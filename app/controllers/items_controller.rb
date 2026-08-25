@@ -12,8 +12,28 @@ class ItemsController < ApplicationController
     @item = current_user.items.new
   end
 
+  def identify
+    @identification = ItemIdentifier.new(photos).call
+
+    respond_to do |format|
+      format.turbo_stream do
+        render turbo_stream: turbo_stream.replace(
+          "follow_up_questions",
+          locals: { identification: @identification }
+        )
+      end
+    end
+  end
+
   def create
-    @item = current_user.items.new(item_params)
+    answers = build_answers(item_params)
+    identification = item_params.slice(:brand, :category, :model_number, :condition_guess)
+    generated = ItemDescriber.new(identification, answers).call || {}
+
+    @item = current_user.items.new(item_params.except(:follow_up_answers, :follow_up_question_texts,
+                                                      :condition_guess).merge(generated.slice(*Item.column_names.map(&:to_sym))))
+    @item.photos.attach(item_params[:photos]) if item_params[:photos]
+
     if @item.save
       redirect_to @item, notice: "Item created."
     else
@@ -45,7 +65,15 @@ class ItemsController < ApplicationController
 
   def item_params
     params.require(:item).permit(
-      :title, :category, :platform, :description, :description_ja, :title_ja, :age, :functional, :brand, :model_number, :suggested_price, :disposal_fee, :jimoty_category, photos: []
+      :title, :category, :platform, :description, :description_ja, :title_ja, :age, :functional,
+      :brand, :model_number, :suggested_price, :disposal_fee, :jimoty_category, :condition_guess,
+      photos: [], follow_up_answers: [], follow_up_question_texts: []
     )
+  end
+
+  def build_answers(params)
+    questions = Array(params[:follow_up_question_texts])
+    responses = Array(params[:follow_up_answers])
+    questions.zip(responses).to_h.merge(age: params[:age], functional: params[:functional])
   end
 end
