@@ -143,5 +143,90 @@ Item.create!(
   jimoty_category: "3"
 )
 
+Item.create!(
+  user: user1,
+  title: "Wooden Chair",
+  title_ja: "木製チェア",
+  category: "Furniture",
+  platform: "jimoty",
+  description: "Solid wooden chair, sturdy and comfortable. Light scratches on the legs.",
+  description_ja: "頑丈な木製チェアです。脚に軽い傷があります。",
+  age: 5,
+  functional: true,
+  brand: "Muji",
+  model_number: "WC-100",
+  suggested_price: 1200,
+  disposal_fee: 400,
+  jimoty_category: "2"
+)
+
+Item.create!(
+  user: user1,
+  title: "Chocolate Fountain",
+  title_ja: "チョコレートファウンテン",
+  category: "Kitchen Appliance",
+  platform: "mercari",
+  description: "Party chocolate fountain, used twice. Works perfectly.",
+  description_ja: "パーティー用チョコレートファウンテン。2回のみ使用、動作良好です。",
+  age: 1,
+  functional: true,
+  brand: "BRUNO",
+  model_number: "BOE115",
+  suggested_price: 2800,
+  disposal_fee: 400,
+  jimoty_category: "1"
+)
+
+Item.create!(
+  user: user1,
+  title: "Hamster Cage",
+  title_ja: "ハムスターケージ",
+  category: "Pet Supplies",
+  platform: "jimoty",
+  description: "Complete hamster cage with wheel and water bottle. Cleaned and ready.",
+  description_ja: "回し車と給水ボトル付きのハムスターケージ。清掃済みです。",
+  age: 2,
+  functional: true,
+  brand: "SANKO",
+  model_number: "C11",
+  suggested_price: 1500,
+  disposal_fee: 400,
+  jimoty_category: "4"
+)
+
+Item.create!(
+  user: user1,
+  title: "Nintendo Switch 2",
+  title_ja: "Nintendo Switch 2",
+  category: "Electronics",
+  platform: "mercari",
+  description: "Switch 2 console in excellent condition. Includes dock and Joy-Cons.",
+  description_ja: "Nintendo Switch 2本体。ドックとJoy-Con付き、美品です。",
+  age: 1,
+  functional: true,
+  brand: "Nintendo",
+  model_number: "SW2-001",
+  suggested_price: 38000,
+  disposal_fee: 400,
+  jimoty_category: "3"
+)
+
+Item.create!(
+  user: user1,
+  title: "Laptop",
+  title_ja: "ノートパソコン",
+  category: "Electronics",
+  platform: "mercari",
+  description: "14-inch laptop, works well. Battery holds about 8 hours.",
+  description_ja: "13インチのノートパソコン。動作良好、バッテリーは約4時間持ちます。",
+  age: 4,
+  functional: true,
+  brand: "Apple",
+  model_number: "Macbook pro m5",
+  suggested_price: 18000,
+  disposal_fee: 400,
+  jimoty_category: "3"
+)
+
 puts "Created #{User.count} users"
 puts "Created #{Item.count} items"
