@@ -1,0 +1,40 @@
+<div class="container items-index">
+  <h1>My Items</h1>
+
+  <div class="items-header">
+    <%= link_to "Scan an item →", new_item_path, class: "scan-link" %>
+  </div>
+
+  <div class="filter-bar">
+    <% ["All", "Pending", "Path Chosen", "Listed", "Disposal Booked", "Passed On", "Disposed"].each do |status| %>
+      <button type="button" class="filter-pill <%= 'active' if status == 'All' %>"><%= status %></button>
+    <% end %>
+  </div>
+  <div class="filter-bar">
+    <% ["All platforms", "Mercari", "Jimoty", "Dispose"].each do |platform| %>
+      <button type="button" class="filter-pill <%= 'active' if platform == 'All platforms' %>"><%= platform %></button>
+    <% end %>
+  </div>
+
+  <% if @items.any? %>
+    <% @items.each do |item| %>
+      <div class="item-card">
+        <% if (img = item_image(item)) %>
+        <%= image_tag img, class: "item-photo" %>
+        <% else %>
+        <div class="item-photo"></div>
+        <% end %>
+        <div class="item-info">
+          <h3><%= item.title %></h3>
+          <p class="item-desc"><%= item.description %></p>
+          <p class="item-meta">
+            <%= item.age %> years old ·
+            <%= item.functional ? "Working" : "Not working" %>
+          </p>
+        </div>
+      </div>
+    <% end %>
+  <% else %>
+    <p class="empty-note">No items yet — scan your first one!</p>
+  <% end %>
+</div>
