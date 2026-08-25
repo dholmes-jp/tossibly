@@ -1,19 +1,43 @@
 <nav class="navbar navbar-expand-sm navbar-light navbar-tossibly">
-  <div class="container-fluid">
-    <%= link_to root_path, class: "navbar-brand" do %>
-      <%= image_tag "tossibly-logo.png" %>
+  <div class="container-fluid align-items-center">
+    <% if user_signed_in? %>
+      <%= link_to dashboard_path, class: "navbar-brand" do %>
+        <%= image_tag "tossibly-logo.png" %>
+      <% end %>
+    <% else %>
+      <%= link_to root_path, class: "navbar-brand" do %>
+        <%= image_tag "tossibly-logo.png" %>
+      <% end %>
     <% end %>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto">
+      <ul class="navbar-nav me-auto gap-2">
         <% if user_signed_in? %>
-          <li class="nav-item active">
-            <%= link_to "Home", "#", class: "nav-link" %>
+          <li>
+            <%= link_to dashboard_path, class: "nav-item active" do %>
+              <%= image_tag "icon_house.svg", alt: "house-icon" %>
+              <span>Dashboard</span>
+            <% end %>
           </li>
-          <li class="nav-item">
-            <%= link_to "Messages", "#", class: "nav-link" %>
+          <li>
+            <%= link_to items_path, class: "nav-item" do %>
+              <%= image_tag "icon_box.svg", alt: "box-icon" %>
+              <span>My Items</span>
+            <% end %>
+          </li>
+          <li>
+            <%= link_to new_item_path, class: "nav-item" do %>
+              <%= image_tag "icon_camera.svg", alt: "camera-icon" %>
+              <span>Scan</span>
+            <% end %>
+          </li>
+          <li>
+            <%= link_to dashboard_path, class: "nav-item" do %>
+              <%= image_tag "icon_calendar.svg", alt: "calendar-icon" %>
+              <span>Schedule</span>
+            <% end %>
           </li>
           <li class="nav-item dropdown">
             <a href="#" class="avatar" id="navbarDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
