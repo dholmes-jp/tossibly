@@ -6,7 +6,7 @@ Rails.application.routes.draw do
 
   resources :items do
     collection do
-      post :Identify
+      post :identify
     end
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

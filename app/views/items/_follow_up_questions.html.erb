@@ -4,7 +4,7 @@
   <%= hidden_field_tag "item[model_number]", identification[:model_number] %>
   <%= hidden_field_tag "item[condition_guess]", identification[:condition_guess] %>
 
-  <%= (identification[:follow_up_questions] || []).each do |question| %>
+  <% (identification[:follow_up_questions] || []).each do |question| %>
     <div class="form-group mb-3">
       <label class="form-label"><%= question %></label>
       <input type="text" name="item[follow_up_answers][]" class="form-control">
