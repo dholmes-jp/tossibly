@@ -15,18 +15,20 @@ class ItemsController < ApplicationController
   def identify
     @identification = ItemIdentifier.new(photos).call
 
+    locals = { identification: @identification }
+
     respond_to do |format|
       format.turbo_stream do
-        render turbo_stream: turbo_stream.replace(
-          "follow_up_questions",
-          locals: { identification: @identification }
-        )
+        render turbo_stream: [
+          turbo_stream.replace("identification", partial: "items/identification", locals: locals),
+          turbo_stream.replace("follow_up_questions", partial: "items/follow_up_questions", locals: locals)
+        ]
       end
     end
   end
 
   def create
-    answers = build_answers(item_params)
+    answers = build_answers(item_params).merge(defects: params[:defects], accessories: params[:accessories])
     identification = item_params.slice(:brand, :category, :model_number, :condition_guess)
     generated = ItemDescriber.new(identification, answers).call || {}
 
@@ -35,7 +37,8 @@ class ItemsController < ApplicationController
     @item.photos.attach(item_params[:photos]) if item_params[:photos]
 
     if @item.save
-      redirect_to @item, notice: "Item created."
+      # No show/index views exist yet, so redirect back to the scan form for now.
+      redirect_to new_item_path, notice: "Item created."
     else
       render :new, status: :unprocessable_entity
     end
@@ -61,6 +64,10 @@ class ItemsController < ApplicationController
 
   def set_item
     @item = current_user.items.find(params[:id])
+  end
+
+  def photos
+    params[:photos]
   end
 
   def item_params
