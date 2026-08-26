@@ -1,0 +1,13 @@
+body {
+  background-color: #fff;
+}
+
+#load-items {
+  background-color: green;
+}
+.extension-lists .item-btn {
+    padding: 4px;
+    background: #ff0;
+    border: 1px solid #000;
+    cursor: pointer;
+}

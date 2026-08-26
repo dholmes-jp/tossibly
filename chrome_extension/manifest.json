@@ -1,0 +1,23 @@
+{
+  "name": "Tossibly chrome extension",
+  "version": "1.0",
+  "description": "Build an Extension!",
+  "manifest_version": 3,
+  "background": {
+    "service_worker": "background.js"
+  },
+   "permissions": [
+    "activeTab",
+    "scripting"
+  ],
+  "action": {
+    "default_popup": "popup.html"
+    // "default_icon": "images/icon.png"
+  }
+  // "icons": {
+  //   "16": "images/icon.png",
+  //   "32": "images/icon.png",
+  //   "48": "images/icon.png",
+  //   "128": "images/icon.png"
+  // }
+}
