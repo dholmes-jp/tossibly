@@ -9,20 +9,13 @@ class ItemDescriber
       Given this item identification: #{@identification.to_json}
       And these seller-provided answers: #{@answers.to_json}
 
-      Write a marketplace listing. Respond with strict JSON only:
-      {
-        "title": string, "title_ja": string,
-        "description": string, "description_ja": string,
-        "category": string, "brand": string|null, "model_number": string|null,
-        "suggested_price": integer|null, "disposal_fee": integer|null,
-        "platform": "mercari"|"jimoty", "jimoty_category": string|null
-      }
+      Write a marketplace listing.
     PROMPT
 
-    chat = RubyLLM.chat(model: "gpt-4o-mini")
+    chat = RubyLLM.chat(model: "gpt-4o-mini").with_schema(ItemListingSchema)
     response = chat.ask(prompt)
 
-    JSON.parse(response.content, symbolize_names: true)
+    response.content.symbolize_keys
   rescue StandardError => e
     Rails.logger.error("ItemDescriber failed: #{e.message}")
     nil
