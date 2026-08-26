@@ -39,8 +39,7 @@ class ItemsController < ApplicationController
     @item.photos.attach(item_params[:photos]) if item_params[:photos]
 
     if @item.save
-      # No show/index views exist yet, so redirect back to the scan form for now.
-      redirect_to new_item_path, notice: "Item created."
+      redirect_to @item, notice: "Item created."
     else
       render :new, status: :unprocessable_entity
     end

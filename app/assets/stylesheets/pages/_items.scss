@@ -32,3 +32,101 @@
   font-size: 2.5rem;
   color: $green;
 }
+
+// Specific CSS for the item decision (show) page
+
+.items-show {
+  .section-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+
+    h2 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      color: $tossibly-black;
+
+      i { color: $primary; }
+    }
+
+    .see-all {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: $primary;
+      text-decoration: none;
+    }
+  }
+
+  .decision-card {
+    background: white;
+    border-radius: 14px;
+    padding: 24px;
+    border: 1px solid rgba($tossibly-black, 0.08);
+  }
+
+  .decision-photo {
+    object-fit: cover;
+    max-height: 260px;
+  }
+}
+
+.action-path-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem;
+}
+
+.action-path {
+  border: 1px solid rgba($tossibly-black, 0.12);
+  border-radius: 12px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.action-path-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 1.1rem;
+  margin-bottom: 0.6rem;
+}
+
+.action-path-mercari { background: $red; }
+.action-path-jimoty { background: $orange; }
+.action-path-bulky { background: $navy; }
+
+.btn-platform {
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  margin-top: auto;
+  transition: opacity 0.15s, transform 0.1s;
+
+  &:hover {
+    opacity: 0.85;
+    transform: translateY(-1px);
+    color: #fff;
+  }
+}
+
+.btn-mercari { background: $red; color: #fff; }
+.btn-jimoty { background: $orange; color: #fff; }
+.btn-bulky { background: $navy; color: #fff; }
