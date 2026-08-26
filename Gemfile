@@ -77,3 +77,4 @@ end
 # Custom added gems here
 gem "ruby-vips", "~> 2.0"
 gem "ruby_llm"
+gem "cloudinary"
