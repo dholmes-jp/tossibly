@@ -8,4 +8,8 @@ class ApplicationController < ActionController::Base
     devise_parameter_sanitizer.permit(:sign_up, keys: %i[name address])
     devise_parameter_sanitizer.permit(:account_update, keys: %i[name address])
   end
+
+  def after_sign_up_path_for(_resource)
+    dashboard_path
+  end
 end
