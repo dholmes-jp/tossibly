@@ -1,0 +1,52 @@
+<div class="container">
+  <h2 class="mb-3"><i class="fas fa-camera"></i> Scan an item</h2>
+
+  <%= form_with model: @item, url: items_path, method: :post, multipart: true, data: { controller: "photo-analyzer" } do |f| %>
+  <div class="mb-3">
+    <label class="scan-dropzone" for="item_photos">
+      <img data-photo-analyzer-target="preview" class="scan-preview d-none" alt="Selected photo preview">
+
+      <div class="scan-placeholder" data-photo-analyzer-target="placeholder">
+        <i class="fas fa-camera"></i>
+        <p class="mb-0 mt-2">Tap to take or choose a photo</p>
+      </div>
+    </label>
+
+    <%= f.file_field :photos, multiple: true, accept: "image/*", capture: "environment",
+          id: "item_photos", class: "visually-hidden",
+          data: { photo_analyzer_target: "input", action: "change->photo-analyzer#analyze" } %>
+
+    <div class="d-none text-center small text-muted mt-3" data-photo-analyzer-target="loading">
+      <div class="spinner-border spinner-border-sm text-success me-2" role="status"></div>
+      Identifying your item with AI — this can take a few seconds…
+    </div>
+  </div>
+
+  <div class="d-none" data-photo-analyzer-target="details">
+    <div id="identification"></div>
+
+    <div class="mb-3">
+      <label class="form-label">How old is it?</label>
+      <%= f.select :age, ["0-1 years", "1-3 years", "3-5 years", "5+ years"], {}, class: "form-select" %>
+    </div>
+
+    <div class="form-check mb-3">
+      <%= f.check_box :functional, class: "form-check-input" %>
+      <%= f.label :functional, "Still working / functional", class: "form-check-label" %>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Any known defects or damage not visible in the photo?</label>
+      <%= text_field_tag :defects, nil, class: "form-control", placeholder: "e.g. scratch on the back, missing button — or leave blank" %>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Any accessories, manual, or original packaging included?</label>
+      <%= text_field_tag :accessories, nil, class: "form-control", placeholder: "e.g. power cable, original box — or leave blank" %>
+    </div>
+
+    <div id="follow_up_questions"></div>
+    <%# filled in by the identify turbo-stream response once photos are chosen %>
+  </div>
+  <% end %>
+</div>

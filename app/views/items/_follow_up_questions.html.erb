@@ -1,0 +1,16 @@
+<div class="container" id="follow_up_questions">
+  <%= hidden_field_tag "item[brand]", identification[:brand] %>
+  <%= hidden_field_tag "item[category]", identification[:category] %>
+  <%= hidden_field_tag "item[model_number]", identification[:model_number] %>
+  <%= hidden_field_tag "item[condition_guess]", identification[:condition_guess] %>
+
+  <% (identification[:follow_up_questions] || []).each do |question| %>
+    <div class="form-group mb-3">
+      <label class="form-label"><%= question %></label>
+      <input type="text" name="item[follow_up_answers][]" class="form-control">
+      <%= hidden_field_tag "item[follow_up_question_texts][]", question %>
+    </div>
+  <% end %>
+
+  <%= submit_tag "Create listing", class: "btn btn-success" %>
+</div>
