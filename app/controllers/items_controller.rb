@@ -28,9 +28,9 @@ class ItemsController < ApplicationController
   end
 
   def create
-    answers = build_answers(item_params).merge(defects: params[:defects], accessories: params[:accessories])
+    answers = build_answers(item_params).merge(condition: params[:condition], note: params[:note])
     identification = item_params.slice(:brand, :category, :model_number, :condition_guess)
-    generated = ItemDescriber.new(identification, answers).call || {}
+    generated = ItemDescriber.new(identification, answers, item_params[:photos]).call || {}
 
     @item = current_user.items.new(item_params.except(:follow_up_answers, :follow_up_question_texts,
                                                       :condition_guess).merge(generated.slice(*Item.column_names.map(&:to_sym))))
@@ -80,6 +80,6 @@ class ItemsController < ApplicationController
   def build_answers(params)
     questions = Array(params[:follow_up_question_texts])
     responses = Array(params[:follow_up_answers])
-    questions.zip(responses).to_h.merge(age: params[:age], functional: params[:functional])
+    questions.zip(responses).to_h
   end
 end
