@@ -77,4 +77,6 @@ end
 # Custom added gems here
 gem "ruby-vips", "~> 2.0"
 gem "ruby_llm"
+# This is for CORS == Cross-origin resource sharing/ chrome extension
+gem "rack-cors"
 gem "cloudinary"
