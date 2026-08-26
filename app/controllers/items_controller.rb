@@ -3,6 +3,8 @@ class ItemsController < ApplicationController
 
   def index
     @items = current_user.items.order(created_at: :desc)
+    @items = @items.where(status: params[:status]) if params[:status].present?
+    @items = @items.where(platform: params[:platform]) if params[:platform].present?
   end
 
   def show
