@@ -1,0 +1,15 @@
+// Page curtain — rises from the bottom to cover the page, then lifts off the top.
+// Driven by the turbo:before-render listener in app/javascript/application.js
+
+.page-curtain {
+  position: fixed;
+  top: -15vh;
+  left: 0;
+  right: 0;
+  height: 130vh;                 // taller than the screen so the curves start off-screen
+  background: $mint;
+  border-radius: 50% / 15vh;     // gentle full-width arc on the top and bottom edges
+  transform: translateY(100%);   // parked below the viewport
+  pointer-events: none;
+  z-index: 9999;
+}
