@@ -1,0 +1,34 @@
+// Specific CSS for the item scan/intake page
+
+.scan-dropzone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: 2px dashed $light-gray;
+  border-radius: 14px;
+  background: $light-gray;
+  min-height: 280px;
+  overflow: hidden;
+  transition: border-color 0.15s;
+}
+
+.scan-dropzone:hover {
+  border-color: $green;
+}
+
+.scan-preview {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+}
+
+.scan-placeholder {
+  text-align: center;
+  color: $gray;
+}
+
+.scan-placeholder i {
+  font-size: 2.5rem;
+  color: $green;
+}

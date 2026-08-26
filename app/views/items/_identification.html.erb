@@ -1,0 +1,12 @@
+<div id="identification">
+  <% if identification[:name].present? %>
+    <div class="mb-3">
+      <h5 class="mb-0"><%= identification[:name] %></h5>
+      <% if identification[:brand].present? || identification[:model_number].present? %>
+        <p class="text-muted small mb-0">
+          <%= [identification[:brand], identification[:model_number]].compact_blank.join(" · ") %>
+        </p>
+      <% end %>
+    </div>
+  <% end %>
+</div>
