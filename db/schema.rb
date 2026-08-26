@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_24_142457) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_26_015417) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -54,6 +54,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_24_142457) do
     t.string "jimoty_category"
     t.string "model_number"
     t.string "platform"
+    t.string "status", default: "pending", null: false
     t.integer "suggested_price"
     t.string "title"
     t.string "title_ja"
