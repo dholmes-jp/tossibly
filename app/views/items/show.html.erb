@@ -1,0 +1,75 @@
+<div class="container items-show">
+  <div class="section-head">
+    <h2><i class="fas fa-route"></i> What Do You Want To Do?</h2>
+    <%= link_to "Back to My Items", items_path, class: "see-all" %>
+  </div>
+
+  <div class="decision-card">
+    <div class="row g-4">
+      <div class="col-12 col-md-5">
+        <% if @item.photos.attached? %>
+          <%= image_tag @item.photos.first, class: "w-100 rounded-3 mb-3 decision-photo" %>
+        <% end %>
+
+        <h1 class="h5 mb-1"><%= @item.title %></h1>
+        <p class="text-muted small mb-2">
+          <%= @item.functional ? "Working" : "Not working" %>
+          <% if @item.brand.present? %> &middot; <%= @item.brand %><% end %>
+          <% if @item.model_number.present? %> &middot; <%= @item.model_number %><% end %>
+        </p>
+        <% if @item.category.present? %>
+          <p class="text-muted small mb-2">Waste category: <strong><%= @item.category %></strong></p>
+        <% end %>
+
+        <% if @item.description.present? %>
+          <p class="small mb-2"><%= @item.description %></p>
+        <% end %>
+
+        <%= link_to "Edit details", edit_item_path(@item), class: "small" %>
+      </div>
+
+      <div class="col-12 col-md-7">
+        <h3 class="h6 mb-3">Compare your options</h3>
+
+        <div class="action-path-grid mb-3">
+          <div class="action-path">
+            <div class="action-path-icon action-path-mercari"><i class="fas fa-bag-shopping"></i></div>
+            <div class="fw-semibold mb-1">Sell - Mercari</div>
+            <% if @item.suggested_price.present? %>
+              <p class="small text-muted mb-1">Estimated price</p>
+              <p class="fw-semibold mb-2"><%= yen(@item.suggested_price) %></p>
+            <% end %>
+            <p class="small text-muted mb-3">TODO: real Mercari comp search here</p>
+            <button type="button" class="btn-platform btn-mercari w-100 justify-content-center">
+              <i class="fas fa-bag-shopping"></i> Sell - Mercari
+            </button>
+          </div>
+
+          <div class="action-path">
+            <div class="action-path-icon action-path-jimoty"><i class="fas fa-location-dot"></i></div>
+            <div class="fw-semibold mb-1">Pass it on - Jimoty</div>
+            <p class="small text-muted mb-3">Free, typically fast &mdash; Jimoty listings are always free in this app.</p>
+            <button type="button" class="btn-platform btn-jimoty w-100 justify-content-center">
+              <i class="fas fa-location-dot"></i> Pass it on - Jimoty
+            </button>
+          </div>
+
+          <div class="action-path">
+            <div class="action-path-icon action-path-bulky"><i class="fas fa-truck"></i></div>
+            <div class="fw-semibold mb-1">Dispose - Government</div>
+            <% if @item.disposal_fee.present? %>
+              <p class="small text-muted mb-1">Estimated fee</p>
+              <p class="fw-semibold mb-1"><%= yen(@item.disposal_fee) %></p>
+            <% end %>
+            <p class="small text-muted mb-3">TODO: real recycling-fee table lookup here</p>
+            <button type="button" class="btn-platform btn-bulky w-100 justify-content-center">
+              <i class="fas fa-truck"></i> Dispose - Government
+            </button>
+          </div>
+        </div>
+
+        <p class="small text-muted mb-0">No rush &mdash; this item is saved as <strong>Pending</strong> in My Items. Decide now, or come back later.</p>
+      </div>
+    </div>
+  </div>
+</div>
