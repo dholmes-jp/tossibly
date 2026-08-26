@@ -5,7 +5,8 @@ const MAX_PHOTOS = 2
 export default class extends Controller {
   static targets = [
     "input", "addBar", "addBarLabel", "filmstrip", "count",
-    "continueButton", "loading", "details"
+    "continueButton", "loading", "details",
+    "conditionRadio", "functionalInput"
   ]
 
   connect() {
@@ -88,7 +89,37 @@ export default class extends Controller {
 
     Turbo.renderStreamMessage(await response.text())
 
+    const conditionGuess = document.querySelector('input[name="item[condition_guess]"]')?.value
+    this.selectConditionFromGuess(conditionGuess)
+
     this.loadingTarget.classList.add("d-none")
     this.detailsTarget.classList.remove("d-none")
+  }
+
+  conditionChanged(event) {
+    this.applyCondition(event.currentTarget.value)
+  }
+
+  selectConditionFromGuess(guess) {
+    const g = (guess || "").toLowerCase()
+    let condition = "Good"
+
+    if (g.includes("like new")) condition = "Like new"
+    else if (g.includes("new")) condition = "New"
+    else if (g.includes("good")) condition = "Good"
+    else if (g.includes("fair") || g.includes("worn")) condition = "Fair"
+    else if (g.includes("not working") || g.includes("broken")) condition = "Not working"
+
+    this.applyCondition(condition)
+  }
+
+  applyCondition(value) {
+    this.conditionRadioTargets.forEach((radio) => {
+      const selected = radio.value === value
+      radio.checked = selected
+      radio.closest(".condition-pill").classList.toggle("active", selected)
+    })
+
+    this.functionalInputTarget.value = value === "Not working" ? "false" : "true"
   }
 }

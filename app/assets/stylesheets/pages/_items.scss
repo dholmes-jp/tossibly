@@ -108,6 +108,37 @@
   margin-top: 0.25rem;
 }
 
+.condition-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.condition-pill {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid rgba($tossibly-black, 0.15);
+  background: white;
+  color: $tossibly-black;
+  border-radius: 999px;
+  padding: 6px 16px;
+  font-family: 'Figtree', sans-serif;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.condition-pill.active {
+  background: $primary;
+  color: #fff;
+  border-color: $primary;
+}
+
+.condition-pill:hover:not(.active) {
+  border-color: $primary;
+  color: $primary;
+}
+
 // Specific CSS for the item decision (show) page
 
 .items-show {
