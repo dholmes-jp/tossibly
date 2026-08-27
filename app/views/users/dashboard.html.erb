@@ -1,57 +1,101 @@
+<%# app/views/users/dashboard.html.erb %>
+<%# Styles: app/assets/stylesheets/pages/_dashboard.scss %>
+<%# Expects @recent_items from UsersController#dashboard (max 3, most recently touched first). %>
+
+<%
+  # Placeholder weekly collection pattern (Meguro-ku, Area B) until a schedule
+  # model exists. Keys are wday numbers: 0 = Sun ... 6 = Sat.
+  weekly = { 2 => "Recyclables", 3 => "Used paper", 4 => "Combustible", 6 => "Non-combustible" }
+  today = Time.current.in_time_zone("Tokyo").to_date
+  next_day = (0..7).map { |n| today + n }.find { |d| weekly.key?(d.wday) }
+  when_label =
+    if next_day == today then "Today"
+    elsif next_day == today + 1 then "Tomorrow"
+    else "Next"
+    end
+%>
+
 <main class="dashboard">
+
   <p class="dashboard-kicker"><%= time_of_day_greeting %>, <%= current_user.name.presence || "there" %></p>
   <h1 class="dashboard-heading">What are you getting rid of?</h1>
 
-  <section class="dashboard-hero">
-    <div class="dashboard-hero__icon"><i class="fa-solid fa-camera"></i></div>
-    <div class="dashboard-hero__body">
-      <strong>Scan an item</strong>
-      <p>Take a photo and Tossibly will help you decide whether to sell it, pass it on, or dispose of it properly.</p>
+  <%# ---------- NEXT COLLECTION STRIP ---------- %>
+  <div class="dashboard-strip">
+    <div class="dashboard-strip__date">
+      <span class="dashboard-strip__eyebrow"><%= when_label %></span>
+      <span class="dashboard-strip__day"><%= next_day.day %></span>
+      <span class="dashboard-strip__weekday"><%= next_day.strftime("%A") %></span>
     </div>
-    <%= link_to "Scan item →", new_item_path, class: "dashboard-hero__cta" %>
-  </section>
 
+    <div class="dashboard-strip__what">
+      <span class="dashboard-strip__title"><%= weekly[next_day.wday] %> collection</span>
+      <span class="dashboard-strip__sub">Put out by 8:00</span>
+    </div>
+
+    <ul class="dashboard-strip__week">
+      <% weekly.each do |wday, type| %>
+        <li class="dashboard-strip__slot <%= 'dashboard-strip__slot--active' if wday == next_day.wday %>">
+          <span class="dashboard-strip__circle"><%= Date::ABBR_DAYNAMES[wday] %></span>
+          <span class="dashboard-strip__type"><%= type %></span>
+        </li>
+      <% end %>
+    </ul>
+
+    <%# Folded paper corner = link to the full schedule (no schedule page yet, so "#") %>
+    <%= link_to "", "#", class: "dashboard-strip__corner", "aria-label": "Full schedule" %>
+  </div>
+
+  <%# ---------- RECENT ITEMS + SCAN TILE + VIEW ALL ---------- %>
   <section class="dashboard-section">
     <div class="dashboard-section__head">
       <h2>Continue where you left off</h2>
-      <%= link_to "View all →", items_path, class: "dashboard-section__link" %>
     </div>
 
-    <% if @items.any? %>
-      <div class="dashboard-items">
-        <% @items.each do |item| %>
-          <article class="dashboard-card">
-            <div class="dashboard-card__photo">
-              <% if item.photos.attached? %>
-                <%= image_tag item.photos.first, alt: item.title %>
-              <% else %>
-                <i class="fa-solid fa-box-open" aria-hidden="true"></i>
-              <% end %>
-            </div>
-            <div class="dashboard-card__body">
-              <span class="dashboard-badge">In progress</span>
-              <p class="dashboard-card__name"><%= item.title %></p>
-              <p class="dashboard-card__meta">
-                <% if item.suggested_price.present? %>
-                  Suggested price <%= yen(item.suggested_price) %>
-                <% elsif item.category.present? %>
-                  <%= item.category %>
-                <% else %>
-                  Review to see next steps
-                <% end %>
-              </p>
-              <%= link_to "Review →", item_path(item), class: "dashboard-card__action" %>
-            </div>
-          </article>
+    <div class="dashboard-grid">
+      <% @recent_items.each do |item| %>
+        <% status = item.respond_to?(:status) ? item.status.to_s : "" %>
+        <% status_label, pill_mod =
+             case status
+             when /listed/ then ["Listed on #{item.platform.to_s.capitalize}", ""]
+             when /ready/  then ["Ready to post", "dashboard-pill--ready"]
+             else               ["In progress", ""]
+             end %>
+
+        <%= link_to item_path(item), class: "dashboard-card" do %>
+          <div class="dashboard-card__photo">
+            <% if item.photos.attached? %>
+              <%= image_tag item.photos.first, alt: item.title %>
+            <% end %>
+          </div>
+          <span class="dashboard-pill <%= pill_mod %>"><%= status_label %></span>
+          <h3 class="dashboard-card__name"><%= item.title %></h3>
+          <p class="dashboard-card__meta">
+            <% if item.category.present? %>
+              <%= item.category %>
+            <% elsif item.suggested_price.present? %>
+              Suggested price <%= yen(item.suggested_price) %>
+            <% else %>
+              Review to see next steps
+            <% end %>
+          </p>
         <% end %>
-      </div>
-    <% else %>
-      <div class="dashboard-empty">
-        <p>Nothing in progress yet — scan your first item and Tossibly will take it from there.</p>
-        <%= link_to "Scan item →", new_item_path, class: "dashboard-empty__cta" %>
-      </div>
-    <% end %>
+      <% end %>
+
+      <% if @recent_items.empty? %>
+        <div class="dashboard-empty">
+          <p>Nothing scanned yet. Your items will show up here.</p>
+        </div>
+      <% end %>
+
+      <%= link_to new_item_path, class: "dashboard-scan" do %>
+        <%= image_tag "icon_camera.svg", alt: "", class: "dashboard-scan__icon" %>
+        <span class="dashboard-scan__title">Scan an item</span>
+        <span class="dashboard-scan__sub">Snap a photo to start</span>
+      <% end %>
+
+      <%= link_to "View all", items_path, class: "dashboard-viewall" %>
+    </div>
   </section>
 
-  <%= render "collection_schedule" %>
 </main>
