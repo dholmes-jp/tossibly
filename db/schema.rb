@@ -54,6 +54,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_26_130409) do
     t.string "jimoty_category"
     t.string "model_number"
     t.string "platform"
+    t.string "status", default: "pending", null: false
     t.integer "suggested_price"
     t.string "title"
     t.string "title_ja"
