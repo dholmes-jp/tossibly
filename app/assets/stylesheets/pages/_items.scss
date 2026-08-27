@@ -1,36 +1,142 @@
 // Specific CSS for the item scan/intake page
 
-.scan-dropzone {
+.photo-picker-label {
+  font-family: 'Figtree', sans-serif;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  border: 2px dashed $light-gray;
-  border-radius: 14px;
-  background: $light-gray;
-  min-height: 280px;
-  overflow: hidden;
-  transition: border-color 0.15s;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-weight: 600;
+  color: $tossibly-black;
+  margin-bottom: 0.5rem;
 }
 
-.scan-dropzone:hover {
-  border-color: $green;
-}
-
-.scan-preview {
-  width: 100%;
-  height: 280px;
-  object-fit: cover;
-}
-
-.scan-placeholder {
-  text-align: center;
+.photo-picker-count {
+  font-size: 0.85rem;
+  font-weight: 500;
   color: $gray;
 }
 
-.scan-placeholder i {
-  font-size: 2.5rem;
+.photo-add-bar {
+  appearance: none;
+  font-family: 'Figtree', sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  width: 100%;
+  cursor: pointer;
+  border: 2px dashed $light-gray;
+  border-radius: 12px;
+  background: $light-gray;
+  padding: 1rem;
+  color: $tossibly-black;
+  font-weight: 600;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.photo-add-bar i {
   color: $green;
+  font-size: 1.1rem;
+}
+
+.photo-add-bar:hover {
+  border-color: $green;
+}
+
+.photo-add-bar:disabled,
+.photo-add-bar.disabled {
+  cursor: default;
+  opacity: 0.6;
+  border-color: $light-gray;
+}
+
+.photo-add-bar:disabled i,
+.photo-add-bar.disabled i {
+  color: $gray;
+}
+
+.photo-filmstrip {
+  display: flex;
+  gap: 0.75rem;
+  overflow-x: auto;
+  padding: 0.75rem 0.1rem;
+}
+
+.photo-filmstrip-tile {
+  position: relative;
+  flex: 0 0 auto;
+  width: 96px;
+  height: 96px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: $light-gray;
+}
+
+.photo-filmstrip-tile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.photo-filmstrip-remove {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: none;
+  background: rgba($tossibly-black, 0.7);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.15s;
+}
+
+.photo-filmstrip-remove:hover {
+  background: $tossibly-black;
+}
+
+.photo-picker-helper {
+  font-size: 0.8rem;
+  color: $gray;
+  margin-top: 0.25rem;
+}
+
+.condition-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.condition-pill {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid rgba($tossibly-black, 0.15);
+  background: white;
+  color: $tossibly-black;
+  border-radius: 999px;
+  padding: 6px 16px;
+  font-family: 'Figtree', sans-serif;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.condition-pill.active {
+  background: $primary;
+  color: #fff;
+  border-color: $primary;
+}
+
+.condition-pill:hover:not(.active) {
+  border-color: $primary;
+  color: $primary;
 }
 
 // Specific CSS for the item decision (show) page

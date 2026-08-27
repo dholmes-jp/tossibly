@@ -3,18 +3,28 @@
 
   <%= form_with model: @item, url: items_path, method: :post, multipart: true, data: { controller: "photo-analyzer" } do |f| %>
   <div class="mb-3">
-    <label class="scan-dropzone" for="item_photos">
-      <img data-photo-analyzer-target="preview" class="scan-preview d-none" alt="Selected photo preview">
+    <div class="photo-picker-label">
+      Photos
+      <span class="photo-picker-count" data-photo-analyzer-target="count">0 of 2 photos</span>
+    </div>
 
-      <div class="scan-placeholder" data-photo-analyzer-target="placeholder">
-        <i class="fas fa-camera"></i>
-        <p class="mb-0 mt-2">Tap to take or choose a photo</p>
-      </div>
-    </label>
+    <button type="button" class="photo-add-bar" data-photo-analyzer-target="addBar" data-action="photo-analyzer#openPicker">
+      <i class="fas fa-camera"></i><i class="fas fa-plus"></i>
+      <span data-photo-analyzer-target="addBarLabel">Add Photos</span>
+    </button>
+
+    <div class="photo-filmstrip" data-photo-analyzer-target="filmstrip"></div>
+
+    <p class="photo-picker-helper">The Add Photos button stays put — your photos scroll in the strip above.</p>
 
     <%= f.file_field :photos, multiple: true, accept: "image/*", capture: "environment",
           id: "item_photos", class: "visually-hidden",
-          data: { photo_analyzer_target: "input", action: "change->photo-analyzer#analyze" } %>
+          data: { photo_analyzer_target: "input", action: "change->photo-analyzer#filesSelected" } %>
+
+    <button type="button" class="btn btn-success mt-3" data-photo-analyzer-target="continueButton"
+            data-action="photo-analyzer#analyze" disabled>
+      Continue
+    </button>
 
     <div class="d-none text-center small text-muted mt-3" data-photo-analyzer-target="loading">
       <div class="spinner-border spinner-border-sm text-success me-2" role="status"></div>
@@ -26,23 +36,25 @@
     <div id="identification"></div>
 
     <div class="mb-3">
-      <label class="form-label">How old is it?</label>
-      <%= f.select :age, ["0-1 years", "1-3 years", "3-5 years", "5+ years"], {}, class: "form-select" %>
+      <label class="form-label d-block">Condition</label>
+      <div class="condition-pills" data-photo-analyzer-target="conditionPills">
+        <% ["New", "Like new", "Good", "Fair", "Not working"].each do |value| %>
+          <label class="condition-pill <%= "active" if value == "Good" %>">
+            <input type="radio" name="condition" value="<%= value %>" class="visually-hidden"
+                   data-photo-analyzer-target="conditionRadio"
+                   data-action="change->photo-analyzer#conditionChanged"
+                   <%= "checked" if value == "Good" %>>
+            <%= value %>
+          </label>
+        <% end %>
+      </div>
     </div>
 
-    <div class="form-check mb-3">
-      <%= f.check_box :functional, class: "form-check-input" %>
-      <%= f.label :functional, "Still working / functional", class: "form-check-label" %>
-    </div>
+    <%= hidden_field_tag "item[functional]", "true", data: { photo_analyzer_target: "functionalInput" } %>
 
     <div class="mb-3">
-      <label class="form-label">Any known defects or damage not visible in the photo?</label>
-      <%= text_field_tag :defects, nil, class: "form-control", placeholder: "e.g. scratch on the back, missing button — or leave blank" %>
-    </div>
-
-    <div class="mb-3">
-      <label class="form-label">Any accessories, manual, or original packaging included?</label>
-      <%= text_field_tag :accessories, nil, class: "form-control", placeholder: "e.g. power cable, original box — or leave blank" %>
+      <label class="form-label">Anything else the buyer should know? (optional)</label>
+      <%= text_field_tag :note, nil, class: "form-control", placeholder: "e.g. scratch on the back, comes with original box — or leave blank" %>
     </div>
 
     <div id="follow_up_questions"></div>

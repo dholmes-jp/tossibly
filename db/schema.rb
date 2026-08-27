@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_24_142457) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_26_130409) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -50,7 +50,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_24_142457) do
     t.text "description"
     t.text "description_ja"
     t.integer "disposal_fee"
-    t.boolean "functional"
+    t.boolean "functional", default: true
     t.string "jimoty_category"
     t.string "model_number"
     t.string "platform"
