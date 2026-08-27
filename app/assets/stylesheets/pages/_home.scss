@@ -1,4 +1,281 @@
-// Specific CSS for your home-page
-body {
-  background-color: $tossibly-white;
+// app/assets/stylesheets/pages/_home.scss
+// Landing page. Uses tokens from config/_colors.scss ($forest, $leaf, $mint,
+// $cream, $sun) and config/_fonts.scss ($headers-font, $body-font).
+// Requires one new token in config/_colors.scss:  $sun: #F6D960;
+
+$home-radius: 32px;
+
+.home {
+  background: $cream;
+  color: $forest;
+  min-height: 100vh;
+  font-family: $body-font;
+
+  a { color: $forest; text-decoration: none; }
+  a:hover { color: $leaf; }
+  ::selection { background: $sun; color: $forest; }
+}
+
+// ---------- Buttons ----------
+.home-btn {
+  display: inline-block;
+  font-family: $body-font;
+  font-weight: 600;
+  font-size: 16px;
+  padding: 15px 28px;
+  border-radius: 999px;
+  transition: background .2s, color .2s, border-color .2s;
+
+  &--sun {
+    background: $sun;
+    color: $forest;
+    &:hover { background: $mint; color: $forest; }
+  }
+
+  &--outline {
+    border: 1.5px solid $mint;
+    color: $mint;
+    &:hover { border-color: $sun; color: $sun; }
+  }
+}
+
+// ---------- Hero ----------
+.home-hero {
+  margin: 12px;
+  background: $forest;
+  border-radius: $home-radius;
+  overflow: hidden;
+  padding: clamp(24px, 5vw, 64px) clamp(20px, 4vw, 56px) clamp(32px, 5vw, 64px);
+  display: flex;
+  flex-direction: column;
+
+  &__chips {
+    display: flex;
+    gap: 10px;
+    margin-bottom: clamp(16px, 3vw, 28px);
+  }
+
+  &__title {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    font-family: $headers-font;
+    font-weight: 800;
+    color: $sun;
+    font-size: clamp(52px, 11vw, 148px);
+    line-height: .94;
+    letter-spacing: -.02em;
+    text-transform: uppercase;
+
+    span:nth-child(2) { align-self: flex-end; }   // "Price it." sits right
+  }
+
+  &__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    margin-top: clamp(28px, 5vw, 56px);
+  }
+
+  &__lead {
+    margin: 0;
+    max-width: 46ch;
+    color: $mint;
+    font-size: clamp(16px, 1.4vw, 19px);
+    line-height: 1.55;
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+}
+
+.home-chip {
+  color: $mint;
+  border: 1.5px solid $mint;
+  border-radius: 999px;
+  padding: 5px 14px;
+  font-size: 13px;
+}
+
+// ---------- Ticker ----------
+.home-ticker {
+  overflow: hidden;
+  padding: clamp(20px, 3vw, 36px) 0 clamp(8px, 1.5vw, 16px);
+
+  &__track {
+    display: flex;
+    width: max-content;
+    animation: home-marquee 22s linear infinite;
+  }
+
+  &__group {
+    display: flex;
+    gap: 28px;
+    padding-right: 28px;
+    font-family: $headers-font;
+    font-weight: 800;
+    font-size: clamp(20px, 2.4vw, 30px);
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  &__star { color: $leaf; }
+}
+
+@keyframes home-marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-ticker__track { animation: none; }
+}
+
+// ---------- Features ----------
+.home-features {
+  padding: clamp(32px, 5vw, 72px) clamp(20px, 4vw, 48px);
+
+  &__header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: clamp(24px, 4vw, 44px);
+  }
+
+  &__title {
+    margin: 0;
+    font-family: $headers-font;
+    font-weight: 800;
+    font-size: clamp(34px, 5vw, 64px);
+    line-height: 1;
+    letter-spacing: -.02em;
+    text-transform: uppercase;
+  }
+
+  &__sub {
+    margin: 0;
+    opacity: .7;
+    font-size: 16px;
+  }
+
+  &__grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+}
+
+.home-card {
+  flex: 1 1 250px;
+  border-radius: 24px;
+  padding: 28px 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  background: $mint;
+  color: $forest;
+
+  &__num {
+    font-family: $headers-font;
+    font-weight: 800;
+    font-size: 15px;
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  h3 {
+    margin: 0;
+    font-family: $headers-font;
+    font-weight: 800;
+    font-size: 24px;
+    color: inherit;
+  }
+
+  p {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.55;
+  }
+
+  &--forest {
+    background: $forest;
+    color: $mint;
+    .home-card__num, h3 { color: $sun; }
+  }
+
+  &--sun { background: $sun; }
+}
+
+// ---------- CTA band ----------
+.home-cta {
+  margin: 0 12px 12px;
+  background: $forest;
+  border-radius: $home-radius;
+  padding: clamp(40px, 7vw, 96px) clamp(20px, 4vw, 56px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  text-align: center;
+
+  &__jp {
+    color: $mint;
+    font-size: 15px;
+  }
+
+  &__title {
+    margin: 0;
+    font-family: $headers-font;
+    font-weight: 800;
+    font-size: clamp(40px, 8vw, 110px);
+    line-height: .95;
+    letter-spacing: -.02em;
+    text-transform: uppercase;
+    color: $sun;
+    max-width: 14ch;
+  }
+
+  &__lead {
+    margin: 0;
+    color: $mint;
+    font-size: clamp(16px, 1.4vw, 18px);
+    max-width: 42ch;
+    line-height: 1.55;
+  }
+}
+
+// ---------- Footer ----------
+.home-footer {
+  padding: clamp(24px, 4vw, 40px) clamp(20px, 4vw, 48px) 28px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+
+  &__logo { height: 28px; }
+
+  &__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 22px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  &__copy {
+    font-size: 13px;
+    opacity: .6;
+  }
 }
