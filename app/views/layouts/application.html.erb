@@ -6,6 +6,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="application-name" content="Tossibly">
     <meta name="mobile-web-app-capable" content="yes">
+    <meta name="turbo-cache-control" content="no-preview">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
@@ -23,8 +24,10 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body><%= render "shared/navbar" %>
-<%= render "shared/flashes" %>
+  <body>
+    <div id="page-curtain" class="page-curtain" data-turbo-permanent></div>
+    <%= render "shared/navbar" %>
+    <%= render "shared/flashes" %>
 
     <%= yield %>
   </body>
