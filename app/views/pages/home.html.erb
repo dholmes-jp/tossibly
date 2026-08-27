@@ -1,4 +1,111 @@
-<div class="container py-5">
-  <h1>This will be our landing page</h1>
-  <%= link_to "Sign up", new_user_registration_path %>
+<%# app/views/pages/home.html.erb — public landing page %>
+<%# Styles live in app/assets/stylesheets/pages/_home.scss %>
+
+<% cta_text, cta_path =
+     user_signed_in? ? ["Add an item", new_item_path]
+                     : ["Try Tossibly — it's free", new_user_registration_path] %>
+
+<div class="home">
+
+  <%# ---------- HERO ---------- %>
+  <section class="home-hero">
+    <div class="home-hero__chips">
+      <span class="home-chip">売る</span>
+      <span class="home-chip">譲る</span>
+      <span class="home-chip">捨てる</span>
+    </div>
+
+    <h1 class="home-hero__title">
+      <span>Snap it.</span>
+      <span>Price it.</span>
+      <span>Let it go.</span>
+    </h1>
+
+    <div class="home-hero__bottom">
+      <p class="home-hero__lead">
+        Tossibly helps you get rid of anything in Japan — sell it, give it away,
+        or dispose of it properly. Snap a photo and we handle the rest, in English.
+      </p>
+      <div class="home-hero__actions">
+        <%= link_to cta_text, cta_path, class: "home-btn home-btn--sun" %>
+        <a href="#features" class="home-btn home-btn--outline">How it works</a>
+      </div>
+    </div>
+  </section>
+
+  <%# ---------- TICKER (delete this block if you don't want it) ---------- %>
+  <div class="home-ticker" aria-hidden="true">
+    <div class="home-ticker__track">
+      <% 2.times do %>
+        <div class="home-ticker__group">
+          <span>Sell it on Mercari</span><span class="home-ticker__star">✳</span>
+          <span>Give it on Jimoty</span><span class="home-ticker__star">✳</span>
+          <span>Toss it the right way</span><span class="home-ticker__star">✳</span>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <%# ---------- FEATURES ---------- %>
+  <section id="features" class="home-features">
+    <div class="home-features__header">
+      <h2 class="home-features__title">No Japanese needed.</h2>
+      <p class="home-features__sub">Four things Tossibly does for you</p>
+    </div>
+
+    <div class="home-features__grid">
+      <div class="home-card home-card--mint">
+        <div class="home-card__num">01</div>
+        <div class="home-card__body">
+          <h3>Snap &amp; know</h3>
+          <p>Take one photo. Tossibly identifies the item and estimates what it's worth on the resale market.</p>
+        </div>
+      </div>
+
+      <div class="home-card home-card--forest">
+        <div class="home-card__num">02</div>
+        <div class="home-card__body">
+          <h3>Sell, give, or toss</h3>
+          <p>Get the best way out for each item: sell on Mercari, give it away on Jimoty, or dispose through your city.</p>
+        </div>
+      </div>
+
+      <div class="home-card home-card--sun">
+        <div class="home-card__num">03</div>
+        <div class="home-card__body">
+          <h3>Japanese, written for you</h3>
+          <p>Your listing — title, description, price — is written in natural Japanese, ready to post.</p>
+        </div>
+      </div>
+
+      <div class="home-card home-card--mint">
+        <div class="home-card__num">04</div>
+        <div class="home-card__body">
+          <h3>Guided to done</h3>
+          <p>Step-by-step help from posting to handing the item over — shipping labels, pickup rules, all of it.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <%# ---------- CTA BAND ---------- %>
+  <section id="get" class="home-cta">
+    <div class="home-cta__jp">「これ、どうしよう？」— we've got it.</div>
+    <h2 class="home-cta__title">Good for your move. Good for Japan.</h2>
+    <p class="home-cta__lead">Less landfill, more second lives for your stuff — and a lighter suitcase for you.</p>
+    <%= link_to cta_text, cta_path, class: "home-btn home-btn--sun" %>
+  </section>
+
+  <%# ---------- FOOTER ---------- %>
+  <footer class="home-footer">
+    <div class="home-footer__brand">
+      <%= image_tag "tossibly-logo.png", alt: "Tossibly", class: "home-footer__logo" %>
+    </div>
+    <div class="home-footer__links">
+      <a href="#features">How it works</a>
+      <a href="#get">Get started</a>
+    </div>
+    <div class="home-footer__copy">© <%= Date.current.year %> Tossibly</div>
+  </footer>
+
 </div>
