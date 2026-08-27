@@ -81,3 +81,20 @@
     border-color: rgba($cream, .5);
   }
 }
+// Landing page: navbar floats over the hero and slides in on scroll
+.navbar--landing {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 1030;
+  transition: transform .35s ease, opacity .35s ease;
+}
+
+.navbar--hidden {
+  transform: translateY(-100%);
+  opacity: 0;
+  pointer-events: none;
+}
+.navbar-tossibly .navbar-nav .nav-link--login {
+  color: $mint-light;
+  &:hover, &:focus { color: $sun; }
+}
