@@ -1,3 +1,57 @@
-<div class="container text-center mt-5">
-  <%= link_to "Scan an item", new_item_path, class: "btn btn-primary btn-lg" %>
-</div>
+<main class="dashboard">
+  <p class="dashboard-kicker"><%= time_of_day_greeting %>, <%= current_user.name.presence || "there" %></p>
+  <h1 class="dashboard-heading">What are you getting rid of?</h1>
+
+  <section class="dashboard-hero">
+    <div class="dashboard-hero__icon"><i class="fa-solid fa-camera"></i></div>
+    <div class="dashboard-hero__body">
+      <strong>Scan an item</strong>
+      <p>Take a photo and Tossibly will help you decide whether to sell it, pass it on, or dispose of it properly.</p>
+    </div>
+    <%= link_to "Scan item →", new_item_path, class: "dashboard-hero__cta" %>
+  </section>
+
+  <section class="dashboard-section">
+    <div class="dashboard-section__head">
+      <h2>Continue where you left off</h2>
+      <%= link_to "View all →", items_path, class: "dashboard-section__link" %>
+    </div>
+
+    <% if @items.any? %>
+      <div class="dashboard-items">
+        <% @items.each do |item| %>
+          <article class="dashboard-card">
+            <div class="dashboard-card__photo">
+              <% if item.photos.attached? %>
+                <%= image_tag item.photos.first, alt: item.title %>
+              <% else %>
+                <i class="fa-solid fa-box-open" aria-hidden="true"></i>
+              <% end %>
+            </div>
+            <div class="dashboard-card__body">
+              <span class="dashboard-badge">In progress</span>
+              <p class="dashboard-card__name"><%= item.title %></p>
+              <p class="dashboard-card__meta">
+                <% if item.suggested_price.present? %>
+                  Suggested price <%= yen(item.suggested_price) %>
+                <% elsif item.category.present? %>
+                  <%= item.category %>
+                <% else %>
+                  Review to see next steps
+                <% end %>
+              </p>
+              <%= link_to "Review →", item_path(item), class: "dashboard-card__action" %>
+            </div>
+          </article>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="dashboard-empty">
+        <p>Nothing in progress yet — scan your first item and Tossibly will take it from there.</p>
+        <%= link_to "Scan item →", new_item_path, class: "dashboard-empty__cta" %>
+      </div>
+    <% end %>
+  </section>
+
+  <%= render "collection_schedule" %>
+</main>

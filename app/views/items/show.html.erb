@@ -1,4 +1,4 @@
-<div class="container items-show">
+<div class="container items-show" data-controller="item-decision">
   <div class="section-head">
     <h2><i class="fas fa-route"></i> What Do You Want To Do?</h2>
     <%= link_to "Back to My Items", items_path, class: "see-all" %>
@@ -21,10 +21,6 @@
           <p class="text-muted small mb-2">Waste category: <strong><%= @item.category %></strong></p>
         <% end %>
 
-        <% if @item.description.present? %>
-          <p class="small mb-2"><%= @item.description %></p>
-        <% end %>
-
         <%= link_to "Edit details", edit_item_path(@item), class: "small" %>
       </div>
 
@@ -32,37 +28,40 @@
         <h3 class="h6 mb-3">Compare your options</h3>
 
         <div class="action-path-grid mb-3">
-          <div class="action-path">
+          <div class="action-path" data-tab="mercari" data-item-decision-target="card">
             <div class="action-path-icon action-path-mercari"><i class="fas fa-bag-shopping"></i></div>
             <div class="fw-semibold mb-1">Sell - Mercari</div>
             <% if @item.suggested_price.present? %>
               <p class="small text-muted mb-1">Estimated price</p>
               <p class="fw-semibold mb-2"><%= yen(@item.suggested_price) %></p>
             <% end %>
-            <p class="small text-muted mb-3">TODO: real Mercari comp search here</p>
-            <button type="button" class="btn-platform btn-mercari w-100 justify-content-center">
+            <p class="small text-muted mb-3">Estimated resale price from similar listings.</p>
+            <button type="button" class="btn-platform btn-mercari w-100 justify-content-center"
+                    data-action="item-decision#select" data-item-decision-tab-param="mercari">
               <i class="fas fa-bag-shopping"></i> Sell - Mercari
             </button>
           </div>
 
-          <div class="action-path">
+          <div class="action-path" data-tab="jimoty" data-item-decision-target="card">
             <div class="action-path-icon action-path-jimoty"><i class="fas fa-location-dot"></i></div>
             <div class="fw-semibold mb-1">Pass it on - Jimoty</div>
             <p class="small text-muted mb-3">Free, typically fast &mdash; Jimoty listings are always free in this app.</p>
-            <button type="button" class="btn-platform btn-jimoty w-100 justify-content-center">
+            <button type="button" class="btn-platform btn-jimoty w-100 justify-content-center"
+                    data-action="item-decision#select" data-item-decision-tab-param="jimoty">
               <i class="fas fa-location-dot"></i> Pass it on - Jimoty
             </button>
           </div>
 
-          <div class="action-path">
+          <div class="action-path" data-tab="dispose" data-item-decision-target="card">
             <div class="action-path-icon action-path-bulky"><i class="fas fa-truck"></i></div>
             <div class="fw-semibold mb-1">Dispose - Government</div>
             <% if @item.disposal_fee.present? %>
               <p class="small text-muted mb-1">Estimated fee</p>
               <p class="fw-semibold mb-1"><%= yen(@item.disposal_fee) %></p>
             <% end %>
-            <p class="small text-muted mb-3">TODO: real recycling-fee table lookup here</p>
-            <button type="button" class="btn-platform btn-bulky w-100 justify-content-center">
+            <p class="small text-muted mb-3">Estimated recycling fee and pickup timing.</p>
+            <button type="button" class="btn-platform btn-bulky w-100 justify-content-center"
+                    data-action="item-decision#select" data-item-decision-tab-param="dispose">
               <i class="fas fa-truck"></i> Dispose - Government
             </button>
           </div>
@@ -70,6 +69,90 @@
 
         <p class="small text-muted mb-0">No rush &mdash; this item is saved as <strong>Pending</strong> in My Items. Decide now, or come back later.</p>
       </div>
+    </div>
+  </div>
+
+  <div class="detail-wrap" data-item-decision-target="wrap">
+    <div class="detail-inner">
+      <section class="detail-panel detail-panel-mercari" data-tab="mercari" data-item-decision-target="panel" hidden>
+        <div class="detail-head">
+          <div class="detail-title-row">
+            <span class="detail-chip detail-chip-mercari"><i class="fas fa-bag-shopping"></i></span>
+            <h3 class="detail-title">Sell on Mercari</h3>
+          </div>
+          <button type="button" class="detail-close" aria-label="Close this panel"
+                  data-action="item-decision#close">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="detail-body">
+          <%# <span class="detail-pill detail-pill-soon">Not designed yet</span> %>
+          <p>
+            This will show a suggested price range built from a comp search against recently
+            sold listings for similar items, plus tips on the photos that sell best and an
+            auto-drafted listing description you'll be able to edit before it posts.
+          </p>
+          <p class="detail-aside">
+            A shipping-size confirmation step is planned here too, so the listing goes out
+            with the right delivery option already selected.
+          </p>
+          <%# TODO: action UI (generate listing / book pickup) goes here %>
+        </div>
+      </section>
+
+      <section class="detail-panel detail-panel-jimoty" data-tab="jimoty" data-item-decision-target="panel" hidden>
+        <div class="detail-head">
+          <div class="detail-title-row">
+            <span class="detail-chip detail-chip-jimoty"><i class="fas fa-location-dot"></i></span>
+            <h3 class="detail-title">Pass it on via Jimoty</h3>
+          </div>
+          <button type="button" class="detail-close" aria-label="Close this panel"
+                  data-action="item-decision#close">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="detail-body">
+          <%# <span class="detail-pill detail-pill-free">Free &middot; first come, first served</span> %>
+          <% if @item.description.present? %>
+            <p><%= @item.description %></p>
+          <% else %>
+            <p class="text-muted">No description yet &mdash; <%= link_to "add one", edit_item_path(@item) %> so people know what they're picking up.</p>
+          <% end %>
+          <p class="detail-aside">
+            Every Jimoty listing in this app is treated as a free giveaway &mdash; no price or
+            negotiation fields, by design.
+          </p>
+          <%# TODO: action UI (generate listing / book pickup) goes here %>
+        </div>
+      </section>
+
+      <section class="detail-panel detail-panel-dispose" data-tab="dispose" data-item-decision-target="panel" hidden>
+        <div class="detail-head">
+          <div class="detail-title-row">
+            <span class="detail-chip detail-chip-dispose"><i class="fas fa-truck"></i></span>
+            <h3 class="detail-title">Dispose via Government</h3>
+          </div>
+          <button type="button" class="detail-close" aria-label="Close this panel"
+                  data-action="item-decision#close">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="detail-body">
+          <%# <span class="detail-pill detail-pill-soon">Not designed yet</span> %>
+          <p>
+            This will show an estimated recycling fee and collection fee for this waste
+            category, a rough pickup window for your municipality, and a way to book the
+            collection once the numbers are confirmed.
+          </p>
+          <p class="detail-aside">
+            <strong>Illustrative example, not a real calculation:</strong> refrigerators fall
+            under Japan's Home Appliance Recycling Law, where the recycling fee alone runs
+            roughly &yen;3,672&ndash;4,644 depending on the capacity tier &mdash; separate from
+            the municipal collection fee.
+          </p>
+          <%# TODO: action UI (generate listing / book pickup) goes here %>
+        </div>
+      </section>
     </div>
   </div>
 </div>

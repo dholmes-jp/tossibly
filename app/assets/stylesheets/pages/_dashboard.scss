@@ -1,0 +1,443 @@
+// Specific CSS for the /dashboard page (app/views/users/dashboard.html.erb).
+// Structural layout adapted from the dashboard mockup; all colours/type come
+// from the existing tokens in config/_colors.scss + the Figtree/Bootstrap stack.
+
+.dashboard {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 36px 30px 54px;
+  font-family: "Figtree", sans-serif;
+  color: $tossibly-black;
+
+  .dashboard-kicker {
+    margin: 0 0 4px;
+    font-size: 12px;
+    font-weight: 700;
+    color: rgba($tossibly-black, 0.6);
+  }
+
+  .dashboard-heading {
+    margin: 0 0 24px;
+    font-size: 30px;
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.6px;
+  }
+
+  // --- Hero "Scan an item" banner -------------------------------------
+  .dashboard-hero {
+    position: relative;
+    display: grid;
+    grid-template-columns: 64px 1fr auto;
+    gap: 18px;
+    align-items: center;
+    padding: 25px 28px;
+    border-radius: 18px;
+    overflow: hidden;
+    color: #fff;
+    background: linear-gradient(118deg, darken($primary, 16%) 0%, $primary 55%, lighten($primary, 6%) 100%);
+
+    > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset: -35% -10% auto auto;
+      width: 58%;
+      height: 170%;
+      pointer-events: none;
+      opacity: 0.7;
+      transform: rotate(-12deg);
+      filter: blur(2px);
+      background:
+        radial-gradient(circle at 35% 30%, rgba(#fff, 0.17) 0 6%, transparent 7%),
+        radial-gradient(circle at 62% 48%, rgba(#fff, 0.1) 0 8%, transparent 9%),
+        radial-gradient(circle at 48% 70%, rgba(#fff, 0.08) 0 10%, transparent 11%);
+    }
+  }
+
+  .dashboard-hero__icon {
+    width: 60px;
+    height: 60px;
+    display: grid;
+    place-items: center;
+    border-radius: 16px;
+    font-size: 24px;
+    color: #fff;
+    background: rgba(#fff, 0.18);
+    border: 1.4px solid rgba(#fff, 0.5);
+  }
+
+  .dashboard-hero__body {
+    strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    p {
+      margin: 0;
+      max-width: 630px;
+      font-size: 13px;
+      line-height: 1.5;
+      color: rgba(#fff, 0.9);
+    }
+  }
+
+  .dashboard-hero__cta {
+    justify-self: end;
+    white-space: nowrap;
+    padding: 12px 18px;
+    border-radius: 11px;
+    font-size: 14px;
+    font-weight: 800;
+    text-decoration: none;
+    color: $primary;
+    background: $tossibly-white;
+    box-shadow: 2px 2px 0 rgba($tossibly-black, 0.25);
+    transition: transform 0.1s, opacity 0.15s;
+
+    &:hover {
+      transform: translateY(-1px);
+      opacity: 0.95;
+      color: $primary;
+    }
+  }
+
+  // --- Section scaffolding ------------------------------------------
+  .dashboard-section {
+    margin-top: 34px;
+  }
+
+  .dashboard-section__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 13px;
+
+    h2 {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 800;
+    }
+  }
+
+  .dashboard-section__link {
+    font-size: 12px;
+    font-weight: 800;
+    text-decoration: none;
+    color: $secondary;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  // --- "Continue where you left off" cards --------------------------
+  .dashboard-items {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  .dashboard-card {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid rgba($tossibly-black, 0.12);
+    border-radius: 15px;
+  }
+
+  .dashboard-card__photo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 190px;
+    background: $light-gray;
+
+    img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    i {
+      font-size: 2rem;
+      color: rgba($tossibly-black, 0.25);
+    }
+  }
+
+  .dashboard-card__body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding: 14px;
+  }
+
+  .dashboard-card__name {
+    margin: 0 0 5px;
+    font-size: 16px;
+    font-weight: 800;
+  }
+
+  .dashboard-card__meta {
+    margin: 0;
+    min-height: 34px;
+    font-size: 12px;
+    line-height: 1.4;
+    color: rgba($tossibly-black, 0.6);
+  }
+
+  .dashboard-card__action {
+    margin-top: 12px;
+    padding: 9px;
+    border: 1.2px solid rgba($tossibly-black, 0.85);
+    border-radius: 9px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 800;
+    text-decoration: none;
+    color: $tossibly-black;
+    transition: background 0.15s, color 0.15s;
+
+    &:hover {
+      background: $tossibly-black;
+      color: $tossibly-white;
+    }
+  }
+
+  // Status badge — neutral by default, plus an attention-needed variant.
+  .dashboard-badge {
+    align-self: flex-start;
+    display: inline-block;
+    margin-bottom: 8px;
+    padding: 5px 9px;
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    background: rgba($primary, 0.12);
+    color: darken($primary, 10%);
+
+    &--attention {
+      background: rgba($orange, 0.18);
+      color: darken($orange, 18%);
+    }
+  }
+
+  // --- Empty state -------------------------------------------------
+  .dashboard-empty {
+    padding: 28px;
+    background: #fff;
+    border: 1px solid rgba($tossibly-black, 0.12);
+    border-radius: 15px;
+
+    p {
+      margin: 0;
+      color: rgba($tossibly-black, 0.6);
+    }
+  }
+
+  .dashboard-empty__cta {
+    display: inline-block;
+    margin-top: 14px;
+    padding: 12px 18px;
+    border-radius: 11px;
+    font-size: 14px;
+    font-weight: 800;
+    text-decoration: none;
+    color: #fff;
+    background: $primary;
+
+    &:hover {
+      color: #fff;
+      background: darken($primary, 6%);
+    }
+  }
+
+  // --- Collection schedule --------------------------------------------
+  .dashboard-schedule {
+    display: grid;
+    grid-template-columns: minmax(0, 1.55fr) minmax(260px, 0.75fr);
+    gap: 14px;
+  }
+
+  .dashboard-schedule__card {
+    padding: 18px;
+    background: #fff;
+    border: 1px solid rgba($tossibly-black, 0.12);
+    border-radius: 15px;
+  }
+
+  .calendar-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+    font-weight: 800;
+  }
+
+  .calendar-nav {
+    letter-spacing: 4px;
+    color: rgba($tossibly-black, 0.45);
+  }
+
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 3px;
+  }
+
+  .calendar-dow {
+    padding: 4px;
+    font-size: 10px;
+    font-weight: 800;
+    text-align: center;
+    color: rgba($tossibly-black, 0.5);
+  }
+
+  .calendar-day {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    min-height: 48px;
+    padding: 5px;
+    border-radius: 8px;
+    font-size: 11px;
+
+    &--today {
+      background: rgba($primary, 0.12);
+    }
+
+    &--muted {
+      color: rgba($tossibly-black, 0.3);
+    }
+  }
+
+  .calendar-num {
+    display: grid;
+    place-items: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    font-weight: 800;
+  }
+
+  .calendar-day--today .calendar-num {
+    background: $primary;
+    color: #fff;
+  }
+
+  .calendar-dots {
+    display: flex;
+    gap: 2px;
+  }
+
+  .calendar-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: $orange;
+
+    &--green { background: $primary; }
+    &--blue  { background: $secondary; }
+    &--dark  { background: darken($primary, 15%); }
+  }
+
+  .next-collection {
+    background: linear-gradient(155deg, #fff, rgba($primary, 0.06));
+    border-top: 4px solid $secondary;
+  }
+
+  .next-collection__label {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: $secondary;
+  }
+
+  .next-collection__when {
+    margin: 8px 0 4px;
+    font-size: 21px;
+    font-weight: 800;
+  }
+
+  .next-collection__detail {
+    margin: 0 0 12px;
+    font-size: 12px;
+    line-height: 1.5;
+    color: rgba($tossibly-black, 0.6);
+  }
+
+  .next-collection__row {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 11px 0;
+    font-size: 12px;
+    border-top: 1px solid rgba($tossibly-black, 0.15);
+  }
+
+  // --- Responsive: match the mockup's ~760px breakpoint -------------
+  @media (max-width: 760px) {
+    padding: 26px 16px 40px;
+
+    .dashboard-heading {
+      font-size: 27px;
+    }
+
+    .dashboard-hero {
+      grid-template-columns: 52px 1fr;
+      gap: 13px;
+      padding: 18px;
+    }
+
+    .dashboard-hero__icon {
+      width: 50px;
+      height: 50px;
+    }
+
+    .dashboard-hero__cta {
+      grid-column: 1 / -1;
+      justify-self: stretch;
+      width: 100%;
+      text-align: center;
+    }
+
+    .dashboard-items {
+      grid-template-columns: 1fr;
+    }
+
+    .dashboard-card {
+      flex-direction: row;
+      min-height: 158px;
+    }
+
+    .dashboard-card__photo {
+      flex-shrink: 0;
+      width: 128px;
+      height: auto;
+    }
+
+    .dashboard-card__meta {
+      min-height: 0;
+    }
+
+    .dashboard-schedule {
+      grid-template-columns: 1fr;
+    }
+
+    // Calendar is decorative on narrow viewports; keep "Next collection".
+    .calendar {
+      display: none;
+    }
+  }
+}

@@ -1,0 +1,60 @@
+<%#
+  Static placeholder — there is no collection-schedule model yet.
+  The calendar grid is generated from today's date for layout only; the event
+  dots and the entire "Next collection" card are hardcoded sample content.
+  When a real schedule source exists, replace the innards of this partial.
+%>
+<section class="dashboard-section">
+  <div class="dashboard-section__head">
+    <h2>Your collection schedule</h2>
+    <%= link_to "Full schedule →", dashboard_path, class: "dashboard-section__link" %>
+  </div>
+
+  <div class="dashboard-schedule">
+    <%
+      today = Date.current
+      grid_start = today.beginning_of_month.beginning_of_week(:sunday)
+      grid_end   = today.end_of_month.end_of_week(:sunday)
+      # Placeholder events: day-of-month => dot-variant class (blank = default colour).
+      sample_events = {
+        4 => "", 6 => "calendar-dot--green", 8 => "calendar-dot--blue",
+        11 => "", 13 => "calendar-dot--green", 15 => "calendar-dot--blue",
+        18 => "", 20 => "calendar-dot--green", 22 => "calendar-dot--dark",
+        25 => "", 27 => "calendar-dot--green"
+      }
+    %>
+
+    <div class="dashboard-schedule__card calendar">
+      <div class="calendar-top">
+        <span><%= today.strftime("%B %Y") %></span>
+        <span class="calendar-nav" aria-hidden="true">&lsaquo;&nbsp;&nbsp;&rsaquo;</span>
+      </div>
+      <div class="calendar-grid">
+        <% %w[SUN MON TUE WED THU FRI SAT].each do |dow| %>
+          <div class="calendar-dow"><%= dow %></div>
+        <% end %>
+        <% (grid_start..grid_end).each do |day| %>
+          <% in_month = day.month == today.month %>
+          <div class="calendar-day<%= " calendar-day--today" if day == today %><%= " calendar-day--muted" unless in_month %>">
+            <span class="calendar-num"><%= day.day %></span>
+            <% if in_month && sample_events.key?(day.day) %>
+              <span class="calendar-dots"><i class="calendar-dot <%= sample_events[day.day] %>"></i></span>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <aside class="dashboard-schedule__card next-collection">
+      <div class="next-collection__label">Next collection</div>
+      <p class="next-collection__when">Tomorrow</p>
+      <p class="next-collection__detail">
+        <strong>Combustible</strong> &middot; by 8:00 AM<br>
+        Area B &middot; Meguro-ku
+      </p>
+      <div class="next-collection__row"><strong>Recyclables</strong><span>Tue</span></div>
+      <div class="next-collection__row"><strong>Used paper</strong><span>Wed</span></div>
+      <div class="next-collection__row"><strong>Non-combustible</strong><span>Sat</span></div>
+    </aside>
+  </div>
+</section>
