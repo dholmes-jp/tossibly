@@ -142,6 +142,9 @@
 // Specific CSS for the item decision (show) page
 
 .items-show {
+  padding-top: 2rem;
+  padding-bottom: 4rem;
+
   .section-head {
     display: flex;
     align-items: center;
@@ -179,6 +182,137 @@
     object-fit: cover;
     max-height: 260px;
   }
+
+  // Full-width detail panel that expands below .decision-card when an option
+  // tab is selected. Driven by item_decision_controller.js.
+  .detail-wrap {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.38s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-top: 1rem;
+    scroll-margin-top: 5rem;
+
+    &.is-open {
+      grid-template-rows: 1fr;
+    }
+  }
+
+  .detail-inner {
+    overflow: hidden;
+    min-height: 0;
+  }
+
+  .detail-panel {
+    background: white;
+    border-radius: 14px;
+    border: 1px solid rgba($tossibly-black, 0.08);
+    border-top: 4px solid rgba($tossibly-black, 0.08);
+    padding: 24px;
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: opacity 0.28s ease 0.06s, transform 0.28s ease 0.06s;
+  }
+
+  .detail-wrap.is-open .detail-panel {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .detail-panel-mercari { border-top-color: $red; }
+  .detail-panel-jimoty { border-top-color: $orange; }
+  .detail-panel-dispose { border-top-color: $navy; }
+
+  .detail-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .detail-title-row {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+  }
+
+  .detail-chip {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 1.1rem;
+  }
+
+  .detail-chip-mercari { background: $red; }
+  .detail-chip-jimoty { background: $orange; }
+  .detail-chip-dispose { background: $navy; }
+
+  .detail-title {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: $tossibly-black;
+  }
+
+  .detail-close {
+    appearance: none;
+    background: none;
+    border: none;
+    line-height: 1;
+    font-size: 1rem;
+    padding: 0.35rem;
+    border-radius: 7px;
+    color: $gray;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+
+    &:hover {
+      background: rgba($tossibly-black, 0.05);
+      color: $tossibly-black;
+    }
+  }
+
+  .detail-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 0.3rem 0.65rem;
+    border-radius: 999px;
+    margin-bottom: 0.9rem;
+  }
+
+  .detail-pill-soon { background: $light-gray; color: $gray; }
+  .detail-pill-free { background: rgba($primary, 0.12); color: $primary; }
+
+  .detail-body {
+    p {
+      font-size: 0.95rem;
+      line-height: 1.65;
+      color: $tossibly-black;
+      max-width: 62ch;
+      margin: 0 0 0.9rem;
+    }
+
+    .detail-aside {
+      font-size: 0.83rem;
+      color: $gray;
+      border-top: 1px dashed rgba($tossibly-black, 0.15);
+      padding-top: 0.8rem;
+      margin-top: 1rem;
+      margin-bottom: 0;
+
+      strong { color: $tossibly-black; }
+    }
+  }
 }
 
 .action-path-grid {
@@ -193,6 +327,22 @@
   padding: 1rem;
   display: flex;
   flex-direction: column;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+// Highlight state when this option's tab is open, reusing the accent colour
+// that already drives its .action-path-icon.
+.action-path[data-tab="mercari"].is-active {
+  border-color: $red;
+  box-shadow: 0 0 0 3px rgba($red, 0.15);
+}
+.action-path[data-tab="jimoty"].is-active {
+  border-color: $orange;
+  box-shadow: 0 0 0 3px rgba($orange, 0.15);
+}
+.action-path[data-tab="dispose"].is-active {
+  border-color: $navy;
+  box-shadow: 0 0 0 3px rgba($navy, 0.15);
 }
 
 .action-path-icon {
@@ -236,3 +386,12 @@
 .btn-mercari { background: $red; color: #fff; }
 .btn-jimoty { background: $orange; color: #fff; }
 .btn-bulky { background: $navy; color: #fff; }
+
+@media (prefers-reduced-motion: reduce) {
+  .items-show {
+    .detail-wrap,
+    .detail-panel { transition: none; }
+  }
+
+  .action-path { transition: none; }
+}
