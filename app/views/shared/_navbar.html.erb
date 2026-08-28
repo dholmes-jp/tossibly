@@ -7,7 +7,7 @@
      <% end %>
 >
   <div class="container-fluid">
-    <%= link_to root_path, class: "navbar-brand" do %>
+    <%= link_to root_path, class: "navbar-brand", data: { curtain: true } do %>
       <%= image_tag "tossibly-logo.png" %>
     <% end %>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -17,25 +17,25 @@
       <ul class="navbar-nav me-auto gap-2">
     <% if user_signed_in? %>
       <li>
-        <%= link_to dashboard_path, class: "nav-item #{'active' if current_page?(dashboard_path)}" do %>
+        <%= link_to dashboard_path, class: "nav-item #{'active' if current_page?(dashboard_path)}", data: { curtain: true, curtain_color: "#1E4B2D" } do %>
           <%= image_tag "icon_house.svg", alt: "house-icon" %>
           <span>Dashboard</span>
         <% end %>
       </li>
       <li>
-        <%= link_to items_path, class: "nav-item #{'active' if controller_name == 'items' && action_name != 'new'}" do %>
+        <%= link_to items_path, class: "nav-item #{'active' if controller_name == 'items' && action_name != 'new'}", data: { curtain: true, curtain_color: "#1E4B2D" } do %>
           <%= image_tag "icon_box.svg", alt: "box-icon" %>
           <span>My Items</span>
         <% end %>
       </li>
       <li>
-        <%= link_to new_item_path, class: "nav-item #{'active' if current_page?(new_item_path)}" do %>
+        <%= link_to new_item_path, class: "nav-item #{'active' if current_page?(new_item_path)}", data: { curtain: true, curtain_color: "#1E4B2D" } do %>
           <%= image_tag "icon_camera.svg", alt: "camera-icon" %>
           <span>Scan</span>
         <% end %>
       </li>
       <li>
-        <%= link_to dashboard_path, class: "nav-item" do %>
+        <%= link_to dashboard_path, class: "nav-item", data: { curtain: true, curtain_color: "#1E4B2D" } do %>
           <%= image_tag "icon_calendar.svg", alt: "calendar-icon" %>
           <span>Schedule</span>
         <% end %>

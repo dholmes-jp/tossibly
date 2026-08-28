@@ -1,216 +1,181 @@
-// Items index — app/views/items/index.html.erb
-// Palette from the "My Items" mockup. Worth moving into config/_colors.scss once the team agrees on it.
-$forest: #1E4B2D;   // page background
-$mint:   #B8D9CC;   // active chip fill
-$cream:  #F4F1E2;   // cards, outlines, text on green
-$gold:   #f7c071;   // title + scan link
-$leaf:   #2C6A3E;   // meta text on cream cards
-$ink:    #1F261F;   // card text
-
-// ---------------------------------------------------------------------------
-// Page
-// ---------------------------------------------------------------------------
+// app/assets/stylesheets/components/_items.scss
+// My items index: header, filter chips, item cards, empty state.
+// Tokens from config/_colors.scss ($forest, $leaf, $mint, $cream, $sun, $ink,
+// $tossibly-white) and config/_fonts.scss ($headers-font, $body-font).
+//
+// Type scale (same as dashboard): h1 32 · card title 22 · body 15 · chips 14 · pills 12
 
 .items-page {
-  position: relative;
-  overflow: hidden;
-  background: white;
-  min-height: calc(100vh - 80px);
-  color: $cream;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 24px 30px 64px;
+  font-family: $body-font;
+  color: $ink;
 
-  &__leaves {
-    position: absolute;
-    left: -20px;
-    bottom: -10px;
-    width: 180px;
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  &__inner {
-    position: relative;
-    z-index: 1;
-    max-width: 1120px;
-  }
-  background: $forest;
-  min-height: calc(100vh - 80px);
-  color: $cream;
-
-  &__inner {
-    max-width: 1120px;
-  }
-
-  &__header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-  }
-
-  &__title {
-    display: flex;
-    align-items: center;
-    gap: .75rem;
-    margin: 0;
-    font-family: $headers-font;
-    font-size: 3rem;
-    font-weight: 800;
-    letter-spacing: .02em;
-    text-transform: uppercase;
-    color: $gold;
-
-    i {
-      font-size: 1.9rem;
-      color: $cream;
-    }
-  }
-
-  &__scan {
-    color: $gold;
-    font-size: 1.1rem;
-    font-weight: 600;
-    text-decoration: none;
-    white-space: nowrap;
-
-    i {
-      margin-left: .25rem;
-      transition: transform .15s ease;
-    }
-
-    &:hover,
-    &:focus-visible {
-      color: $gold;
-      text-decoration: underline;
-
-      i { transform: translateX(3px); }
-    }
-  }
-
-  &__empty {
-    padding: 4rem 1rem;
-    text-align: center;
-    color: $cream;
-    border: 1px dashed rgba($cream, .5);
-    border-radius: 12px;
-
-    p {
-      margin-bottom: .75rem;
-      font-size: 1.1rem;
-    }
-  }
+  a { text-decoration: none; }
 }
 
-// ---------------------------------------------------------------------------
-// Filter chips
-// ---------------------------------------------------------------------------
-
-.chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: .5rem;
-  margin-bottom: .75rem;
-
-  &--platforms { margin-bottom: 1.5rem; }
-}
-
-.chip {
-  padding: .45rem 1.1rem;
-  border: 1px solid rgba($cream, .8);
-  border-radius: 999px;
-  background: transparent;
-  color: $cream;
-  font-size: .95rem;
-  font-weight: 500;
-  text-decoration: none;
-  transition: background .15s ease;
-
-  &:hover {
-    background: rgba($cream, .12);
-    color: $cream;
-  }
-
-  &:focus-visible {
-    outline: 2px solid $gold;
-    outline-offset: 2px;
-  }
-
-  &--active,
-  &--active:hover {
-    background: $mint;
-    border-color: $mint;
-    color: $forest;
-    font-weight: 600;
-  }
-}
-
-// ---------------------------------------------------------------------------
-// Item cards
-// ---------------------------------------------------------------------------
-
-.item-list {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.item-card {
+// ---------- Header ----------
+.items-header {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
-  padding: 1rem;
-  background: $cream;
-  border: 1px solid rgba($ink, .12);
-  border-radius: 12px;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+
+  h1 {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin: 0;
+    font-family: $headers-font;
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: $forest;
+  }
+}
+
+.items-count {
+  font-family: $body-font;
+  font-size: 15px;
+  font-weight: 500;
+  color: rgba($ink, 0.6);
+}
+
+// The page's one button
+.items-scan {
+  display: inline-block;
+  padding: 12px 24px;
+  border-radius: 999px;
+  background: $sun;
+  color: $forest;
+  font-size: 15px;
+  font-weight: 800;
+  white-space: nowrap;
+  transition: background 0.15s;
+
+  &:hover {
+    background: $mint;
+    color: $forest;
+  }
+}
+
+// ---------- Filter chips ----------
+.items-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 10px;
+
+  &--platforms { margin-bottom: 28px; }
+}
+
+.items-chip {
+  display: inline-block;
+  padding: 9px 18px;
+  border: 1.5px solid $forest;
+  border-radius: 999px;
+  background: transparent;
+  color: $forest;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.2;
+  transition: background 0.15s, color 0.15s;
+
+  &:hover {
+    background: rgba($forest, 0.08);
+    color: $forest;
+  }
+
+  // Status row active: solid forest
+  &--active,
+  &--active:hover {
+    background: $forest;
+    color: $cream;
+  }
+}
+
+// Platform row active: mint, so the two rows read differently
+.items-chips--platforms .items-chip--active,
+.items-chips--platforms .items-chip--active:hover {
+  background: $mint;
+  border-color: $mint;
+  color: $forest;
+}
+
+// ---------- Item cards ----------
+.items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.items-card {
+  position: relative;            // containing block for the stretched title link
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 18px;
+  border-radius: 24px;
+  background: $tossibly-white;
   color: $ink;
-  text-decoration: none;
-  transition: box-shadow .15s ease, transform .15s ease;
+  transition: transform 0.15s, box-shadow 0.15s;
 
   &:hover {
     color: $ink;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, .25);
     transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba($forest, 0.10);
   }
 
-  &:focus-visible {
-    outline: 2px solid $gold;
-    outline-offset: 2px;
-  }
+  &__photo {
+    flex: 0 0 168px;
+    aspect-ratio: 4 / 3;
+    display: grid;
+    place-items: center;
+    border-radius: 16px;
+    overflow: hidden;
+    background: repeating-linear-gradient(
+      -45deg,
+      rgba($mint, 0.85) 0 12px,
+      $cream 12px 24px
+    );
+    color: rgba($forest, 0.35);
+    font-size: 28px;
 
-  &__img {
-    flex-shrink: 0;
-    width: 120px;
-    height: 120px;
-    object-fit: cover;
-    border-radius: 8px;
-    border: 1px solid rgba($ink, .2);
-    background: rgba($ink, .05);
-  }
-
-  &__img--empty {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: rgba($ink, .3);
-    font-size: 2rem;
+    img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
   }
 
   &__body {
-    flex: 1;
+    flex: 1 1 auto;
     min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
   }
 
   &__title {
-    margin: 0 0 .25rem;
+    margin: 0;
     font-family: $headers-font;
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: $ink;
+    font-size: 22px;
+    font-weight: 800;
+    line-height: 1.15;
+    color: $forest;
+
+    a { color: inherit; }
   }
 
+  // Two lines max, then an ellipsis
   &__desc {
-    margin: 0 0 .5rem;
-    color: rgba($ink, .8);
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.5;
+    color: rgba($ink, 0.7);
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
@@ -218,47 +183,126 @@ $ink:    #1F261F;   // card text
   }
 
   &__meta {
-    margin: 0;
-    color: $leaf;
-    font-size: .95rem;
-    font-weight: 600;
-
-    span + span::before {
-      content: "•";
-      margin: 0 .5rem;
-    }
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin-top: 4px;
+    font-size: 13px;
+    color: rgba($ink, 0.6);
   }
 
   &__chevron {
-    flex-shrink: 0;
-    margin-right: .5rem;
-    font-size: 1.1rem;
-    color: $ink;
+    flex: 0 0 auto;
+    color: rgba($forest, 0.5);
+    font-size: 18px;
   }
 }
 
-// ---------------------------------------------------------------------------
-// Small screens
-// ---------------------------------------------------------------------------
+// Delete button, next to the condition pill. z-index lifts it above the
+// stretched title link so clicking it doesn't open the item.
+.items-delete-form {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  margin: 0;
+}
 
-@media (max-width: 575.98px) {
-  .items-page__header {
+.items-delete {
+  display: grid;
+  place-items: center;
+  width: 26px;          // was 34px
+  height: 26px;         // was 34px
+  padding: 0;
+  border: 1.5px solid rgba($forest, 0.45);
+  border-radius: 9px;   // was 12px, scaled to match
+  background: transparent;
+  color: rgba($forest, 0.7);
+  font-size: 11px;      // was 14px
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+
+  &:hover,
+  &:focus-visible {
+    border-color: $forest;
+    background: $forest;
+    color: $cream;
+  }
+}
+
+// Condition pill: mint = working, sun = not working
+.items-pill {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: $mint;
+  color: $forest;
+  font-size: 12px;
+  font-weight: 700;
+
+  &--warn { background: $sun; }
+}
+
+// ---------- Empty state ----------
+.items-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 56px 24px;
+  border-radius: 24px;
+  background: $tossibly-white;
+  text-align: center;
+
+  h2 {
+    margin: 0;
+    font-family: $headers-font;
+    font-size: 24px;
+    font-weight: 800;
+    color: $forest;
+  }
+
+  p {
+    margin: 0 0 12px;
+    font-size: 15px;
+    color: rgba($ink, 0.7);
+  }
+}
+
+// ---------- Responsive ----------
+@media (max-width: 640px) {
+  .items-page { padding: 20px 16px 48px; }
+
+  .items-header { flex-wrap: wrap; }
+
+  .items-scan {
+    width: 100%;
+    text-align: center;
+  }
+
+  // Chips scroll sideways in one line per row
+  .items-chips {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    &::-webkit-scrollbar { display: none; }
+  }
+
+  .items-chip { flex: 0 0 auto; }
+
+  // Cards stack: photo on top
+  .items-card {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
+    gap: 14px;
+
+    &__photo {
+      flex-basis: auto;
+      width: 100%;
+    }
+
+    &__chevron { display: none; }
   }
-
-  .items-page__title { font-size: 2.2rem; }
-  .item-card { gap: 1rem; }
-  .item-card__img { width: 84px; height: 84px; }
-  .item-card__title { font-size: 1.2rem; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .chip,
-  .item-card,
-  .items-page__scan i {
-    transition: none;
-  }
-
-  .item-card:hover { transform: none; }
 }
