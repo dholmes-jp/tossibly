@@ -74,7 +74,7 @@ class ItemsController < ApplicationController
   def item_params
     params.require(:item).permit(
       :title, :category, :platform, :description, :description_ja, :title_ja, :age, :functional,
-      :brand, :model_number, :suggested_price, :disposal_fee, :jimoty_category, :condition_guess,
+      :brand, :model_number, :suggested_price, :confirmed_price, :disposal_fee, :jimoty_category, :condition_guess,
       photos: [], follow_up_answers: [], follow_up_question_texts: []
     )
   end
