@@ -8,6 +8,6 @@ class Api::V1::ItemsController < ApplicationController
     # @item = Item.find(params[:id])
     @item = User.first.items.find(params[:id])
     # Putting the most recently created items first
-    render json: @item
+    render json: @item.as_json.merge(photo_urls: @item.photo_urls)
   end
 end

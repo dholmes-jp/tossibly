@@ -11,7 +11,13 @@
     "scripting"
   ],
   "action": {
-    "default_popup": "popup.html"
+    "default_popup": "popup.html",
+    "default_icon": {
+    "16": "images/icon-tossibly.png",
+    "32": "images/icon-tossibly.png",
+    "48": "images/icon-tossibly.png",
+    "128": "images/icon-tossibly.png"
+    }
   },
   "content_scripts": [
     {
