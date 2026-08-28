@@ -53,6 +53,7 @@ $home-radius: 32px;
     display: flex;
     gap: 10px;
     margin-bottom: clamp(16px, 3vw, 28px);
+    justify-content: space-between;
   }
 
   &__title {
@@ -93,7 +94,12 @@ $home-radius: 32px;
     gap: 12px;
   }
 }
-
+/* ayaka added */
+.l-wrap {
+  gap: 10px;
+  display: flex;
+}
+a.home-chip,
 .home-chip {
   color: $mint;
   border: 1.5px solid $mint;
@@ -101,7 +107,18 @@ $home-radius: 32px;
   padding: 5px 14px;
   font-size: 13px;
 }
-
+a.home-chip {
+ color: $forest;
+ font-weight: bolder;
+}
+a.home-chip:first-of-type {
+  background-color: #F6D960;
+  border-color: #F6D960;
+}
+a.home-chip:last-of-type {
+  background-color: $mint;
+  border-color: $mint;
+}
 // ---------- Ticker ----------
 .home-ticker {
   overflow: hidden;
