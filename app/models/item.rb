@@ -6,4 +6,8 @@ class Item < ApplicationRecord
   PLATFORMS = %w[mercari jimoty dispose].freeze
 
   validates :title, presence: true
+
+  def photo_urls
+    photos.map { |photo| photo.blob.url }
+  end
 end
