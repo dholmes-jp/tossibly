@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" data-controller="submit-overlay">
   <h2 class="mb-3"><i class="fas fa-camera"></i> Scan an item</h2>
 
   <%= form_with model: @item, url: items_path, method: :post, multipart: true, data: { controller: "photo-analyzer" } do |f| %>
@@ -15,7 +15,7 @@
 
     <div class="photo-filmstrip" data-photo-analyzer-target="filmstrip"></div>
 
-    <p class="photo-picker-helper">The Add Photos button stays put — your photos scroll in the strip above.</p>
+    <p class="photo-picker-helper">Take or upload a photo or two of your item to get started.</p>
 
     <%= f.file_field :photos, multiple: true, accept: "image/*", capture: "environment",
           id: "item_photos", class: "visually-hidden",
@@ -28,7 +28,7 @@
 
     <div class="d-none text-center small text-muted mt-3" data-photo-analyzer-target="loading">
       <div class="spinner-border spinner-border-sm text-success me-2" role="status"></div>
-      Identifying your item with AI — this can take a few seconds…
+      Tossibly is taking a look at your item — this can take a few seconds…
     </div>
   </div>
 
@@ -61,4 +61,10 @@
     <%# filled in by the identify turbo-stream response once photos are chosen %>
   </div>
   <% end %>
+
+  <div class="submit-overlay d-none" data-submit-overlay-target="overlay">
+    <div class="spinner-border text-light" role="status"></div>
+    <p class="submit-overlay-headline">Tossibly is checking the best way forward for this item&hellip;</p>
+    <p class="submit-overlay-subline">This can take a few seconds</p>
+  </div>
 </div>
