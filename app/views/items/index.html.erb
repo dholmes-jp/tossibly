@@ -1,76 +1,106 @@
-<div class="items-page">
-<%= image_tag "tossibly-leaves.png", class: "items-page__leaves", alt: "" %>
-<div class="container items-page__inner py-4">
+<%# app/views/items/index.html.erb — My items %>
+<%# Styles: app/assets/stylesheets/components/_items.scss %>
 
-  <div class="items-page__header">
-    <h1 class="items-page__title">
-      <i class="fa-solid fa-leaf"></i> My Items
-    </h1>
-    <%= link_to new_item_path, class: "items-page__scan" do %>
-      Scan an item <i class="fa-solid fa-arrow-right"></i>
-    <% end %>
+<%
+  filtering   = params[:status].present? || params[:platform].present?
+  total       = current_user.items.count
+  shown       = @items.size
+  count_label = (filtering && shown != total) ? "#{shown} of #{total} items" : pluralize(total, "item")
+%>
+
+<main class="items-page">
+
+  <%# ---------- Header ---------- %>
+  <div class="items-header">
+    <h1>My items <span class="items-count"><%= count_label %></span></h1>
+    <%= link_to "Scan an item", new_item_path, class: "items-scan" %>
   </div>
 
-  <div class="chips">
+  <%# ---------- Status filter (same links/params as before) ---------- %>
+  <div class="items-chips">
     <%= link_to "All",
           items_path(platform: params[:platform]),
-          class: "chip #{'chip--active' if params[:status].blank?}" %>
+          class: "items-chip #{'items-chip--active' if params[:status].blank?}" %>
     <% Item::STATUSES.each do |status| %>
-      <%= link_to status.titleize,
+      <%= link_to status.humanize,
             items_path(status: status, platform: params[:platform]),
-            class: "chip #{'chip--active' if params[:status] == status}" %>
+            class: "items-chip #{'items-chip--active' if params[:status] == status}" %>
     <% end %>
   </div>
 
-  <div class="chips chips--platforms">
+  <%# ---------- Platform filter ---------- %>
+  <div class="items-chips items-chips--platforms">
     <%= link_to "All platforms",
           items_path(status: params[:status]),
-          class: "chip #{'chip--active' if params[:platform].blank?}" %>
+          class: "items-chip #{'items-chip--active' if params[:platform].blank?}" %>
     <% Item::PLATFORMS.each do |platform| %>
-      <%= link_to platform.titleize,
+      <%= link_to platform.humanize,
             items_path(status: params[:status], platform: platform),
-            class: "chip #{'chip--active' if params[:platform] == platform}" %>
+            class: "items-chip #{'items-chip--active' if params[:platform] == platform}" %>
     <% end %>
   </div>
 
+  <%# ---------- List ---------- %>
   <% if @items.any? %>
-    <div class="item-list">
+    <div class="items-list">
       <% @items.each do |item| %>
-        <%= link_to item_path(item), class: "item-card" do %>
+        <article class="items-card">
 
-          <% if item.photos.attached? %>
-            <%= image_tag item.photos.first, class: "item-card__img", alt: item.title %>
-          <% elsif item_image(item) %>
-            <%= image_tag item_image(item), class: "item-card__img", alt: item.title %>
-          <% else %>
-            <div class="item-card__img item-card__img--empty">
-              <i class="fa-solid fa-box-open"></i>
-            </div>
-          <% end %>
+          <div class="items-card__photo">
+            <% if item.photos.attached? %>
+              <%= image_tag item.photos.first, alt: item.title %>
+            <% elsif item_image(item) %>
+              <%= image_tag item_image(item), alt: item.title %>
+            <% else %>
+              <i class="fa-solid fa-box-open" aria-hidden="true"></i>
+            <% end %>
+          </div>
 
-          <div class="item-card__body">
-            <h2 class="item-card__title"><%= item.title %></h2>
-            <p class="item-card__desc"><%= item.description %></p>
-            <p class="item-card__meta">
+          <div class="items-card__body">
+            <%# The title link is stretched to cover the whole card %>
+            <h2 class="items-card__title">
+              <%= link_to item.title, item_path(item), class: "stretched-link" %>
+            </h2>
+            <p class="items-card__desc"><%= item.description %></p>
+            <div class="items-card__meta">
+              <span class="items-pill <%= 'items-pill--warn' unless item.functional %>">
+                <%= item.functional ? "Working" : "Not working" %>
+              </span>
+
+              <%# Delete: sits above the stretched link so it doesn't open the item %>
+              <%= button_to item_path(item),
+                    method: :delete,
+                    class: "items-delete",
+                    form_class: "items-delete-form",
+                    form: { data: { turbo_confirm: "Delete “#{item.title}”? This can't be undone." } },
+                    "aria-label": "Delete #{item.title}",
+                    title: "Delete" do %>
+                <i class="fa-regular fa-trash-can" aria-hidden="true"></i>
+              <% end %>
+
               <% if item.age.present? %>
                 <span><%= item.age.to_s.include?("year") ? item.age : pluralize(item.age, "year") %> old</span>
               <% end %>
-              <span><%= item.functional ? "Working" : "Not working" %></span>
-            </p>
+            </div>
           </div>
 
-          <i class="fa-solid fa-chevron-right item-card__chevron"></i>
-        <% end %>
+          <i class="fa-solid fa-chevron-right items-card__chevron" aria-hidden="true"></i>
+        </article>
       <% end %>
     </div>
-  <% else %>
-    <div class="items-page__empty">
-      <p>No items match these filters yet.</p>
-      <%= link_to new_item_path, class: "items-page__scan" do %>
-        Scan an item <i class="fa-solid fa-arrow-right"></i>
-      <% end %>
-    </div>
-   <% end %>
 
-</div>
-</div>
+  <%# ---------- Empty states ---------- %>
+  <% else %>
+    <div class="items-empty">
+      <% if filtering %>
+        <h2>No items match this filter</h2>
+        <p>Try a different filter — or scan something new.</p>
+      <% else %>
+        <h2>Nothing scanned yet</h2>
+        <p>Scan your first item and Tossibly will take it from there.</p>
+      <% end %>
+      <%= link_to "Scan an item", new_item_path, class: "items-scan" %>
+    </div>
+  <% end %>
+
+</main>

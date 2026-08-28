@@ -17,25 +17,33 @@ $home-radius: 32px;
 }
 
 // ---------- Buttons ----------
+// ---------- Buttons ----------
+// Written as ".home .home-btn--x" so they beat the ".home a" colour rule.
 .home-btn {
   display: inline-block;
   font-family: $body-font;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 16px;
   padding: 15px 28px;
   border-radius: 999px;
   transition: background .2s, color .2s, border-color .2s;
+}
 
-  &--sun {
-    background: $sun;
+.home .home-btn--sun {
+  background: $sun;
+  color: $forest;
+
+  &:hover { background: $mint; color: $forest; }
+}
+
+.home .home-btn--outline {
+  border: 1.5px solid $cream;
+  color: $cream;
+
+  &:hover {
+    background: $cream;
+    border-color: $cream;
     color: $forest;
-    &:hover { background: $mint; color: $forest; }
-  }
-
-  &--outline {
-    border: 1.5px solid $mint;
-    color: $mint;
-    &:hover { border-color: $sun; color: $sun; }
   }
 }
 
@@ -45,14 +53,15 @@ $home-radius: 32px;
   background: $forest;
   border-radius: $home-radius;
   overflow: hidden;
-  padding: clamp(24px, 5vw, 64px) clamp(20px, 4vw, 56px) clamp(32px, 5vw, 64px);
+  padding: clamp(16px, 3vw, 36px) clamp(20px, 4vw, 56px) clamp(32px, 5vw, 64px);
   display: flex;
   flex-direction: column;
 
   &__chips {
     display: flex;
     gap: 10px;
-    margin-bottom: clamp(16px, 3vw, 28px);
+    margin-bottom: clamp(28px, 5vw, 52px);
+//     margin-bottom: clamp(16px, 3vw, 28px);
     justify-content: space-between;
   }
 
@@ -80,11 +89,11 @@ $home-radius: 32px;
     margin-top: clamp(28px, 5vw, 56px);
   }
 
-  &__lead {
+   &__lead {
     margin: 0;
     max-width: 46ch;
     color: $mint;
-    font-size: clamp(16px, 1.4vw, 19px);
+    font-size: clamp(14px, 1.1vw, 16px);
     line-height: 1.55;
   }
 
