@@ -1,8 +1,11 @@
+// Replace the following URL to Heroku URL
+const BASE_URL = "http://localhost:3000";
+
 function listenClick() {
   const button = document.getElementById("load-items");
 
   button.addEventListener("click", async () => {
-    const url = "http://localhost:3000/api/v1/items";
+    const url = `${BASE_URL}/api/v1/items`;
     const lists = document.querySelector(".extension-lists");
 
     const loadData = async () => {
@@ -16,6 +19,7 @@ function listenClick() {
           "beforeend",
           `<div data-id="${item.id}" class="item-btn">
             ${item.title}
+            <button class="autofill-btn">Auto-fill</button>
           </div>`
         );
       });
@@ -23,12 +27,10 @@ function listenClick() {
 
     const fetchOneItem = async (target) => {
       const response = await fetch(
-        `http://localhost:3000/api/v1/items/${target.dataset.id}`
+        `${BASE_URL}/api/v1/items/${target.dataset.id}`
       );
 
       const item_data = await response.json();
-
-      console.log("Selected item:", item_data);
 
       // Get the current tab
       const [tab] = await chrome.tabs.query({
@@ -40,7 +42,8 @@ function listenClick() {
       chrome.tabs.sendMessage(tab.id, {
         type: "FILL_FORM",
         title: item_data.title_ja,
-        description: item_data.description_ja
+        description: item_data.description_ja,
+        photo_urls: item_data.photo_urls
       });
     };
 

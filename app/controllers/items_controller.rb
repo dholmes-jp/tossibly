@@ -36,7 +36,7 @@ class ItemsController < ApplicationController
 
     @item = current_user.items.new(item_params.except(:follow_up_answers, :follow_up_question_texts,
                                                       :condition_guess).merge(generated.slice(*Item.column_names.map(&:to_sym))))
-    @item.photos.attach(item_params[:photos]) if item_params[:photos]
+    # @item.photos.attach(item_params[:photos]) if item_params[:photos]
 
     if @item.save
       redirect_to @item, notice: "Item created."
