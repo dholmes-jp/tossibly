@@ -1,26 +1,31 @@
 <%# app/views/pages/home.html.erb — public landing page %>
 <%# Styles live in app/assets/stylesheets/pages/_home.scss %>
-
 <% cta_text, cta_path =
      user_signed_in? ? ["Add an item", new_item_path]
                      : ["Try Tossibly — it's free", new_user_registration_path] %>
-
 <div class="home">
-
   <%# ---------- HERO ---------- %>
   <section class="home-hero">
     <div class="home-hero__chips">
-      <span class="home-chip">売る</span>
-      <span class="home-chip">譲る</span>
-      <span class="home-chip">捨てる</span>
+      <div class="r-wrap">
+        <span class="home-chip">売る</span>
+        <span class="home-chip">譲る</span>
+        <span class="home-chip">捨てる</span>
+      </div>
+      <div class="l-wrap">
+        <%= link_to new_user_registration_path, class: "home-chip" do %>
+          Sign up
+        <% end %>
+        <%= link_to new_user_session_path, class: "home-chip" do %>
+          Sign in
+        <% end %>
+      </div>
     </div>
-
     <h1 class="home-hero__title">
       <span>Snap it.</span>
       <span>Price it.</span>
       <span>Let it go.</span>
     </h1>
-
     <div class="home-hero__bottom">
       <p class="home-hero__lead">
         Before you toss it, see what's possible.
@@ -31,7 +36,6 @@
       </div>
     </div>
   </section>
-
   <%# ---------- TICKER (delete this block if you don't want it) ---------- %>
   <div class="home-ticker" aria-hidden="true">
     <div class="home-ticker__track">
@@ -44,14 +48,12 @@
       <% end %>
     </div>
   </div>
-
   <%# ---------- FEATURES ---------- %>
   <section id="features" class="home-features">
     <div class="home-features__header">
       <h2 class="home-features__title">No Japanese needed.</h2>
       <p class="home-features__sub">Four things Tossibly does for you</p>
     </div>
-
     <div class="home-features__grid">
       <div class="home-card home-card--mint">
         <div class="home-card__num">01</div>
@@ -60,7 +62,6 @@
           <p>Take one photo. Tossibly identifies the item and estimates what it's worth on the resale market.</p>
         </div>
       </div>
-
       <div class="home-card home-card--forest">
         <div class="home-card__num">02</div>
         <div class="home-card__body">
@@ -68,7 +69,6 @@
           <p>Get the best way out for each item: sell on Jimoty, give it away on Jimoty, or dispose through your city.</p>
         </div>
       </div>
-
       <div class="home-card home-card--sun">
         <div class="home-card__num">03</div>
         <div class="home-card__body">
@@ -76,7 +76,6 @@
           <p>Your listing — title, description, price — is written in natural Japanese, ready to post.</p>
         </div>
       </div>
-
       <div class="home-card home-card--mint">
         <div class="home-card__num">04</div>
         <div class="home-card__body">
@@ -86,7 +85,6 @@
       </div>
     </div>
   </section>
-
   <%# ---------- CTA BAND ---------- %>
   <section id="get" class="home-cta">
     <div class="home-cta__jp">「これ、どうしよう？」— we've got it.</div>
@@ -94,7 +92,6 @@
     <p class="home-cta__lead">Less landfill, more second lives for your stuff — and a lighter suitcase for you.</p>
     <%= link_to cta_text, cta_path, class: "home-btn home-btn--sun" %>
   </section>
-
   <%# ---------- FOOTER ---------- %>
   <footer class="home-footer">
     <div class="home-footer__brand">
@@ -106,5 +103,4 @@
     </div>
     <div class="home-footer__copy">© <%= Date.current.year %> Tossibly</div>
   </footer>
-
 </div>
