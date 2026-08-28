@@ -19,13 +19,5 @@ export default class extends Controller {
       button.classList.toggle("is-on", on)
       button.setAttribute("aria-pressed", on ? "true" : "false")
     })
-
-    if (state !== "both" && !this.prefersReducedMotion) {
-      this.pathsTarget.scrollIntoView({ behavior: "smooth", block: "nearest" })
-    }
-  }
-
-  get prefersReducedMotion() {
-    return window.matchMedia("(prefers-reduced-motion: reduce)").matches
   }
 }
