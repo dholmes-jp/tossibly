@@ -139,6 +139,41 @@
   color: $primary;
 }
 
+// Full-screen overlay shown while "Create listing" submits. Toggled by
+// submit_overlay_controller.js via Bootstrap's .d-none utility.
+.submit-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1060;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  text-align: center;
+  background: rgba($tossibly-black, 0.75);
+  color: #fff;
+
+  .spinner-border {
+    width: 3rem;
+    height: 3rem;
+  }
+}
+
+.submit-overlay-headline {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  max-width: 32ch;
+}
+
+.submit-overlay-subline {
+  margin: 0;
+  font-size: 0.9rem;
+  color: rgba(#fff, 0.7);
+}
+
 // ---------------------------------------------------------------------------
 // Item decision (show) page
 // ---------------------------------------------------------------------------
@@ -180,9 +215,24 @@
     border: 1px solid rgba($tossibly-black, 0.08);
   }
 
-  .decision-photo {
+  // Full-width item header strip, stacked above the compare cards.
+  .item-head {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .item-head-thumb {
+    flex-shrink: 0;
+    width: 72px;
+    height: 72px;
+    border-radius: 12px;
     object-fit: cover;
-    max-height: 260px;
+  }
+
+  .item-head-info {
+    min-width: 0;
   }
 }
 
