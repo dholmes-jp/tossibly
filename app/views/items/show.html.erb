@@ -5,12 +5,12 @@
   </div>
 
   <div class="decision-card">
-    <div class="row g-4">
-      <div class="col-12 col-md-5">
-        <% if @item.photos.attached? %>
-          <%= image_tag @item.photos.first, class: "w-100 rounded-3 mb-3 decision-photo" %>
-        <% end %>
+    <div class="item-head">
+      <% if @item.photos.attached? %>
+        <%= image_tag @item.photos.first, class: "item-head-thumb", alt: @item.title %>
+      <% end %>
 
+      <div class="item-head-info">
         <h1 class="h5 mb-1"><%= @item.title %></h1>
         <p class="text-muted small mb-2">
           <%= @item.functional ? "Working" : "Not working" %>
@@ -23,9 +23,9 @@
 
         <%= link_to "Edit details", edit_item_path(@item), class: "small" %>
       </div>
+    </div>
 
-      <div class="col-12 col-md-7">
-        <h3 class="h6 mb-3">Compare your options</h3>
+    <h3 class="h6 mb-3">Compare your options</h3>
 
         <%
           classifier   = ItemPathClassifier.new(@item)
@@ -266,7 +266,5 @@
         <p class="small text-muted mb-0">
           No rush &mdash; this item is saved as <strong>Pending</strong> in My Items. Decide now, or come back later.
         </p>
-      </div>
-    </div>
   </div>
 </div>

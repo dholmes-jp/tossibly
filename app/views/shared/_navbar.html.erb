@@ -3,59 +3,59 @@
      <% if landing %>
        data-controller="navbar-reveal"
        data-action="scroll@window->navbar-reveal#update:passive"
-       data-navbar-reveal-threshold-value="120"
-     <% end %>
+  data-navbar-reveal-threshold-value="120"
+<% end %>
 >
-  <div class="container-fluid">
-    <%= link_to root_path, class: "navbar-brand", data: { curtain: true } do %>
-      <%= image_tag "tossibly-logo.png" %>
-    <% end %>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto gap-2">
-    <% if user_signed_in? %>
-      <li>
-        <%= link_to dashboard_path, class: "nav-item #{'active' if current_page?(dashboard_path)}", data: { curtain: true, curtain_color: "#1E4B2D" } do %>
-          <%= image_tag "icon_house.svg", alt: "house-icon" %>
-          <span>Dashboard</span>
-        <% end %>
-      </li>
-      <li>
-        <%= link_to items_path, class: "nav-item #{'active' if controller_name == 'items' && action_name != 'new'}", data: { curtain: true, curtain_color: "#1E4B2D" } do %>
-          <%= image_tag "icon_box.svg", alt: "box-icon" %>
-          <span>My Items</span>
-        <% end %>
-      </li>
-      <li>
-        <%= link_to new_item_path, class: "nav-item #{'active' if current_page?(new_item_path)}", data: { curtain: true, curtain_color: "#1E4B2D" } do %>
-          <%= image_tag "icon_camera.svg", alt: "camera-icon" %>
-          <span>Scan</span>
-        <% end %>
-      </li>
-      <li>
-        <%= link_to dashboard_path, class: "nav-item", data: { curtain: true, curtain_color: "#1E4B2D" } do %>
-          <%= image_tag "icon_calendar.svg", alt: "calendar-icon" %>
-          <span>Schedule</span>
-        <% end %>
-      </li>
-      <li class="nav-item dropdown">
-        <a href="#" class="avatar" id="navbarDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <%= image_tag (current_user.name == "Eri" ? "female.png" : "male.png"), class: "avatar", alt: current_user.name %>
-        </a>
-        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-          <%= link_to "Action", "#", class: "dropdown-item" %>
-          <%= link_to "Another action", "#", class: "dropdown-item" %>
-          <%= link_to "Log out", destroy_user_session_path, data: {turbo_method: :delete}, class: "dropdown-item" %>
-        </div>
-      </li>
-    <% else %>
-      <li class="nav-item">
-        <%= link_to "Login", new_user_session_path, class: "nav-link nav-link--login" %>
-      </li>
-    <% end %>
-  </ul>
-    </div>
+<div class="container-fluid">
+  <%= link_to user_signed_in? ? dashboard_path : root_path, class: "navbar-brand" do %>
+    <%= image_tag "tossibly-logo.png" %>
+  <% end %>
+  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav me-auto gap-2">
+      <% if user_signed_in? %>
+        <li>
+          <%= link_to dashboard_path, class: "nav-item #{'active' if current_page?(dashboard_path)}" do %>
+            <%= image_tag "icon_house.svg", alt: "house-icon" %>
+            <span>Dashboard</span>
+          <% end %>
+        </li>
+        <li>
+          <%= link_to items_path, class: "nav-item #{'active' if controller_name == 'items' && action_name != 'new'}" do %>
+            <%= image_tag "icon_box.svg", alt: "box-icon" %>
+            <span>My Items</span>
+          <% end %>
+        </li>
+        <li>
+          <%= link_to new_item_path, class: "nav-item #{'active' if current_page?(new_item_path)}" do %>
+            <%= image_tag "icon_camera.svg", alt: "camera-icon" %>
+            <span>Scan</span>
+          <% end %>
+        </li>
+        <li>
+          <%= link_to dashboard_path, class: "nav-item" do %>
+            <%= image_tag "icon_calendar.svg", alt: "calendar-icon" %>
+            <span>Schedule</span>
+          <% end %>
+        </li>
+        <li class="nav-item dropdown">
+          <a href="#" class="avatar" id="navbarDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <%= image_tag (current_user.name == "Eri" ? "female.png" : "male.png"), class: "avatar", alt: current_user.name %>
+          </a>
+          <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+            <%= link_to "Action", "#", class: "dropdown-item" %>
+            <%= link_to "Another action", "#", class: "dropdown-item" %>
+            <%= link_to "Log out", destroy_user_session_path, data: {turbo_method: :delete}, class: "dropdown-item" %>
+          </div>
+        </li>
+      <% else %>
+        <li class="nav-item">
+          <%= link_to "Login", new_user_session_path, class: "nav-link nav-link--login" %>
+        </li>
+      <% end %>
+    </ul>
   </div>
+</div>
 </nav>
