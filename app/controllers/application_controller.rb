@@ -14,6 +14,10 @@ class ApplicationController < ActionController::Base
     dashboard_path
   end
 
+  def after_sign_in_path_for(_resource)
+    dashboard_path
+  end
+
   private
 
   def set_active_storage_url_options
