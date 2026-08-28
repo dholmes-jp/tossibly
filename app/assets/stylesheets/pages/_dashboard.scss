@@ -1,164 +1,267 @@
-// Specific CSS for the /dashboard page (app/views/users/dashboard.html.erb).
-// Structural layout adapted from the dashboard mockup; all colours/type come
-// from the existing tokens in config/_colors.scss + the Figtree/Bootstrap stack.
+// app/assets/stylesheets/pages/_dashboard.scss
+// Dashboard: collection strip + recent items row + scan tile + "View all".
+// Tokens from config/_colors.scss ($forest, $leaf, $mint, $cream, $sun, $ink,
+// $tossibly-white) and config/_fonts.scss ($headers-font, $body-font).
+//
+// Type scale used on this page (keep consistent):
+//   h1 32 · h2 22 · card/strip titles 18 · body 14 · labels/pills 12 · eyebrow 11
+
+$dash-gap: 20px;        // gap between cards
+$dash-viewall: 120px;   // width reserved on the right for the "View all" button
 
 .dashboard {
-  max-width: 1120px;
+  max-width: 1180px;
   margin: 0 auto;
-  padding: 36px 30px 54px;
-  font-family: "Figtree", sans-serif;
-  color: $tossibly-black;
+  padding: 24px 30px 40px;
+  font-family: $body-font;
+  color: $ink;
 
-  .dashboard-kicker {
-    margin: 0 0 4px;
-    font-size: 12px;
-    font-weight: 700;
-    color: rgba($tossibly-black, 0.6);
+  a { text-decoration: none; }
+}
+
+.dashboard-kicker {
+  margin: 0 0 4px;
+  font-size: 14px;
+  font-weight: 700;
+  color: $forest;
+}
+
+.dashboard-heading {
+  margin: 0 0 20px;
+  font-family: $headers-font;
+  font-size: 32px;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: $forest;
+}
+
+// ---------- Collection strip ----------
+.dashboard-strip {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px 32px;
+  padding: 16px 48px 16px 28px;   // a little extra right padding keeps the corner clear of "Sat"
+  border-radius: 24px;
+  background: $mint;
+  color: $forest;
+
+  // Left: TODAY / 27 / Thursday
+  &__date {
+    display: flex;
+    flex-direction: column;
+    padding-left: 14px;
+    border-left: 3px solid $forest;
+    line-height: 1;
   }
 
-  .dashboard-heading {
-    margin: 0 0 24px;
-    font-size: 30px;
+  &__eyebrow {
+    margin-bottom: 4px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  &__day {
+    font-family: $headers-font;
+    font-size: 28px;
+    font-weight: 800;
+    line-height: 1;
+  }
+
+  &__weekday {
+    margin-top: 4px;
+    font-size: 14px;
+  }
+
+  // Middle: Combustible collection / Put out by 8:00
+  &__what {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 180px;
+  }
+
+  &__title {
+    font-family: $headers-font;
+    font-size: 18px;
     font-weight: 800;
     line-height: 1.15;
-    letter-spacing: -0.6px;
   }
 
-  // --- Hero "Scan an item" banner -------------------------------------
-  .dashboard-hero {
-    position: relative;
-    display: grid;
-    grid-template-columns: 64px 1fr auto;
-    gap: 18px;
-    align-items: center;
-    padding: 25px 28px;
-    border-radius: 18px;
-    overflow: hidden;
-    color: #fff;
-    background: linear-gradient(118deg, darken($primary, 16%) 0%, $primary 55%, lighten($primary, 6%) 100%);
+  &__sub {
+    font-size: 14px;
+    color: rgba($forest, 0.7);
+  }
 
-    > * {
-      position: relative;
-      z-index: 1;
+  // Right: the weekly pattern as day circles. Every slot is the same fixed
+  // width, so the circles sit at exactly equal intervals regardless of how
+  // long the label under each one is.
+  &__week {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 112px;
+    margin: 0 0 0 auto;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__slot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+  }
+
+  &__circle {
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: $forest;
+    color: $cream;
+    font-size: 11px;
+    font-weight: 800;
+  }
+
+  // The next collection day gets the one accent colour
+  &__slot--active .dashboard-strip__circle {
+    background: $sun;
+    color: $forest;
+  }
+
+  // ---- Folded paper corner (top-right) — links to the full schedule ----
+  // ::before is the page showing through where the corner lifted (cream),
+  // ::after is the folded flap itself (forest). Peels open on load, lifts a
+  // little further on hover. No text; aria-label carries the meaning.
+  &__corner {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 28px;
+    height: 28px;
+    display: block;
+    animation: strip-corner-peel 0.6s cubic-bezier(0.34, 1.4, 0.64, 1);
+    transition: width 0.2s ease, height 0.2s ease;
+
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
     }
 
     &::before {
-      content: "";
-      position: absolute;
-      inset: -35% -10% auto auto;
-      width: 58%;
-      height: 170%;
-      pointer-events: none;
-      opacity: 0.7;
-      transform: rotate(-12deg);
-      filter: blur(2px);
-      background:
-        radial-gradient(circle at 35% 30%, rgba(#fff, 0.17) 0 6%, transparent 7%),
-        radial-gradient(circle at 62% 48%, rgba(#fff, 0.1) 0 8%, transparent 9%),
-        radial-gradient(circle at 48% 70%, rgba(#fff, 0.08) 0 10%, transparent 11%);
+      background: $cream;
+      clip-path: polygon(0 0, 100% 0, 100% 100%);
+    }
+
+    &::after {
+      background: linear-gradient(225deg, $leaf 0%, $forest 60%);
+      clip-path: polygon(0 0, 100% 100%, 0 100%);
+    }
+
+    &:hover,
+    &:focus-visible {
+      width: 36px;
+      height: 36px;
     }
   }
+}
 
-  .dashboard-hero__icon {
-    width: 60px;
-    height: 60px;
-    display: grid;
-    place-items: center;
+@keyframes strip-corner-peel {
+  from { width: 0; height: 0; }
+  to   { width: 28px; height: 28px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dashboard-strip__corner { animation: none; }
+}
+
+// Underlined text link (kept for reuse)
+.dashboard-link {
+  font-size: 14px;
+  font-weight: 800;
+  color: $forest;
+  text-decoration: underline !important;
+  text-underline-offset: 4px;
+
+  &:hover { color: $leaf; }
+}
+
+// ---------- Section ----------
+// Equal breathing room above and below the section title.
+.dashboard-section {
+  margin-top: 28px;
+}
+
+.dashboard-section__head {
+  margin-bottom: 28px;
+
+  // "Continue where you left off" as a white label with a green border,
+  // regular weight (not bold), green text.
+  h2 {
+    display: inline-block;
+    margin: 0;
+    padding: 8px 18px;
+    border: 1.5px solid $forest;
     border-radius: 16px;
-    font-size: 24px;
-    color: #fff;
-    background: rgba(#fff, 0.18);
-    border: 1.4px solid rgba(#fff, 0.5);
-  }
-
-  .dashboard-hero__body {
-    strong {
-      display: block;
-      margin-bottom: 4px;
-      font-size: 20px;
-      font-weight: 800;
-    }
-
-    p {
-      margin: 0;
-      max-width: 630px;
-      font-size: 13px;
-      line-height: 1.5;
-      color: rgba(#fff, 0.9);
-    }
-  }
-
-  .dashboard-hero__cta {
-    justify-self: end;
-    white-space: nowrap;
-    padding: 12px 18px;
-    border-radius: 11px;
-    font-size: 14px;
-    font-weight: 800;
-    text-decoration: none;
-    color: $primary;
-    background: $tossibly-white;
-    box-shadow: 2px 2px 0 rgba($tossibly-black, 0.25);
-    transition: transform 0.1s, opacity 0.15s;
-
-    &:hover {
-      transform: translateY(-1px);
-      opacity: 0.95;
-      color: $primary;
-    }
-  }
-
-  // --- Section scaffolding ------------------------------------------
-  .dashboard-section {
-    margin-top: 34px;
-  }
-
-  .dashboard-section__head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 13px;
-
-    h2 {
-      margin: 0;
-      font-size: 20px;
-      font-weight: 800;
-    }
-  }
-
-  .dashboard-section__link {
-    font-size: 12px;
-    font-weight: 800;
-    text-decoration: none;
-    color: $secondary;
-
-    &:hover {
-      text-decoration: underline;
-    }
-  }
-
-  // --- "Continue where you left off" cards --------------------------
-  .dashboard-items {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 14px;
-  }
-
-  .dashboard-card {
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
     background: #fff;
-    border: 1px solid rgba($tossibly-black, 0.12);
-    border-radius: 15px;
+    font-family: $headers-font;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1.2;
+    color: $forest;
+  }
+}
+
+// ---------- Cards row ----------
+// Flex row: up to 3 item cards + scan tile at the same width, then the
+// "View all" button pushed to the right edge and centred vertically.
+.dashboard-grid {
+  display: flex;
+  align-items: stretch;
+  gap: $dash-gap;
+}
+
+// Shared column width for cards and the scan tile: 4 columns fit beside the
+// reserved "View all" space, so the row never wraps at desktop width.
+.dashboard-card,
+.dashboard-scan {
+  flex: 0 0 calc((100% - #{$dash-viewall} - #{4 * $dash-gap}) / 4);
+}
+
+// ---------- Item card (whole card is the link) ----------
+.dashboard-card {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  border-radius: 24px;
+  background: $tossibly-white;
+  color: $ink;
+  transition: transform 0.15s, box-shadow 0.15s;
+
+  &:hover {
+    color: $ink;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba($forest, 0.10);
   }
 
-  .dashboard-card__photo {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 190px;
-    background: $light-gray;
+  &__photo {
+    aspect-ratio: 3 / 2;
+    margin-bottom: 12px;
+    border-radius: 14px;
+    overflow: hidden;
+    background: repeating-linear-gradient(
+      -45deg,
+      rgba($mint, 0.85) 0 12px,
+      $cream 12px 24px
+    );
 
     img {
       display: block;
@@ -166,278 +269,152 @@
       height: 100%;
       object-fit: cover;
     }
-
-    i {
-      font-size: 2rem;
-      color: rgba($tossibly-black, 0.25);
-    }
   }
 
-  .dashboard-card__body {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    padding: 14px;
-  }
-
-  .dashboard-card__name {
-    margin: 0 0 5px;
-    font-size: 16px;
-    font-weight: 800;
-  }
-
-  .dashboard-card__meta {
-    margin: 0;
-    min-height: 34px;
-    font-size: 12px;
-    line-height: 1.4;
-    color: rgba($tossibly-black, 0.6);
-  }
-
-  .dashboard-card__action {
-    margin-top: 12px;
-    padding: 9px;
-    border: 1.2px solid rgba($tossibly-black, 0.85);
-    border-radius: 9px;
-    text-align: center;
-    font-size: 12px;
-    font-weight: 800;
-    text-decoration: none;
-    color: $tossibly-black;
-    transition: background 0.15s, color 0.15s;
-
-    &:hover {
-      background: $tossibly-black;
-      color: $tossibly-white;
-    }
-  }
-
-  // Status badge — neutral by default, plus an attention-needed variant.
-  .dashboard-badge {
-    align-self: flex-start;
-    display: inline-block;
-    margin-bottom: 8px;
-    padding: 5px 9px;
-    border-radius: 999px;
-    font-size: 10px;
-    font-weight: 800;
-    letter-spacing: 0.02em;
-    background: rgba($primary, 0.12);
-    color: darken($primary, 10%);
-
-    &--attention {
-      background: rgba($orange, 0.18);
-      color: darken($orange, 18%);
-    }
-  }
-
-  // --- Empty state -------------------------------------------------
-  .dashboard-empty {
-    padding: 28px;
-    background: #fff;
-    border: 1px solid rgba($tossibly-black, 0.12);
-    border-radius: 15px;
-
-    p {
-      margin: 0;
-      color: rgba($tossibly-black, 0.6);
-    }
-  }
-
-  .dashboard-empty__cta {
-    display: inline-block;
-    margin-top: 14px;
-    padding: 12px 18px;
-    border-radius: 11px;
-    font-size: 14px;
-    font-weight: 800;
-    text-decoration: none;
-    color: #fff;
-    background: $primary;
-
-    &:hover {
-      color: #fff;
-      background: darken($primary, 6%);
-    }
-  }
-
-  // --- Collection schedule --------------------------------------------
-  .dashboard-schedule {
-    display: grid;
-    grid-template-columns: minmax(0, 1.55fr) minmax(260px, 0.75fr);
-    gap: 14px;
-  }
-
-  .dashboard-schedule__card {
-    padding: 18px;
-    background: #fff;
-    border: 1px solid rgba($tossibly-black, 0.12);
-    border-radius: 15px;
-  }
-
-  .calendar-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 14px;
-    font-weight: 800;
-  }
-
-  .calendar-nav {
-    letter-spacing: 4px;
-    color: rgba($tossibly-black, 0.45);
-  }
-
-  .calendar-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 3px;
-  }
-
-  .calendar-dow {
-    padding: 4px;
-    font-size: 10px;
-    font-weight: 800;
-    text-align: center;
-    color: rgba($tossibly-black, 0.5);
-  }
-
-  .calendar-day {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    min-height: 48px;
-    padding: 5px;
-    border-radius: 8px;
-    font-size: 11px;
-
-    &--today {
-      background: rgba($primary, 0.12);
-    }
-
-    &--muted {
-      color: rgba($tossibly-black, 0.3);
-    }
-  }
-
-  .calendar-num {
-    display: grid;
-    place-items: center;
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    font-weight: 800;
-  }
-
-  .calendar-day--today .calendar-num {
-    background: $primary;
-    color: #fff;
-  }
-
-  .calendar-dots {
-    display: flex;
-    gap: 2px;
-  }
-
-  .calendar-dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: $orange;
-
-    &--green { background: $primary; }
-    &--blue  { background: $secondary; }
-    &--dark  { background: darken($primary, 15%); }
-  }
-
-  .next-collection {
-    background: linear-gradient(155deg, #fff, rgba($primary, 0.06));
-    border-top: 4px solid $secondary;
-  }
-
-  .next-collection__label {
-    font-size: 10px;
-    font-weight: 800;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: $secondary;
-  }
-
-  .next-collection__when {
+  &__name {
     margin: 8px 0 4px;
-    font-size: 21px;
+    font-family: $headers-font;
+    font-size: 18px;
     font-weight: 800;
+    line-height: 1.15;
+    color: $forest;
   }
 
-  .next-collection__detail {
-    margin: 0 0 12px;
-    font-size: 12px;
-    line-height: 1.5;
-    color: rgba($tossibly-black, 0.6);
+  &__meta {
+    margin: 0;
+    font-size: 14px;
+    color: rgba($ink, 0.6);
+  }
+}
+
+// Status pill
+.dashboard-pill {
+  align-self: flex-start;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  background: $mint;
+  color: $forest;
+
+  &--ready { background: $sun; }
+}
+
+// Empty state (fills the cards' space when there are no items)
+.dashboard-empty {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  padding: 24px;
+  border-radius: 24px;
+  border: 1.5px dashed rgba($forest, 0.3);
+
+  p {
+    margin: 0;
+    font-size: 14px;
+    color: rgba($ink, 0.6);
+  }
+}
+
+// ---------- Scan tile ----------
+.dashboard-scan {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 24px 16px;
+  border-radius: 24px;
+  background: $forest;
+  color: $cream;
+  text-align: center;
+  transition: background 0.15s, transform 0.15s;
+
+  &:hover {
+    color: $cream;
+    background: $leaf;
+    transform: translateY(-2px);
   }
 
-  .next-collection__row {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-    padding: 11px 0;
-    font-size: 12px;
-    border-top: 1px solid rgba($tossibly-black, 0.15);
+  &__icon {
+    width: 64px;
+    height: 64px;
+    margin-bottom: 12px;
   }
 
-  // --- Responsive: match the mockup's ~760px breakpoint -------------
-  @media (max-width: 760px) {
-    padding: 26px 16px 40px;
+  &__title {
+    font-family: $headers-font;
+    font-size: 18px;
+    font-weight: 800;
+    color: $cream;
+  }
 
-    .dashboard-heading {
-      font-size: 27px;
-    }
+  &__sub {
+    font-size: 14px;
+    color: $mint;
+  }
+}
 
-    .dashboard-hero {
-      grid-template-columns: 52px 1fr;
-      gap: 13px;
-      padding: 18px;
-    }
+// ---------- "View all" button: right edge, vertically centred ----------
+.dashboard-viewall {
+  flex: 0 0 auto;
+  align-self: center;
+  margin-left: auto;
+  padding: 10px 22px;
+  border-radius: 999px;
+  background: $forest;
+  color: $cream;
+  font-size: 14px;
+  font-weight: 800;
+  white-space: nowrap;
+  transition: background 0.15s;
 
-    .dashboard-hero__icon {
-      width: 50px;
-      height: 50px;
-    }
+  &:hover {
+    color: $cream;
+    background: $leaf;
+  }
+}
 
-    .dashboard-hero__cta {
-      grid-column: 1 / -1;
-      justify-self: stretch;
-      width: 100%;
-      text-align: center;
-    }
+// ---------- Responsive ----------
+@media (max-width: 1100px) {
+  .dashboard-grid { flex-wrap: wrap; }
 
-    .dashboard-items {
-      grid-template-columns: 1fr;
-    }
+  .dashboard-card,
+  .dashboard-scan {
+    flex: 0 0 calc((100% - #{$dash-gap}) / 2);
+  }
 
-    .dashboard-card {
-      flex-direction: row;
-      min-height: 158px;
-    }
+  // Button keeps margin-left: auto, so it stays right-aligned on its own line
+}
 
-    .dashboard-card__photo {
-      flex-shrink: 0;
-      width: 128px;
-      height: auto;
-    }
+@media (max-width: 640px) {
+  .dashboard { padding: 20px 16px 40px; }
 
-    .dashboard-card__meta {
-      min-height: 0;
-    }
+  .dashboard-heading { font-size: 28px; }
 
-    .dashboard-schedule {
-      grid-template-columns: 1fr;
-    }
+  .dashboard-strip {
+    gap: 14px 20px;
+    padding: 16px 36px 16px 18px;
+  }
 
-    // Calendar is decorative on narrow viewports; keep "Next collection".
-    .calendar {
-      display: none;
-    }
+  .dashboard-strip__week {
+    width: 100%;
+    margin-left: 0;
+    grid-auto-columns: minmax(0, 1fr);
+  }
+
+  .dashboard-strip__type { text-align: center; }
+
+  .dashboard-card,
+  .dashboard-scan {
+    flex: 0 0 100%;
+  }
+
+  // Phones take the photos: camera tile first
+  .dashboard-scan { order: -1; }
+
+  .dashboard-viewall {
+    flex-basis: 100%;
+    text-align: center;
   }
 }
