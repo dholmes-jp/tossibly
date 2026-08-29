@@ -3,6 +3,12 @@
   "version": "1.0",
   "description": "Build an Extension!",
   "manifest_version": 3,
+  "icons": {
+    "16": "images/icon-tossibly.png",
+    "32": "images/icon-tossibly.png",
+    "48": "images/icon-tossibly.png",
+    "128": "images/icon-tossibly.png"
+  },
   "background": {
     "service_worker": "background.js"
   },
