@@ -65,3 +65,16 @@ function listenClick() {
 }
 
 listenClick();
+
+const submitButton = document.getElementById("submit-item");
+
+submitButton.addEventListener("click", async () => {
+  const [tab] = await chrome.tabs.query({
+    active: true,
+    currentWindow: true
+  });
+
+  chrome.tabs.sendMessage(tab.id, {
+    type: "SUBMIT_FORM"
+  });
+});
