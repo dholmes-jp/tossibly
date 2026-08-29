@@ -1,6 +1,6 @@
 // Replace the following URL to Heroku URL
-// const BASE_URL = "http://localhost:3000";
-const BASE_URL = "https://tossibly-519656c75f63.herokuapp.com";
+const BASE_URL = "http://localhost:3000";
+// const BASE_URL = "https://tossibly-519656c75f63.herokuapp.com";
 
 function listenClick() {
   const button = document.getElementById("load-items");
@@ -65,3 +65,16 @@ function listenClick() {
 }
 
 listenClick();
+
+const submitButton = document.getElementById("submit-item");
+
+submitButton.addEventListener("click", async () => {
+  const [tab] = await chrome.tabs.query({
+    active: true,
+    currentWindow: true
+  });
+
+  chrome.tabs.sendMessage(tab.id, {
+    type: "SUBMIT_FORM"
+  });
+});

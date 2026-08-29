@@ -1,6 +1,29 @@
-chrome.runtime.onMessage.addListener(async (message) => {
+const AUTOFILL_KEY = "tossibly_autofill";
+chrome.runtime.onMessage.addListener((message) => {
   if (message.type !== "FILL_FORM") return;
+    // Save item data before reloading
+  sessionStorage.setItem(
+    AUTOFILL_KEY,
+    JSON.stringify(message)
+  );
 
+  // Completely reset the Jimoty page
+  window.location.reload();
+});
+
+// Check if there is an item waiting to be auto-filled
+const savedMessage = sessionStorage.getItem(AUTOFILL_KEY);
+
+if (savedMessage) {
+  // Remove it first so the page does not reload/fill repeatedly
+  sessionStorage.removeItem(AUTOFILL_KEY);
+
+  const message = JSON.parse(savedMessage);
+
+  fillForm(message);
+}
+
+async function fillForm(message) {
   const titleInput = document.querySelector("#article_title");
   const descriptionInput = document.querySelector("#article_text");
   const prefectureSelect = document.querySelector("#article_prefecture_id");
@@ -14,6 +37,7 @@ chrome.runtime.onMessage.addListener(async (message) => {
       new Event("change", { bubbles: true })
     );
   }
+
   await new Promise((resolve) => setTimeout(resolve, 300));
 
   // Categories | 3rd
@@ -24,6 +48,7 @@ chrome.runtime.onMessage.addListener(async (message) => {
       new Event("change", { bubbles: true })
     );
   }
+
   await new Promise((resolve) => setTimeout(resolve, 300));
 
   // Categories | 4th
@@ -64,7 +89,7 @@ chrome.runtime.onMessage.addListener(async (message) => {
       new Event("change", { bubbles: true })
     );
   }
-  // Wait for city options to update
+
   await new Promise((resolve) => setTimeout(resolve, 1000));
 
   // Meguro
@@ -91,19 +116,26 @@ chrome.runtime.onMessage.addListener(async (message) => {
   if (message.photo_urls?.length > 0) {
     await handleImageInput(message.photo_urls);
   }
-});
+}
+
 async function handleImageInput(remoteImageURLs) {
   const input = document.querySelector("#upload_tag");
+
   if (!input) {
     return;
   }
+
   await new Promise((resolve) => setTimeout(resolve, 300));
+
   const dt = new DataTransfer();
+
   for (const remoteImageURL of remoteImageURLs) {
     const file = await createFile(remoteImageURL);
     dt.items.add(file);
   }
+
   input.files = dt.files;
+
   input.dispatchEvent(
     new Event("change", {
       bubbles: true
@@ -113,10 +145,13 @@ async function handleImageInput(remoteImageURLs) {
 
 async function createFile(url) {
   const response = await fetch(url);
+
   if (!response.ok) {
     throw new Error(`Failed to fetch image: ${response.status}`);
   }
+
   const data = await response.blob();
+
   return new File(
     [data],
     "item-photo.jpg",
@@ -125,3 +160,16 @@ async function createFile(url) {
     }
   );
 }
+
+// Submit button from chrome extension
+chrome.runtime.onMessage.addListener((message) => {
+  if (message.type !== "SUBMIT_FORM") return;
+
+  const submitButton = document.querySelector(
+    "#article_submit_button"
+  );
+
+  if (submitButton) {
+    submitButton.click();
+  }
+});
