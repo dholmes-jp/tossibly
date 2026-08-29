@@ -1,0 +1,1656 @@
+# Jimoty category taxonomy for Tossibly
+# Relationship rule: child class="sub_XXX" -> parent value="XXX"
+# category_group value "1" (売ります・あげます) is fixed.
+# `children` is omitted when Jimoty has no further category for that node.
+
+category_group:
+  value: '1'
+  name: 売ります・あげます
+  children:
+  - value: '6'
+    name: 家具
+    children:
+    - value: '1227'
+      name: 寝具
+      children:
+      - value: '1228'
+        name: 布団
+      - value: '1229'
+        name: 枕
+      - value: '1230'
+        name: 毛布、ブランケット
+      - value: '1231'
+        name: タオルケット
+      - value: '1232'
+        name: 敷パッド
+      - value: '1233'
+        name: マットレス
+      - value: '1234'
+        name: 寝具カバー
+      - value: '1235'
+        name: その他
+    - value: '1236'
+      name: ベッド
+      children:
+      - value: '1237'
+        name: ダブルベッド
+      - value: '1238'
+        name: シングルベッド
+      - value: '1239'
+        name: ロフトベッド
+      - value: '1240'
+        name: 二段ベッド
+      - value: '1241'
+        name: ソファーベッド
+      - value: '1242'
+        name: ベビーベッド
+      - value: '1243'
+        name: キッズ用ベッド
+      - value: '1244'
+        name: その他
+    - value: '1245'
+      name: 椅子
+      children:
+      - value: '1246'
+        name: チェア
+      - value: '1247'
+        name: ダイニングチェア
+      - value: '1248'
+        name: ハイバックチェア
+      - value: '1249'
+        name: スツール
+      - value: '1250'
+        name: 座椅子
+      - value: '1251'
+        name: オットマン
+      - value: '1252'
+        name: ロッキングチェア
+      - value: '1253'
+        name: ハイチェア
+      - value: '1254'
+        name: その他
+    - value: '1255'
+      name: テーブル
+      children:
+      - value: '1256'
+        name: ダイニングテーブル
+      - value: '1257'
+        name: 座卓、ローテーブル
+      - value: '1258'
+        name: センターテーブル
+      - value: '1259'
+        name: コーヒーテーブル
+      - value: '1260'
+        name: コーナー、サイドテーブル
+      - value: '1261'
+        name: こたつ
+      - value: '1262'
+        name: 学習机
+      - value: '1263'
+        name: パソコンデスク
+      - value: '1264'
+        name: その他
+    - value: '1265'
+      name: 収納家具
+      children:
+      - value: '1266'
+        name: テレビ台
+      - value: '1267'
+        name: 収納ケース
+      - value: '1268'
+        name: タンス、衣類収納
+      - value: '1269'
+        name: 押入れ収納
+      - value: '1270'
+        name: 布団収納
+      - value: '1271'
+        name: マガジンラック、スタンド
+      - value: '1272'
+        name: CD、DVDラック
+      - value: '1273'
+        name: 食器棚、キッチン収納
+      - value: '1274'
+        name: ランドリー収納
+      - value: '1275'
+        name: トイレ収納
+      - value: '1276'
+        name: 玄関収納
+      - value: '1277'
+        name: 子供部屋用収納
+      - value: '1278'
+        name: おもちゃ箱
+      - value: '1279'
+        name: 物置
+      - value: '1280'
+        name: 棚、シェルフ
+      - value: '1281'
+        name: スチールラック
+      - value: '1282'
+        name: 本棚
+      - value: '1283'
+        name: キャビネット
+      - value: '1284'
+        name: コンソール
+      - value: '1285'
+        name: カラーボックス
+      - value: '1286'
+        name: その他
+    - value: '1287'
+      name: ソファ
+      children:
+      - value: '1288'
+        name: 1人用ソファ
+      - value: '1289'
+        name: 2人掛けソファ
+      - value: '1290'
+        name: 3人掛けソファ
+      - value: '1291'
+        name: オットマン
+      - value: '1292'
+        name: ビーズソファ
+      - value: '1293'
+        name: クッション
+      - value: '1294'
+        name: その他
+    - value: '1295'
+      name: ダイニングセット
+    - value: '1296'
+      name: ドレッサー
+    - value: '1297'
+      name: 照明器具
+    - value: '1298'
+      name: カーペット/マット/ラグ
+    - value: '1299'
+      name: カーテン、ブラインド
+    - value: '1300'
+      name: ファブリック、カバー
+      children:
+      - value: '1301'
+        name: クッション
+      - value: '1302'
+        name: 座布団
+      - value: '1303'
+        name: カバー
+      - value: '1304'
+        name: タペストリー
+      - value: '1305'
+        name: のれん
+      - value: '1306'
+        name: その他
+    - value: '1307'
+      name: ミラー/鏡
+    - value: '1308'
+      name: 時計
+      children:
+      - value: '1309'
+        name: 掛け時計
+      - value: '1310'
+        name: 置時計
+      - value: '1311'
+        name: 目覚まし時計
+      - value: '1312'
+        name: その他
+    - value: '1313'
+      name: インテリア雑貨/小物
+      children:
+      - value: '1314'
+        name: オイルランプ
+      - value: '1315'
+        name: 置物、オブジェ
+      - value: '1316'
+        name: 傘立て
+      - value: '1317'
+        name: 花瓶
+      - value: '1318'
+        name: キャンドルホルダー
+      - value: '1319'
+        name: ごみ箱
+      - value: '1320'
+        name: 小物入れ
+      - value: '1321'
+        name: ジュエリーケース
+      - value: '1322'
+        name: スリッパ
+      - value: '1323'
+        name: ティッシュケース
+      - value: '1324'
+        name: トレイ
+      - value: '1325'
+        name: のれん
+      - value: '1326'
+        name: 写真立て、フォトフレーム
+      - value: '1327'
+        name: その他
+    - value: '1328'
+      name: オフィス用家具
+      children:
+      - value: '1329'
+        name: 机
+      - value: '1330'
+        name: いす
+      - value: '1331'
+        name: 応接セット
+      - value: '1332'
+        name: キャビネ
+      - value: '1333'
+        name: パーテーション
+      - value: '1334'
+        name: 棚
+      - value: '1335'
+        name: ロッカー
+      - value: '1336'
+        name: 金庫
+      - value: '1337'
+        name: ホワイトボード
+      - value: '1338'
+        name: その他
+    - value: '1339'
+      name: その他
+  - value: '3'
+    name: 家電
+    children:
+    - value: '1067'
+      name: 季節、空調家電
+      children:
+      - value: '1068'
+        name: エアコン
+      - value: '1069'
+        name: 除湿器
+      - value: '1070'
+        name: 扇風機
+      - value: '1071'
+        name: 冷風扇
+      - value: '1072'
+        name: 空気清浄機
+      - value: '1073'
+        name: 加湿器
+      - value: '1074'
+        name: ストーブ
+      - value: '1075'
+        name: ファンヒーター
+      - value: '1076'
+        name: オイルヒーター
+      - value: '1077'
+        name: 遠赤外線ヒーター
+      - value: '1078'
+        name: こたつ
+      - value: '1079'
+        name: ホットカーペット
+      - value: '1080'
+        name: 電気毛布
+      - value: '1081'
+        name: あんか
+      - value: '1082'
+        name: 足温器
+      - value: '1083'
+        name: 湯たんぽ
+      - value: '1084'
+        name: その他
+    - value: '1085'
+      name: 生活家電
+      children:
+      - value: '1086'
+        name: 掃除機
+      - value: '1087'
+        name: 洗濯機
+      - value: '1088'
+        name: 乾燥機
+      - value: '1089'
+        name: アイロン
+      - value: '1090'
+        name: ミシン
+      - value: '1091'
+        name: 電池
+      - value: '1092'
+        name: 発電機
+      - value: '1093'
+        name: 温水洗浄便座
+      - value: '1094'
+        name: ラジオ
+      - value: '1095'
+        name: その他
+    - value: '1096'
+      name: 電話、ＦＡＸ
+      children:
+      - value: '1097'
+        name: 携帯電話
+      - value: '1098'
+        name: スマートフォン
+      - value: '1099'
+        name: 電話機
+      - value: '1100'
+        name: ファクシミリ
+      - value: '1101'
+        name: その他
+    - value: '1102'
+      name: キッチン家電
+      children:
+      - value: '1103'
+        name: 冷蔵庫
+      - value: '1104'
+        name: 電子レンジ
+      - value: '1105'
+        name: オーブンレンジ
+      - value: '1106'
+        name: オーブントースター
+      - value: '1107'
+        name: 炊飯器
+      - value: '1108'
+        name: ホームベーカリー
+      - value: '1109'
+        name: フードプロセッサー
+      - value: '1110'
+        name: 食器洗い機
+      - value: '1111'
+        name: アイスクリームメーカー
+      - value: '1112'
+        name: ジューサー、ミキサー
+      - value: '1113'
+        name: コーヒーメーカー
+      - value: '1114'
+        name: ワインセラー
+      - value: '1115'
+        name: グリル鍋
+      - value: '1116'
+        name: 電気ポット
+      - value: '1117'
+        name: 電磁調理器
+      - value: '1118'
+        name: ホットプレート
+      - value: '1119'
+        name: フィッシュロースター
+      - value: '1120'
+        name: 精米機
+      - value: '1121'
+        name: 餅つき器
+      - value: '1122'
+        name: 生ごみ処理機
+      - value: '1123'
+        name: その他
+    - value: '1124'
+      name: 美容家電
+      children:
+      - value: '1125'
+        name: フェイスケア
+      - value: '1126'
+        name: ヘアケア
+      - value: '1127'
+        name: ボディケア
+      - value: '1128'
+        name: 脱毛、除毛
+      - value: '1129'
+        name: ネイルケア
+      - value: '1130'
+        name: その他
+    - value: '1131'
+      name: テレビ
+      children:
+      - value: '1132'
+        name: 液晶テレビ
+      - value: '1133'
+        name: プラズマテレビ
+      - value: '1134'
+        name: リアプロジェクションテレビ
+      - value: '1135'
+        name: ブラウン管テレビ
+      - value: '1136'
+        name: DVD内蔵型テレビ
+      - value: '1137'
+        name: ポータブルテレビ
+      - value: '1138'
+        name: 地上デジタルチューナー
+      - value: '1139'
+        name: アクセサリー
+      - value: '1140'
+        name: アンテナ
+      - value: '1141'
+        name: 衛星放送用品
+      - value: '1142'
+        name: その他
+    - value: '1143'
+      name: 映像プレーヤー、レコーダー
+      children:
+      - value: '1144'
+        name: DVDプレーヤー
+      - value: '1145'
+        name: DVDレコーダー
+      - value: '1146'
+        name: HD-DVDレコーダー
+      - value: '1147'
+        name: ブルーレイプレーヤー
+      - value: '1148'
+        name: ブルーレイレコーダー
+      - value: '1149'
+        name: HDD専用レコーダー
+      - value: '1150'
+        name: ビデオデッキ
+      - value: '1151'
+        name: 録画用メディア
+      - value: '1152'
+        name: その他
+    - value: '1153'
+      name: カメラ
+      children:
+      - value: '1154'
+        name: デジタル一眼
+      - value: '1155'
+        name: デジタルカメラ
+      - value: '1156'
+        name: フィルムカメラ
+      - value: '1157'
+        name: フィルム一眼レフカメラ
+      - value: '1158'
+        name: コンパクトカメラ
+      - value: '1159'
+        name: トイカメラ
+      - value: '1160'
+        name: インスタントカメラ
+      - value: '1161'
+        name: 使い切りカメラ
+      - value: '1162'
+        name: 水中カメラ
+      - value: '1163'
+        name: レンズ
+      - value: '1164'
+        name: フィルム
+      - value: '1165'
+        name: アクセサリー
+      - value: '1166'
+        name: その他
+    - value: '1167'
+      name: オーディオ
+      children:
+      - value: '1168'
+        name: コンポ
+      - value: '1169'
+        name: ラジカセ
+      - value: '1170'
+        name: AVアンプ
+      - value: '1171'
+        name: CDデッキ
+      - value: '1172'
+        name: MDデッキ
+      - value: '1173'
+        name: カセットデッキ
+      - value: '1174'
+        name: レコードプレーヤー
+      - value: '1175'
+        name: カラオケ機器
+      - value: '1176'
+        name: スピーカー
+      - value: '1177'
+        name: ヘッドフォン
+      - value: '1178'
+        name: 記録メディア
+      - value: '1179'
+        name: オーディオアクセサリー
+      - value: '1180'
+        name: その他
+    - value: '1181'
+      name: ポータブルプレーヤー
+      children:
+      - value: '1182'
+        name: デジタルオーディオ
+      - value: '1183'
+        name: CDプレーヤー
+      - value: '1184'
+        name: MDプレーヤー
+      - value: '1185'
+        name: カセットプレーヤー
+      - value: '1186'
+        name: その他
+    - value: '1187'
+      name: ビデオカメラ、ムービーカメラ
+    - value: '1188'
+      name: プロジェクター、ホームシアター
+    - value: '1189'
+      name: 望遠鏡、顕微鏡
+      children:
+      - value: '1190'
+        name: 天体望遠鏡
+      - value: '1191'
+        name: 双眼鏡、単眼鏡
+      - value: '1192'
+        name: 顕微鏡
+      - value: '1193'
+        name: 内視鏡
+      - value: '1194'
+        name: その他
+    - value: '1195'
+      name: その他
+  - value: '99'
+    name: 自転車
+    children:
+    - value: '1495'
+      name: 電動アシスト自転車
+    - value: '1496'
+      name: 折りたたみ自転車
+    - value: '1497'
+      name: ロードバイク
+    - value: '1498'
+      name: マウンテンバイク
+    - value: '1499'
+      name: クロスバイク
+    - value: '1500'
+      name: BMX
+    - value: '1501'
+      name: 三輪車
+    - value: '1502'
+      name: 一輪車
+    - value: '1503'
+      name: その他
+  - value: '180'
+    name: 車のパーツ
+    children:
+    - value: '2429'
+      name: タイヤ、ホイール
+    - value: '2430'
+      name: カーナビ、テレビ
+    - value: '2431'
+      name: カーオーディオ
+    - value: '2432'
+      name: ETC
+    - value: '2433'
+      name: パーツ
+    - value: '2434'
+      name: 内装、インテリア
+    - value: '2435'
+      name: セーフティ、チャイルドシート
+    - value: '2436'
+      name: 外装、車外用品
+    - value: '2437'
+      name: キャリア、ラック
+    - value: '2438'
+      name: アクセサリー
+    - value: '2439'
+      name: セキュリティ用品
+    - value: '2440'
+      name: メンテナンス用品
+    - value: '2441'
+      name: その他
+  - value: '16'
+    name: バイク
+    children:
+    - value: '1504'
+      name: ホンダ
+    - value: '1505'
+      name: ヤマハ
+    - value: '1506'
+      name: カワサキ
+    - value: '1507'
+      name: スズキ
+    - value: '1508'
+      name: その他
+  - value: '100'
+    name: 楽器
+    children:
+    - value: '1580'
+      name: 弦楽器、ギター
+    - value: '1581'
+      name: 鍵盤楽器、ピアノ
+    - value: '1582'
+      name: 打楽器、ドラム
+    - value: '1583'
+      name: 管楽器、笛、ハーモニカ
+    - value: '1584'
+      name: 電子楽器
+    - value: '1585'
+      name: エフェクター、PA機器
+    - value: '1586'
+      name: アンプ
+    - value: '1587'
+      name: DJギア
+    - value: '1588'
+      name: MIDI関連機器
+    - value: '1589'
+      name: アクセサリー
+    - value: '1590'
+      name: 教則本
+    - value: '1591'
+      name: その他
+  - value: '12'
+    name: チケット
+    children:
+    - value: '1469'
+      name: コンサート
+    - value: '1470'
+      name: スポーツ
+    - value: '1471'
+      name: 演劇
+    - value: '1472'
+      name: 映画
+    - value: '1473'
+      name: 商品券/ギフトカード
+    - value: '1474'
+      name: プリペイドカード
+    - value: '1475'
+      name: テーマパーク/遊園地
+    - value: '1476'
+      name: 宿泊券/旅行券
+    - value: '1477'
+      name: 飛行機
+    - value: '1478'
+      name: 新幹線/鉄道切符
+    - value: '1479'
+      name: バス
+    - value: '1480'
+      name: その他
+  - value: '13'
+    name: 生活雑貨
+    children:
+    - value: '1340'
+      name: 食器
+      children:
+      - value: '1341'
+        name: コップ、グラス
+      - value: '1342'
+        name: コーヒー、ティー
+      - value: '1343'
+        name: カトラリー
+      - value: '1344'
+        name: ディナーセット
+      - value: '1345'
+        name: 和皿
+      - value: '1346'
+        name: プレート
+      - value: '1347'
+        name: 酒器
+      - value: '1348'
+        name: 箸
+      - value: '1349'
+        name: 飯碗
+      - value: '1350'
+        name: 丼
+      - value: '1351'
+        name: 汁椀
+      - value: '1352'
+        name: 茶器
+      - value: '1353'
+        name: その他
+    - value: '1354'
+      name: 調理器具
+      children:
+      - value: '1355'
+        name: キッチンツール
+      - value: '1356'
+        name: ガステーブル
+      - value: '1357'
+        name: 包丁、ナイフ
+      - value: '1358'
+        name: まな板
+      - value: '1359'
+        name: 鍋、グリル
+      - value: '1360'
+        name: 計量器具
+      - value: '1361'
+        name: 調理用ボール
+      - value: '1362'
+        name: 型
+      - value: '1363'
+        name: 製菓用具
+      - value: '1364'
+        name: 塩分計
+      - value: '1365'
+        name: うどん、そば道具
+      - value: '1366'
+        name: おひつ、飯台
+      - value: '1367'
+        name: かつ箱
+      - value: '1368'
+        name: オイルポット
+      - value: '1369'
+        name: かき氷機
+      - value: '1370'
+        name: たこ焼き器
+      - value: '1371'
+        name: パスタマシーン
+      - value: '1372'
+        name: その他
+    - value: '1373'
+      name: 家庭用品
+      children:
+      - value: '1374'
+        name: あんか、湯たんぽ
+      - value: '1375'
+        name: 浄水器、整水器
+      - value: '1376'
+        name: キッチン雑貨
+      - value: '1377'
+        name: 家庭用包装紙、袋
+      - value: '1378'
+        name: バス用品
+      - value: '1379'
+        name: トイレ用品
+      - value: '1380'
+        name: 害虫駆除、虫よけ
+      - value: '1381'
+        name: ストーブ
+      - value: '1382'
+        name: ガーデニング
+      - value: '1383'
+        name: その他
+    - value: '1384'
+      name: 洗濯用品
+      children:
+      - value: '1385'
+        name: ランドリーバスケット
+      - value: '1386'
+        name: ハンガー
+      - value: '1387'
+        name: 丸ハンガー、角ハンガー
+      - value: '1388'
+        name: 洗剤
+      - value: '1389'
+        name: 洗濯ネット
+      - value: '1390'
+        name: 漂白剤
+      - value: '1391'
+        name: 柔軟剤
+      - value: '1392'
+        name: 洗濯のり
+      - value: '1393'
+        name: 洗濯バサミ
+      - value: '1394'
+        name: 物干し竿、ロープ
+      - value: '1395'
+        name: 布団ばさみ
+      - value: '1396'
+        name: その他
+    - value: '1397'
+      name: 芳香剤、消臭剤
+    - value: '1398'
+      name: 掃除用具
+      children:
+      - value: '1399'
+        name: ゴミ袋
+      - value: '1400'
+        name: ほうき、はたき
+      - value: '1401'
+        name: モップ、雑巾
+      - value: '1402'
+        name: バケツ
+      - value: '1403'
+        name: 洗剤
+      - value: '1404'
+        name: 掃除用ブラシ
+      - value: '1405'
+        name: その他
+    - value: '1406'
+      name: 防災、セキュリティ
+    - value: '1407'
+      name: 手帳
+    - value: '1408'
+      name: 個人用印鑑
+    - value: '1409'
+      name: 冠婚葬祭
+    - value: '1410'
+      name: アルバム
+    - value: '1411'
+      name: 年中行事用品
+      children:
+      - value: '1412'
+        name: お正月
+      - value: '1413'
+        name: ひな祭り
+      - value: '1414'
+        name: 子供の日
+      - value: '1415'
+        name: 祭り
+      - value: '1416'
+        name: クリスマス
+      - value: '1417'
+        name: その他
+    - value: '1418'
+      name: ラッピング用品
+      children:
+      - value: '1419'
+        name: リボン
+      - value: '1420'
+        name: 箱
+      - value: '1421'
+        name: パッキン
+      - value: '1422'
+        name: 袋
+      - value: '1423'
+        name: 包装紙
+      - value: '1424'
+        name: オーナメント
+      - value: '1425'
+        name: シール
+      - value: '1426'
+        name: その他
+    - value: '1427'
+      name: ノベルティグッズ
+    - value: '1428'
+      name: その他
+  - value: '7'
+    name: 子供用品
+    children:
+    - value: '1429'
+      name: ベビー用品
+      children:
+      - value: '1430'
+        name: ベビー服
+      - value: '1431'
+        name: ベビー用ファッション小物
+      - value: '1432'
+        name: ベビーキャリア、抱っこひも
+      - value: '1433'
+        name: ベビーカー、バギー
+      - value: '1434'
+        name: ベビーラック、ベビーチェア
+      - value: '1435'
+        name: 歩行器
+      - value: '1436'
+        name: 寝具
+      - value: '1437'
+        name: ベビーベッド、家具
+      - value: '1438'
+        name: 安全、保護グッズ
+      - value: '1439'
+        name: 授乳、お食事用品
+      - value: '1440'
+        name: お風呂用品
+      - value: '1441'
+        name: おむつ、トイレ用品
+      - value: '1442'
+        name: 洗浄、衛生用品
+      - value: '1443'
+        name: メモリアル、セレモニー用品
+      - value: '1444'
+        name: おもちゃ
+      - value: '1445'
+        name: チャイルドシート
+      - value: '1446'
+        name: 自転車用チャイルドシート
+      - value: '1447'
+        name: その他
+    - value: '1448'
+      name: キッズ用品
+      children:
+      - value: '1449'
+        name: 子供服
+      - value: '1450'
+        name: 子供用ファッション小物
+      - value: '1451'
+        name: 子供用バッグ
+      - value: '1452'
+        name: 子供用シューズ
+      - value: '1453'
+        name: ベッド、家具
+      - value: '1454'
+        name: 車用ジュニアシート
+      - value: '1455'
+        name: 幼児教育
+      - value: '1456'
+        name: その他
+    - value: '1457'
+      name: マタニティ用品
+    - value: '1458'
+      name: 産後用品
+      children:
+      - value: '1459'
+        name: 授乳用トップス
+      - value: '1460'
+        name: 授乳用パジャマ
+      - value: '1461'
+        name: ママコート
+      - value: '1463'
+        name: 授乳クッション
+      - value: '1464'
+        name: 授乳カバー
+      - value: '1465'
+        name: マザーズバッグ
+      - value: '1466'
+        name: 母子手帳ケース
+      - value: '1467'
+        name: その他
+    - value: '1468'
+      name: その他
+  - value: '11'
+    name: おもちゃ
+    children:
+    - value: '1509'
+      name: テレビゲーム
+      children:
+      - value: '1510'
+        name: Wii
+      - value: '1511'
+        name: プレイステーション
+      - value: '1512'
+        name: PS2
+      - value: '1513'
+        name: PS3
+      - value: '1514'
+        name: Xbox
+      - value: '1515'
+        name: Xbox 360
+      - value: '1516'
+        name: ゲームキューブ
+      - value: '1517'
+        name: NINTENDO64
+      - value: '1518'
+        name: スーパーファミコン
+      - value: '1519'
+        name: セガサターン
+      - value: '1520'
+        name: ドリームキャスト
+      - value: '1521'
+        name: その他
+    - value: '1522'
+      name: ポータブルゲーム
+      children:
+      - value: '1523'
+        name: ニンテンドーDS,3DS
+      - value: '1524'
+        name: PSP、PS Vita
+      - value: '1525'
+        name: PSP go
+      - value: '1526'
+        name: ゲームボーイアドバンス
+      - value: '1527'
+        name: ゲームボーイ
+      - value: '1528'
+        name: ワンダースワン
+      - value: '1529'
+        name: その他
+    - value: '1530'
+      name: フィギュア
+    - value: '1531'
+      name: おもちゃ
+      children:
+      - value: '1532'
+        name: ヒーロー遊び
+      - value: '1533'
+        name: おしゃれ遊び
+      - value: '1534'
+        name: ぬいぐるみ
+      - value: '1535'
+        name: 人形
+      - value: '1536'
+        name: 超合金
+      - value: '1537'
+        name: バーチャルペット
+      - value: '1538'
+        name: 電子玩具
+      - value: '1539'
+        name: 知育玩具
+      - value: '1540'
+        name: スポーツ玩具
+      - value: '1541'
+        name: 乗り物、ミニチュア
+      - value: '1542'
+        name: レールトイ
+      - value: '1543'
+        name: ビンテージ、コレクション
+      - value: '1544'
+        name: 楽器玩具
+      - value: '1545'
+        name: 乗用玩具
+      - value: '1546'
+        name: 水遊び
+      - value: '1547'
+        name: 積木
+      - value: '1548'
+        name: ブロック
+      - value: '1549'
+        name: ままごと
+      - value: '1550'
+        name: 遊具
+      - value: '1551'
+        name: おりがみ
+      - value: '1552'
+        name: クレヨン
+      - value: '1553'
+        name: その他
+    - value: '1554'
+      name: 模型、プラモデル
+    - value: '1555'
+      name: ラジコン
+    - value: '1556'
+      name: ミニカー
+    - value: '1557'
+      name: カードゲーム
+      children:
+      - value: '1558'
+        name: トレーディングカード
+      - value: '1559'
+        name: かるた
+      - value: '1560'
+        name: トランプ
+      - value: '1561'
+        name: 花札
+      - value: '1562'
+        name: その他
+    - value: '1563'
+      name: 花火
+    - value: '1564'
+      name: ボードゲーム
+    - value: '1565'
+      name: 囲碁、将棋、麻雀
+    - value: '1566'
+      name: パズル
+    - value: '1567'
+      name: パーティグッズ
+    - value: '1568'
+      name: ダーツ
+    - value: '1569'
+      name: ビリヤード
+    - value: '1570'
+      name: 子供用自転車
+    - value: '1571'
+      name: 幼児用自転車
+    - value: '1572'
+      name: 三輪車
+    - value: '1573'
+      name: 一輪車
+    - value: '1574'
+      name: 車用ジュニアシート
+    - value: '1575'
+      name: ひな人形
+    - value: '1576'
+      name: 五月人形
+    - value: '1577'
+      name: かぶと
+    - value: '1578'
+      name: こいのぼり
+    - value: '1579'
+      name: その他
+  - value: '4'
+    name: パソコン
+    children:
+    - value: '1196'
+      name: タブレットPC
+    - value: '1197'
+      name: iPad
+    - value: '1198'
+      name: ノートパソコン
+    - value: '1199'
+      name: デスクトップパソコン
+    - value: '1200'
+      name: Mac
+    - value: '1201'
+      name: プリンター
+    - value: '1202'
+      name: 周辺機器
+    - value: '1203'
+      name: PCパーツ
+    - value: '1204'
+      name: パソコンソフト
+    - value: '1205'
+      name: OA用品
+    - value: '1206'
+      name: メモリーカード
+    - value: '1207'
+      name: PDA
+    - value: '1208'
+      name: その他
+  - value: '5'
+    name: 携帯電話/スマホ
+    children:
+    - value: '1209'
+      name: ドコモ
+      children:
+      - value: '1210'
+        name: Galaxy
+      - value: '1211'
+        name: Xperia
+      - value: '1212'
+        name: その他
+    - value: '1213'
+      name: au
+      children:
+      - value: '1214'
+        name: iPhone
+      - value: '1215'
+        name: HTC
+      - value: '1216'
+        name: ARROWS
+      - value: '1217'
+        name: その他
+    - value: '1218'
+      name: ソフトバンク
+      children:
+      - value: '1219'
+        name: iPhone
+      - value: '1220'
+        name: AQUOS
+      - value: '1221'
+        name: その他
+    - value: '1222'
+      name: ウィルコム
+    - value: '1223'
+      name: イー・モバイル
+    - value: '1224'
+      name: ディズニー・モバイル
+    - value: '1225'
+      name: 携帯アクセサリー
+    - value: '1226'
+      name: その他
+  - value: '8'
+    name: 本/CD/DVD
+    children:
+    - value: '1606'
+      name: 文芸
+    - value: '1607'
+      name: マンガ、コミック、アニメ
+    - value: '1608'
+      name: ビジネス、経済
+    - value: '1609'
+      name: パソコン
+    - value: '1610'
+      name: 写真集
+    - value: '1611'
+      name: ゲーム攻略本
+    - value: '1612'
+      name: 雑誌
+    - value: '1613'
+      name: 参考書
+    - value: '1614'
+      name: 語学、辞書
+    - value: '1615'
+      name: 医学、薬学、看護
+    - value: '1616'
+      name: 絵本
+    - value: '1617'
+      name: 就職、資格
+    - value: '1618'
+      name: 理学、工学
+    - value: '1619'
+      name: 歴史、心理、教育
+    - value: '1620'
+      name: 楽譜、音楽書
+    - value: '1621'
+      name: 電子書籍
+    - value: '2449'
+      name: CD
+      children:
+      - value: '2450'
+        name: ポップス
+      - value: '2451'
+        name: ロック
+      - value: '2452'
+        name: ダンス、ユーロビート
+      - value: '2453'
+        name: テクノ、リミックス、ハウス
+      - value: '2454'
+        name: ラップ、ヒップホップ
+      - value: '2455'
+        name: R&B
+      - value: '2456'
+        name: パンク、ソウル
+      - value: '2457'
+        name: レゲエ
+      - value: '2458'
+        name: ジャズ、ブルース、ルーツ
+      - value: '2459'
+        name: アニメ、ゲーム
+      - value: '2460'
+        name: K-POP
+      - value: '2461'
+        name: キッズ、ファミリー
+      - value: '2462'
+        name: インディーズ
+      - value: '2463'
+        name: クラシック
+      - value: '2464'
+        name: ヒーリング、ニューエイジ
+      - value: '2465'
+        name: サウンドトラック
+      - value: '2466'
+        name: その他
+    - value: '2467'
+      name: DVD/ブルーレイ
+      children:
+      - value: '2468'
+        name: 邦画
+      - value: '2469'
+        name: 洋画
+      - value: '2470'
+        name: アニメーション
+      - value: '2471'
+        name: ミュージック
+      - value: '2472'
+        name: テレビドラマ
+      - value: '2473'
+        name: お笑い、バラエティ
+      - value: '2474'
+        name: アイドル、イメージ
+      - value: '2475'
+        name: スポーツ、フィットネス
+      - value: '2476'
+        name: キッズ、ファミリー
+      - value: '2477'
+        name: その他
+    - value: '1622'
+      name: その他
+  - value: '1'
+    name: 服/ファッション
+    children:
+    - value: '804'
+      name: ジャケット
+      children:
+      - value: '830'
+        name: レディース
+      - value: '850'
+        name: メンズ
+    - value: '805'
+      name: トレーナー
+      children:
+      - value: '831'
+        name: レディース
+      - value: '851'
+        name: メンズ
+    - value: '806'
+      name: ジャンパー
+      children:
+      - value: '832'
+        name: レディース
+      - value: '852'
+        name: メンズ
+    - value: '807'
+      name: ブラウス
+    - value: '808'
+      name: ボレロ
+    - value: '809'
+      name: パンツ
+      children:
+      - value: '833'
+        name: レディース
+      - value: '853'
+        name: メンズ
+    - value: '810'
+      name: セーター
+      children:
+      - value: '834'
+        name: レディース
+      - value: '854'
+        name: メンズ
+    - value: '811'
+      name: パーカー
+      children:
+      - value: '835'
+        name: レディース
+      - value: '855'
+        name: メンズ
+    - value: '812'
+      name: ブルゾン
+      children:
+      - value: '836'
+        name: レディース
+      - value: '856'
+        name: メンズ
+    - value: '813'
+      name: コート
+      children:
+      - value: '837'
+        name: レディース
+      - value: '857'
+        name: メンズ
+    - value: '814'
+      name: シャツ
+      children:
+      - value: '838'
+        name: レディース
+      - value: '858'
+        name: メンズ
+    - value: '815'
+      name: カットソー
+      children:
+      - value: '839'
+        name: レディース
+      - value: '859'
+        name: メンズ
+    - value: '816'
+      name: Tシャツ
+      children:
+      - value: '840'
+        name: レディース
+      - value: '860'
+        name: メンズ
+    - value: '817'
+      name: ポロシャツ
+      children:
+      - value: '841'
+        name: レディース
+      - value: '861'
+        name: メンズ
+    - value: '818'
+      name: カーディガン
+      children:
+      - value: '842'
+        name: レディース
+      - value: '862'
+        name: メンズ
+    - value: '819'
+      name: ワンピース
+    - value: '820'
+      name: スカート
+    - value: '821'
+      name: ボトムス
+      children:
+      - value: '843'
+        name: レディース
+      - value: '863'
+        name: メンズ
+    - value: '822'
+      name: ジーンズ/デニム
+      children:
+      - value: '844'
+        name: レディース
+      - value: '864'
+        name: メンズ
+    - value: '823'
+      name: スーツ
+      children:
+      - value: '845'
+        name: レディース
+      - value: '865'
+        name: メンズ
+    - value: '824'
+      name: ドレス
+    - value: '826'
+      name: 毛皮
+      children:
+      - value: '847'
+        name: レディース
+      - value: '867'
+        name: メンズ
+    - value: '827'
+      name: ニット
+      children:
+      - value: '848'
+        name: レディース
+      - value: '868'
+        name: メンズ
+    - value: '828'
+      name: 着物
+      children:
+      - value: '849'
+        name: レディース
+      - value: '869'
+        name: メンズ
+    - value: '2481'
+      name: アクセサリー
+      children:
+      - value: '2482'
+        name: 腕時計
+      - value: '2483'
+        name: 懐中時計
+      - value: '2484'
+        name: 指輪
+      - value: '2485'
+        name: ネックレス
+      - value: '2486'
+        name: ペンダントヘッド
+      - value: '2487'
+        name: チョーカー
+      - value: '2488'
+        name: ピアス
+      - value: '2489'
+        name: ボディピアス
+      - value: '2490'
+        name: ブレスレット
+      - value: '2491'
+        name: ウォレットチェーン
+      - value: '2492'
+        name: カフス
+      - value: '2493'
+        name: タイピン
+      - value: '2494'
+        name: タイタック
+      - value: '2495'
+        name: ブローチ
+      - value: '2496'
+        name: ペンダント
+      - value: '2497'
+        name: タイホルダー
+      - value: '2498'
+        name: ピンブローチ
+      - value: '2499'
+        name: トゥーリング
+      - value: '2500'
+        name: イヤリング
+      - value: '2501'
+        name: ヘアアクセサリー
+      - value: '2502'
+        name: その他
+    - value: '2503'
+      name: 小物
+      children:
+      - value: '2504'
+        name: 財布
+      - value: '2505'
+        name: パスケース
+      - value: '2506'
+        name: 名刺入れ
+      - value: '2507'
+        name: キーケース
+      - value: '2508'
+        name: IDストラップ
+      - value: '2509'
+        name: 帽子
+      - value: '2510'
+        name: サングラス
+      - value: '2511'
+        name: スカーフ
+      - value: '2512'
+        name: ストール
+      - value: '2513'
+        name: マフラー
+      - value: '2514'
+        name: コサージュ
+      - value: '2515'
+        name: 手袋
+      - value: '2516'
+        name: 耳あて
+      - value: '2517'
+        name: リストバンド
+      - value: '2518'
+        name: ベルト
+      - value: '2519'
+        name: タイツ
+      - value: '2520'
+        name: 靴下
+      - value: '2521'
+        name: ハンカチ
+      - value: '2522'
+        name: 長傘
+      - value: '2523'
+        name: 折りたたみ傘
+      - value: '2524'
+        name: 皮革クリーニング
+      - value: '2525'
+        name: コインケース
+      - value: '2526'
+        name: 定期入れ
+      - value: '2527'
+        name: チーフ
+      - value: '2528'
+        name: ネクタイ
+      - value: '2529'
+        name: ネックウォーマー
+      - value: '2530'
+        name: その他
+    - value: '829'
+      name: その他
+  - value: '182'
+    name: 靴/バッグ
+    children:
+    - value: '2548'
+      name: 靴
+      children:
+      - value: '2549'
+        name: パンプス
+      - value: '2550'
+        name: サンダル
+      - value: '2551'
+        name: ローファー
+      - value: '2552'
+        name: スニーカー
+      - value: '2553'
+        name: ブーツ
+      - value: '2554'
+        name: 長靴
+      - value: '2555'
+        name: 下駄
+      - value: '2556'
+        name: アウトドアシューズ
+      - value: '2557'
+        name: ミュール
+      - value: '2558'
+        name: レインシューズ
+      - value: '2559'
+        name: 革靴
+      - value: '2560'
+        name: 草履
+      - value: '2561'
+        name: ケア用品
+      - value: '2562'
+        name: その他
+    - value: '2531'
+      name: バッグ
+      children:
+      - value: '2532'
+        name: ハンドバッグ
+      - value: '2533'
+        name: ショルダーバッグ
+      - value: '2534'
+        name: セカンドバッグ
+      - value: '2535'
+        name: トートバッグ
+      - value: '2536'
+        name: エコロジーバッグ
+      - value: '2537'
+        name: ウエストバッグ
+      - value: '2538'
+        name: バッグセット
+      - value: '2539'
+        name: ポーチ
+      - value: '2540'
+        name: アタッシュケース
+      - value: '2541'
+        name: シザーバッグ
+      - value: '2542'
+        name: ダレスバッグ
+      - value: '2543'
+        name: パイロットケース
+      - value: '2544'
+        name: ヒップバッグ
+      - value: '2545'
+        name: リュックサック
+      - value: '2546'
+        name: バッグクリーニング
+      - value: '2547'
+        name: その他
+  - value: '101'
+    name: コスメ/ヘルスケア
+    children:
+    - value: '1592'
+      name: 化粧品
+    - value: '1593'
+      name: スキンケア
+    - value: '1594'
+      name: フェイスケア
+    - value: '1595'
+      name: メイクアップ
+    - value: '1596'
+      name: ネイル
+    - value: '1597'
+      name: ボディケア
+    - value: '1598'
+      name: ヘアケア
+    - value: '1599'
+      name: 香水
+    - value: '1600'
+      name: アロマ
+    - value: '2478'
+      name: マッサージ器
+    - value: '2479'
+      name: ダイエットグッズ
+    - value: '2480'
+      name: 健康食品
+    - value: '1601'
+      name: その他
+  - value: '15'
+    name: スポーツ
+    children:
+    - value: '1650'
+      name: スポーツウェア
+      children:
+      - value: '1651'
+        name: レディース
+      - value: '1652'
+        name: メンズ
+    - value: '1653'
+      name: ゴルフ
+    - value: '1654'
+      name: スノーボード
+    - value: '1655'
+      name: スキー
+    - value: '1656'
+      name: ランニング、ジョギング
+    - value: '1657'
+      name: サッカー
+    - value: '1658'
+      name: フットサル
+    - value: '1659'
+      name: 野球
+    - value: '1660'
+      name: ソフトボール
+    - value: '1661'
+      name: テニス
+    - value: '1662'
+      name: バスケットボール
+    - value: '1663'
+      name: ストリートスポーツ
+    - value: '1664'
+      name: マリンスポーツ
+    - value: '1665'
+      name: 水泳
+    - value: '1666'
+      name: 武道、格闘技
+      children:
+      - value: '1667'
+        name: 柔道
+      - value: '1668'
+        name: 空手
+      - value: '1669'
+        name: 合気道
+      - value: '1670'
+        name: 剣道
+      - value: '1671'
+        name: 弓道
+      - value: '1672'
+        name: ボクシング
+      - value: '1673'
+        name: その他
+    - value: '1674'
+      name: フィットネス、トレーニング
+    - value: '1675'
+      name: その他
+  - value: '231'
+    name: 食品
+  - value: '222'
+    name: お酒
+    children:
+    - value: '2716'
+      name: ビール
+    - value: '2717'
+      name: カクテル・チューハイ
+    - value: '2718'
+      name: 焼酎
+    - value: '2719'
+      name: 日本酒
+    - value: '2720'
+      name: ワイン
+    - value: '2721'
+      name: ウイスキー
+    - value: '2722'
+      name: ブランデー
+    - value: '2723'
+      name: リキュール
+    - value: '2584'
+      name: その他
+  - value: '17'
+    name: その他
