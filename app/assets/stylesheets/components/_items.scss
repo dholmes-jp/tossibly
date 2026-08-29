@@ -43,23 +43,8 @@
   color: rgba($ink, 0.6);
 }
 
-// The page's one button
-.items-scan {
-  display: inline-block;
-  padding: 12px 24px;
-  border-radius: 999px;
-  background: $sun;
-  color: $forest;
-  font-size: 15px;
-  font-weight: 800;
-  white-space: nowrap;
-  transition: background 0.15s;
-
-  &:hover {
-    background: $mint;
-    color: $forest;
-  }
-}
+// The page's one button — visuals come from components/_scan_action.scss
+// (scan-action--pill). .items-scan stays for the mobile width rule below.
 
 // ---------- Filter chips ----------
 .items-chips {
@@ -211,14 +196,14 @@
 .items-delete {
   display: grid;
   place-items: center;
-  width: 26px;          // was 34px
-  height: 26px;         // was 34px
+  width: 34px;
+  height: 34px;
   padding: 0;
   border: 1.5px solid rgba($forest, 0.45);
-  border-radius: 9px;   // was 12px, scaled to match
+  border-radius: 12px;
   background: transparent;
   color: rgba($forest, 0.7);
-  font-size: 11px;      // was 14px
+  font-size: 14px;
   cursor: pointer;
   transition: background 0.15s, color 0.15s, border-color 0.15s;
 
@@ -275,10 +260,7 @@
 
   .items-header { flex-wrap: wrap; }
 
-  .items-scan {
-    width: 100%;
-    text-align: center;
-  }
+  .items-scan { width: 100%; }
 
   // Chips scroll sideways in one line per row
   .items-chips {

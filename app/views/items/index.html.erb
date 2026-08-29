@@ -13,7 +13,10 @@
   <%# ---------- Header ---------- %>
   <div class="items-header">
     <h1>My items <span class="items-count"><%= count_label %></span></h1>
-    <%= link_to "Scan an item", new_item_path, class: "items-scan" %>
+    <%= link_to new_item_path, class: "items-scan scan-action scan-action--pill" do %>
+      <%= render "shared/scan_camera" %>
+      <span class="scan-action__label">Scan an item</span>
+    <% end %>
   </div>
 
   <%# ---------- Status filter (same links/params as before) ---------- %>
@@ -75,7 +78,7 @@
                     form: { data: { turbo_confirm: "Delete “#{item.title}”? This can't be undone." } },
                     "aria-label": "Delete #{item.title}",
                     title: "Delete" do %>
-                <i class="fa-regular fa-trash-can" aria-hidden="true"></i>
+                <i class="fa-solid fa-trash-can" aria-hidden="true"></i>
               <% end %>
 
               <% if item.age.present? %>
@@ -99,7 +102,10 @@
         <h2>Nothing scanned yet</h2>
         <p>Scan your first item and Tossibly will take it from there.</p>
       <% end %>
-      <%= link_to "Scan an item", new_item_path, class: "items-scan" %>
+      <%= link_to new_item_path, class: "items-scan scan-action scan-action--pill" do %>
+        <%= render "shared/scan_camera" %>
+        <span class="scan-action__label">Scan an item</span>
+      <% end %>
     </div>
   <% end %>
 
