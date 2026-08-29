@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_28_030114) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_29_084530) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -53,6 +53,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_28_030114) do
     t.integer "disposal_fee"
     t.boolean "functional", default: true
     t.string "jimoty_category"
+    t.string "jimoty_category_value"
+    t.string "jimoty_large_genre_value"
+    t.string "jimoty_medium_genre_value"
     t.string "model_number"
     t.string "platform"
     t.string "status", default: "pending", null: false

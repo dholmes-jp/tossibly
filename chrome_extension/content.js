@@ -1,20 +1,46 @@
-chrome.runtime.onMessage.addListener((message) => {
+chrome.runtime.onMessage.addListener(async (message) => {
   if (message.type !== "FILL_FORM") return;
 
   const titleInput = document.querySelector("#article_title");
   const descriptionInput = document.querySelector("#article_text");
   const prefectureSelect = document.querySelector("#article_prefecture_id");
-  const citySelect = document.querySelector("#article_city_id");
   const priceSelect = document.querySelector("#article_price");
+
+  // Categories | 2nd
+  const categorySelect = document.querySelector("#article_category_id");
+  if (categorySelect) {
+    categorySelect.value = message.jimoty_category_value;
+    categorySelect.dispatchEvent(
+      new Event("change", { bubbles: true })
+    );
+  }
+  await new Promise((resolve) => setTimeout(resolve, 300));
+
+  // Categories | 3rd
+  const largeGenreSelect = document.querySelector("#article_large_genre_id");
+  if (largeGenreSelect) {
+    largeGenreSelect.value = message.jimoty_large_genre_value;
+    largeGenreSelect.dispatchEvent(
+      new Event("change", { bubbles: true })
+    );
+  }
+  await new Promise((resolve) => setTimeout(resolve, 300));
+
+  // Categories | 4th
+  const mediumGenreSelect = document.querySelector("#article_medium_genre_id");
+  if (mediumGenreSelect) {
+    mediumGenreSelect.value = message.jimoty_medium_genre_value;
+    mediumGenreSelect.dispatchEvent(
+      new Event("change", { bubbles: true })
+    );
+  }
 
   // Title
   if (titleInput) {
     titleInput.value = message.title;
-
     titleInput.dispatchEvent(
       new Event("input", { bubbles: true })
     );
-
     titleInput.dispatchEvent(
       new Event("change", { bubbles: true })
     );
@@ -23,11 +49,9 @@ chrome.runtime.onMessage.addListener((message) => {
   // Description
   if (descriptionInput) {
     descriptionInput.value = message.description;
-
     descriptionInput.dispatchEvent(
       new Event("input", { bubbles: true })
     );
-
     descriptionInput.dispatchEvent(
       new Event("change", { bubbles: true })
     );
@@ -36,27 +60,28 @@ chrome.runtime.onMessage.addListener((message) => {
   // Tokyo
   if (prefectureSelect) {
     prefectureSelect.value = "13";
-
     prefectureSelect.dispatchEvent(
       new Event("change", { bubbles: true })
     );
   }
+  // Wait for city options to update
+  await new Promise((resolve) => setTimeout(resolve, 1000));
 
   // Meguro
-  setTimeout(() => {
-    if (citySelect) {
-      citySelect.value = "265";
-
-      citySelect.dispatchEvent(
-        new Event("change", { bubbles: true })
-      );
-    }
-  }, 1000);
+  const citySelect = document.querySelector("#article_city_id");
+  if (citySelect) {
+    citySelect.value = "265";
+    citySelect.dispatchEvent(
+      new Event("change", { bubbles: true })
+    );
+  }
 
   // Price
   if (priceSelect) {
-    priceSelect.value = "0";
-
+    priceSelect.value = message.price;
+    priceSelect.dispatchEvent(
+      new Event("input", { bubbles: true })
+    );
     priceSelect.dispatchEvent(
       new Event("change", { bubbles: true })
     );
@@ -64,22 +89,14 @@ chrome.runtime.onMessage.addListener((message) => {
 
   // Images
   if (message.photo_urls?.length > 0) {
-    handleImageInput(message.photo_urls);
+    await handleImageInput(message.photo_urls);
   }
 });
-
 async function handleImageInput(remoteImageURLs) {
   const input = document.querySelector("#upload_tag");
   if (!input) {
     return;
   }
-  // const deleteButtons = document.querySelectorAll(".delete_link");
-  // deleteButtons.forEach((btn) => {
-    // btn.click();
-    // btn.previousElementSibling.style.display = "none";
-    // btn.previousElementSibling.previousElementSibling.style.display = "none";
-  // });
-
   await new Promise((resolve) => setTimeout(resolve, 300));
   const dt = new DataTransfer();
   for (const remoteImageURL of remoteImageURLs) {
@@ -92,10 +109,6 @@ async function handleImageInput(remoteImageURLs) {
       bubbles: true
     })
   );
-  // document.querySelectorAll(".async_image_tag.square").forEach((img) => {
-    // console.log(img.classList);
-    // img.remove()
-  // })
 }
 
 async function createFile(url) {
