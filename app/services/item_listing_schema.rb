@@ -9,5 +9,5 @@ class ItemListingSchema < RubyLLM::Schema
   optional(:suggested_price) { integer }
   optional(:disposal_fee) { integer }
   string :platform, enum: %w[mercari jimoty]
-  optional(:jimoty_category) { string }
+  # optional(:jimoty_category) { string }
 end
