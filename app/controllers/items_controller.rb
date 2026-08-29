@@ -34,8 +34,20 @@ class ItemsController < ApplicationController
     identification = item_params.slice(:brand, :category, :model_number, :condition_guess)
     generated = ItemDescriber.new(identification, answers, item_params[:photos]).call || {}
 
+    # ayaka added / start
+    jimoty_categories = JimotyCategorySelector.new.call(
+      {
+        identification: identification,
+        answers: answers,
+        listing: generated
+      }
+    ) || {}
+    # ayaka added / end
+
     @item = current_user.items.new(item_params.except(:follow_up_answers, :follow_up_question_texts,
-                                                      :condition_guess).merge(generated.slice(*Item.column_names.map(&:to_sym))))
+                                                      :condition_guess)
+                                                      .merge(generated.slice(*Item.column_names.map(&:to_sym)))
+                                                      .merge(jimoty_category_value: jimoty_categories[:category_value], jimoty_large_genre_value: jimoty_categories[:large_genre_value], jimoty_medium_genre_value: jimoty_categories[:medium_genre_value]))
     # @item.photos.attach(item_params[:photos]) if item_params[:photos]
 
     if @item.save

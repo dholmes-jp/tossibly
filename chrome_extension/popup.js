@@ -1,6 +1,6 @@
 // Replace the following URL to Heroku URL
-// const BASE_URL = "http://localhost:3000";
-const BASE_URL = "https://tossibly-519656c75f63.herokuapp.com";
+const BASE_URL = "http://localhost:3000";
+// const BASE_URL = "https://tossibly-519656c75f63.herokuapp.com";
 
 function listenClick() {
   const button = document.getElementById("load-items");
@@ -18,9 +18,9 @@ function listenClick() {
       data.forEach((item) => {
         lists.insertAdjacentHTML(
           "beforeend",
-          `<div data-id="${item.id}" class="item-btn">
-            ${item.title}
-            <button class="autofill-btn">Auto-fill</button>
+          `<div class="item">
+            <p>${item.title}</p>
+            <button class="autofill-btn" data-id="${item.id}">Auto-fill</button>
           </div>`
         );
       });
@@ -44,12 +44,16 @@ function listenClick() {
         type: "FILL_FORM",
         title: item_data.title_ja,
         description: item_data.description_ja,
-        photo_urls: item_data.photo_urls
+        price: item_data.confirmed_price,
+        photo_urls: item_data.photo_urls,
+        jimoty_category_value: item_data.jimoty_category_value,
+        jimoty_large_genre_value: item_data.jimoty_large_genre_value,
+        jimoty_medium_genre_value: item_data.jimoty_medium_genre_value
       });
     };
 
     lists.addEventListener("click", (event) => {
-      const button = event.target.closest(".item-btn");
+      const button = event.target.closest(".autofill-btn");
 
       if (button) {
         fetchOneItem(button);
