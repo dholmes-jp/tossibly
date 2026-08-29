@@ -73,7 +73,12 @@ export default class extends Controller {
   async analyze() {
     if (this.photos.length === 0) return
 
+    // NEW: drop the first photo into the scanning state and bring it on screen
+    const scanPhoto = this.loadingTarget.querySelector(".scan-scanning__photo")
+    if (scanPhoto && this.photos[0]) scanPhoto.src = this.photos[0].url
+
     this.loadingTarget.classList.remove("d-none")
+    this.loadingTarget.scrollIntoView({ behavior: "smooth", block: "center" }) // NEW
 
     const formData = new FormData()
     for (const { file } of this.photos) formData.append("photos[]", file)
