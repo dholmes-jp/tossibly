@@ -1,0 +1,238 @@
+recyclable:
+  name: "Recyclables"
+  blurb: "This goes out with your recyclables — nothing to list, nothing to arrange."
+  steps:
+    - "Clean off recyclables and separate them into the four categories — plastic, PET bottles, glass bottles, and cans — before putting them out."
+    - "Rinse out any residue and remove caps or labels where required."
+    - "Put them out at the collection site before 8:00am on the designated day, once a week."
+  cost_yen: 0
+  chip_label: "Free"
+  collection_frequency: "Once weekly"
+  application_required: false
+  position: 1
+  subitems:
+    - key: plastic_containers_packaging
+      name: "Plastic containers & packaging"
+      description: "Plastic containers/packages, and plastic products made entirely of plastic, under ~30cm on all sides."
+      steps:
+        - "Empty out any contents."
+        - "Rinse and drain off residue."
+        - "Place plastic containers, packaging, and plastic products together in a transparent bag."
+        - "Paper price tags/labels that won't come off can stay on — don't double- or triple-bag."
+      exceptions:
+        - "Unremovable stains → combustible waste"
+        - "Contains non-plastic material (e.g. metal) → non-combustible waste"
+        - "Larger than 30cm on any side → large-sized waste"
+        - "5mm+ thick items or videotapes → combustible waste"
+        - "Rubber or silicone products → combustible waste"
+        - "Knives, lighters → non-combustible waste"
+        - "Items with a built-in rechargeable battery → contact manufacturer/distributor, don't bin"
+    - key: pet_bottles
+      name: "PET bottles"
+      description: "For soft drinks, alcoholic beverages, soy sauce, etc."
+      steps:
+        - "Remove the cap and label (dispose as Plastic)."
+        - "Rinse and drain off the water."
+        - "Crush lengthwise — not vertically or by twisting."
+        - "Put into a designated net or a transparent bag."
+      exceptions:
+        - "Contents were an oil product → combustible waste"
+        - "Unremovable stains → combustible waste"
+        - "Colored bottles (imported items, etc.) → dispose as Plastic instead, not combustible"
+    - key: bottles
+      name: "Bottles"
+      description: "Glass bottles for beverages and food."
+      steps:
+        - "Remove caps (dispose separately as non-combustible)."
+        - "Rinse and drain off the water."
+        - "Put into the designated yellow bin or a transparent bag."
+        - "Colored bottles are also collected."
+      exceptions:
+        - "Unremovable stains/oil → non-combustible waste"
+        - "Broken bottles, glass sheets or glass cups → non-combustible waste"
+        - "Cosmetic or chemical bottles → non-combustible waste"
+        - "Medicine bottles ARE collected as bottles"
+    - key: cans
+      name: "Cans"
+      description: "Aluminum and steel cans, for beverages and food."
+      steps:
+        - "Rinse and drain off the water."
+        - "Put into the designated blue bin or a transparent bag."
+        - "Close the lid lightly and dispose together."
+        - "Pull-tops can be disposed of as-is."
+      exceptions:
+        - "Unremovable stains/oil → non-combustible waste"
+        - "Spray cans → non-combustible waste (empty contents first, mark 危険)"
+
+combustible:
+  name: "Combustible waste"
+  blurb: "This goes out with your combustible waste — nothing to list, nothing to arrange."
+  steps:
+    - "Bag it with your combustible waste."
+    - "Put it out on one of the two weekly collection days."
+  cost_yen: 0
+  chip_label: "Free"
+  collection_frequency: "Twice weekly"
+  application_required: false
+  position: 2
+  subitems:
+    - key: cooking_oil
+      name: "Cooking oil / waste cooking oil"
+      steps:
+        - "Soak into paper or cloth, or solidify with a coagulant, before bagging."
+        - "Alternative: bring vegetable oil only to the Meguro Eco Plaza drop-off."
+    - key: twigs_and_dead_leaves
+      name: "Twigs and dead leaves"
+      steps:
+        - "Cut twigs to 50cm or less."
+        - "Bundle to 30cm or less in diameter."
+        - "Up to two bundles collected at one time."
+    - key: general_combustible
+      name: "Kitchen garbage, clothes/fabric, leather/rubber, unrecyclable paper"
+      steps:
+        - "Drain kitchen garbage completely before bagging."
+        - "Bag the rest with combustible waste as normal."
+
+non_combustible:
+  name: "Non-combustible waste"
+  blurb: "Non-combustible waste — it goes out on the regular schedule with nothing to arrange."
+  steps:
+    - "Bag it with non-combustible waste."
+    - "Check your ward calendar for the twice-monthly collection date."
+  cost_yen: 0
+  chip_label: "Free"
+  collection_frequency: "Twice monthly"
+  application_required: false
+  position: 3
+  subitems:
+    - key: ceramics_glass
+      name: "Ceramics, broken glass"
+      steps:
+        - "Wrap sharp or broken pieces with paper and mark 危険 (dangerous) before disposing."
+    - key: spray_cans_lighters_gas_cartridges
+      name: "Spray cans, lighters, gas cartridges"
+      steps:
+        - "Use up the contents completely first."
+        - "Bag separately from other non-combustible waste."
+        - "Mark the bag 危険 (dangerous)."
+        - "You do not need to puncture the can."
+    - key: small_appliance_non_designated
+      name: "Small appliance, not one of the 9 designated types"
+      description: "Under 30cm on its longest side."
+      steps:
+        - "Bag with non-combustible waste."
+      exceptions:
+        - "Rice cookers ≥1L capacity → large-sized waste instead, regardless of size class"
+
+mercury_products:
+  name: "Products containing mercury"
+  blurb: "Contains mercury, so it's collected on its own once-a-month schedule, in its own bag — not with regular non-combustible waste."
+  steps:
+    - "Bag separately from other non-combustible waste."
+    - "Fluorescent tubes/bulbs: place in original packaging or write 蛍光管 on the bag."
+    - "Thermometers/blood-pressure monitors: write 水銀 on the bag."
+  cost_yen: 0
+  chip_label: "Free"
+  collection_frequency: "Once monthly"
+  application_required: false
+  position: 4
+  subitems:
+    - key: fluorescent_lights
+      name: "Tube- or bulb-shaped fluorescent lights"
+    - key: mercury_thermometers_and_monitors
+      name: "Mercury thermometers, mercury blood-pressure monitors"
+
+used_paper:
+  name: "Used paper"
+  blurb: "Collected as used paper by your town council or residents' association — a different weekly pickup from regular recyclables."
+  steps:
+    - "Separate into three categories: newspapers, miscellaneous (magazines/books), cardboard."
+    - "Bundle each category with rope — do not use tape."
+    - "Cardboard: fold flat."
+    - "Place outside the garbage container on the designated day."
+  cost_yen: 0
+  chip_label: "Free"
+  collection_frequency: "Once weekly (group collection)"
+  application_required: false
+  position: 5
+  subitems: []
+
+designated_small_appliance:
+  name: "Designated small appliance"
+  blurb: "One of Meguro's nine designated small-appliance types — hand it in whole, no paperwork."
+  steps:
+    - "No need to remove the battery — collected whole."
+    - "Drop into any small home-appliance collection box in Meguro."
+    - "Nothing to book: no application needed."
+  cost_yen: 0
+  chip_label: "Free"
+  collection_frequency: "Anytime — 10 drop-off points"
+  application_required: false
+  position: 6
+  subitems:
+    - { key: mobile_phones, name: "Mobile phones" }
+    - { key: handheld_game_consoles, name: "Handheld game consoles" }
+    - { key: portable_music_players, name: "Portable music players" }
+    - { key: digital_cameras, name: "Digital cameras" }
+    - { key: portable_video_cameras, name: "Portable video cameras" }
+    - { key: electronic_dictionaries, name: "Electronic dictionaries" }
+    - { key: desktop_calculators, name: "Desktop calculators" }
+    - { key: car_navigation_devices, name: "Portable car navigation devices" }
+    - { key: cables_and_adapters, name: "Cables and AC adapters" }
+
+battery:
+  name: "Battery"
+  blurb: "Batteries go through a separate drop-off track, not regular collection."
+  steps:
+    - "Never put batteries in with regular non-combustible waste."
+    - "Non-rechargeable batteries go in a collection box (insulate the terminals with tape first); rechargeable/Li-ion batteries go to a retailer with the recycle mark or the same collection boxes."
+  cost_yen: 0
+  chip_label: "Free"
+  collection_frequency: "Anytime — drop-off or retailer"
+  application_required: false
+  position: 7
+  subitems:
+    - key: non_rechargeable
+      name: "Alkaline / manganese / lithium primary / button batteries"
+      steps:
+        - "Insulate both terminals with tape."
+        - "Deposit in a battery collection box at a city facility."
+    - key: rechargeable
+      name: "Rechargeable / Li-ion batteries, e-cigarettes, heated cigarettes, electric shavers/toothbrushes, portable fans"
+      steps:
+        - "Take to a retailer with the Ni-Cd/Ni-MH/Li-ion recycle mark, or use the same 10 small-appliance collection-box locations citywide."
+        - "Heated cigarettes specifically: free collection via cigarette stores/retailers (Tobacco Institute of Japan)."
+
+appliance_recycling_law:
+  name: "Appliance Recycling Law item"
+  blurb: "Covered by Japan's Home Appliance Recycling Law, so it goes through the recycling route rather than ward collection."
+  steps:
+    - "Arrange collection through the Home Appliance Recycling Pick-up Center, or hand it back to the original retailer."
+    - "Pay the recycling fee plus a transport charge when it's collected (transport waived if self-delivered to a designated dealer)."
+    - "There is no ward drop-off for this category."
+  cost_yen: 4300
+  cost_note: "Placeholder for the demo — real recycling fee varies by manufacturer/category/size, no fee table sourced yet."
+  chip_label: "Paid"
+  collection_frequency: "On request via Pick-up Center"
+  application_required: true
+  position: 8
+  subitems:
+    - { key: air_conditioners, name: "Air conditioners" }
+    - { key: televisions, name: "Televisions" }
+    - { key: refrigerators_freezers, name: "Refrigerators and freezers" }
+    - { key: washing_machines_dryers, name: "Washing machines and dryers" }
+
+large_sized_waste:
+  name: "Large-sized waste"
+  blurb: "Large-sized waste — apply first, then put it out on the collection date you're given."
+  steps:
+    - "Submit an application before any collection date is assigned."
+    - "You'll be given a collection date and the location to leave it."
+    - "Take it to that location by 8:00am on the assigned date."
+  cost_yen: 2000
+  cost_note: "Placeholder for the demo — real per-item fee comes from the city's fee schedule, not sourced yet."
+  chip_label: "Paid"
+  collection_frequency: "On request — apply first"
+  application_required: true
+  position: 9
+  subitems: []
