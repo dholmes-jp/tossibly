@@ -76,10 +76,11 @@
           <p>Nothing scanned yet. Your items will show up here.</p>
         </div>
       <% end %>
-      <%= link_to new_item_path, class: "dashboard-scan" do %>
-        <%= image_tag "icon_camera.svg", alt: "", class: "dashboard-scan__icon" %>
-        <span class="dashboard-scan__title">Scan an item</span>
-        <span class="dashboard-scan__sub">Snap a photo to start</span>
+
+      <%= link_to new_item_path, class: "dashboard-scan scan-action scan-action--hero" do %>
+        <%= render "shared/scan_camera" %>
+        <span class="scan-action__label">Scan an item</span>
+        <span class="scan-action__helper">Snap a photo to start</span>
       <% end %>
       <%= link_to "View all", items_path, class: "dashboard-viewall" %>
     </div>
