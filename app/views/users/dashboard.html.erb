@@ -1,7 +1,6 @@
 <%# app/views/users/dashboard.html.erb %>
 <%# Styles: app/assets/stylesheets/pages/_dashboard.scss %>
 <%# Expects @recent_items from UsersController#dashboard (max 3, most recently touched first). %>
-
 <%
   # Placeholder weekly collection pattern (Meguro-ku, Area B) until a schedule
   # model exists. Keys are wday numbers: 0 = Sun ... 6 = Sat.
@@ -14,12 +13,9 @@
     else "Next"
     end
 %>
-
 <main class="dashboard">
-
   <p class="dashboard-kicker"><%= time_of_day_greeting %>, <%= current_user.name.presence || "there" %></p>
   <h1 class="dashboard-heading">What are you getting rid of?</h1>
-
   <%# ---------- NEXT COLLECTION STRIP ---------- %>
   <div class="dashboard-strip">
     <div class="dashboard-strip__date">
@@ -27,12 +23,10 @@
       <span class="dashboard-strip__day"><%= next_day.day %></span>
       <span class="dashboard-strip__weekday"><%= next_day.strftime("%A") %></span>
     </div>
-
     <div class="dashboard-strip__what">
       <span class="dashboard-strip__title"><%= weekly[next_day.wday] %> collection</span>
       <span class="dashboard-strip__sub">Put out by 8:00</span>
     </div>
-
     <ul class="dashboard-strip__week">
       <% weekly.each do |wday, type| %>
         <li class="dashboard-strip__slot <%= 'dashboard-strip__slot--active' if wday == next_day.wday %>">
@@ -41,17 +35,14 @@
         </li>
       <% end %>
     </ul>
-
     <%# Folded paper corner = link to the full schedule (no schedule page yet, so "#") %>
     <%= link_to "", "#", class: "dashboard-strip__corner", "aria-label": "Full schedule" %>
   </div>
-
   <%# ---------- RECENT ITEMS + SCAN TILE + VIEW ALL ---------- %>
   <section class="dashboard-section">
     <div class="dashboard-section__head">
       <h2>Continue where you left off</h2>
     </div>
-
     <div class="dashboard-grid">
       <% @recent_items.each do |item| %>
         <% status = item.respond_to?(:status) ? item.status.to_s : "" %>
@@ -61,7 +52,6 @@
              when /ready/  then ["Ready to post", "dashboard-pill--ready"]
              else               ["In progress", ""]
              end %>
-
         <%= link_to item_path(item), class: "dashboard-card" do %>
           <div class="dashboard-card__photo">
             <% if item.photos.attached? %>
@@ -81,21 +71,17 @@
           </p>
         <% end %>
       <% end %>
-
       <% if @recent_items.empty? %>
         <div class="dashboard-empty">
           <p>Nothing scanned yet. Your items will show up here.</p>
         </div>
       <% end %>
-
       <%= link_to new_item_path, class: "dashboard-scan" do %>
         <%= image_tag "icon_camera.svg", alt: "", class: "dashboard-scan__icon" %>
         <span class="dashboard-scan__title">Scan an item</span>
         <span class="dashboard-scan__sub">Snap a photo to start</span>
       <% end %>
-
       <%= link_to "View all", items_path, class: "dashboard-viewall" %>
     </div>
   </section>
-
 </main>

@@ -3,7 +3,8 @@
   --secondary: #0056B3;
   --tossibly-white: #FEFDFC;
   --tossibly-black: #392C24;
-  --mint:   #B8D9CC;
+  --mint: #B8D9CC;
+  --mint_hover: #87bba6;
   --cream:  #F4F1E2;
   --forest: #1E4B2D;
 }
@@ -20,8 +21,6 @@ body {
 
 body {
   background: #fff;
-  /* background: var(--tossibly-white); */
-  /* background: #eeefef; */
   color: var(--tossibly-black);
   font-size: .9rem;
   line-height: 1.5rem;
@@ -40,7 +39,6 @@ body {
   justify-content: space-between;
   align-items: center;
   gap: 16px;
-  margin-bottom: 24px;
 }
 .load-logo {
   height: 32px;
@@ -63,15 +61,14 @@ body {
   padding: 8px;
   border-radius: 8px;
   width: 100%;
+  transition: ease 0.2s;
+  cursor: pointer;
 }
 
-.extension-lists .item-btn {
-  cursor: pointer;
-  color: var(--tossibly-dark);
-  border-radius: 8px;
-  padding: 8px;
-  width: 100%;
+#load-items:hover {
+  background-color: var(--mint_hover);
 }
+
 .extension-lists {
   display: flex;
   flex-direction: column;
@@ -79,8 +76,25 @@ body {
   justify-content: space-between;
 }
 
+.extension-lists .item {
+  color: var(--tossibly-dark);
+  padding: 2px 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.extension-lists .item:first-of-type {
+  margin-top: 24px;
+}
+
+.extension-lists .item:not(:last-of-type) {
+  border-bottom: 1px solid #aaaaaa;
+}
+
 .autofill-btn {
-  margin: 0;
   padding: 2px 16px;
   border: 0;
   cursor: pointer;
@@ -89,8 +103,14 @@ body {
   border-radius: 99px;
   font-size: .9rem;
   line-height: 1.5rem;
-  transition: all .2s;
+  transition: ease 0.2s;
+  margin: 0 0 0 auto;
+  display: block;
+  height: fit-content;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
-.extension-lists .item-btn:hover {
-  background: var(--mint);
+
+.autofill-btn:hover {
+  background-color: var(--mint);
 }
