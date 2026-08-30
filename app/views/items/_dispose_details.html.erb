@@ -1,0 +1,27 @@
+<div class="dispose-facts">
+  <% dispose[:facts].each do |key, value| %>
+    <div class="dispose-fact">
+      <span class="dispose-fact__k"><%= key %></span>
+      <span class="dispose-fact__v"><%= value %></span>
+    </div>
+  <% end %>
+</div>
+
+<% if dispose[:notes].present? %>
+  <div class="dispose-notes">
+    <% dispose[:notes].each do |note| %>
+      <p class="dispose-note"><%= note %></p>
+    <% end %>
+  </div>
+<% end %>
+
+<ol class="dispose-steps">
+  <% dispose[:steps].each do |step| %>
+    <li><%= step %></li>
+  <% end %>
+</ol>
+
+<% if dispose[:apply_url].present? %>
+  <%= link_to dispose[:apply_label], dispose[:apply_url],
+        target: "_blank", rel: "noopener", class: "dispose-apply" %>
+<% end %>
