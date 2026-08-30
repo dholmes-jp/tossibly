@@ -32,22 +32,38 @@ class ItemsController < ApplicationController
   def create
     answers = build_answers(item_params).merge(condition: params[:condition], note: params[:note])
     identification = item_params.slice(:brand, :category, :model_number, :condition_guess)
-    generated = ItemDescriber.new(identification, answers, item_params[:photos]).call || {}
+    # Defaults to "listable" if the form doesn't send a value.
+    # Logic is that it's safer to show Jimoty than to possibly hide it for an item.
+    listable = item_params[:listable].nil? || ActiveModel::Type::Boolean.new.cast(item_params[:listable])
 
-    # ayaka added / start
-    jimoty_categories = JimotyCategorySelector.new.call(
-      {
-        identification: identification,
-        answers: answers,
-        listing: generated
-      }
-    ) || {}
-    # ayaka added / end
+    if listable
+      generated = ItemDescriber.new(identification, answers, item_params[:photos]).call || {}
+
+      # ayaka added / start
+      jimoty_categories = JimotyCategorySelector.new.call(
+        {
+          identification: identification,
+          answers: answers,
+          listing: generated
+        }
+      ) || {}
+      # ayaka added / end
+
+      generated = generated.merge(platform: "jimoty")
+    else
+      # Non-listable items never get Jimoty listing copy generated at all — not just hidden.
+      # Built from what identify already determined; no extra AI call, and guarantees `title`
+      # presence since identification[:name] never reaches the server.
+      plain_title = [identification[:brand],
+                     identification[:category]].compact_blank.join(" ").presence || "Unlisted item"
+      generated = { title: plain_title, description: "Not offered on Jimoty — routed straight to disposal." }
+      jimoty_categories = {}
+    end
 
     @item = current_user.items.new(item_params.except(:follow_up_answers, :follow_up_question_texts,
-                                                      :condition_guess)
+                                                      :condition_guess, :listable)
                                                       .merge(generated.slice(*Item.column_names.map(&:to_sym)))
-                                                      .merge(jimoty_category_value: jimoty_categories[:category_value], jimoty_large_genre_value: jimoty_categories[:large_genre_value], jimoty_medium_genre_value: jimoty_categories[:medium_genre_value]))
+                                                      .merge(jimoty_category_value: jimoty_categories[:category_value], jimoty_large_genre_value: jimoty_categories[:large_genre_value], jimoty_medium_genre_value: jimoty_categories[:medium_genre_value], listable: listable))
     # @item.photos.attach(item_params[:photos]) if item_params[:photos]
 
     if @item.save
@@ -86,7 +102,8 @@ class ItemsController < ApplicationController
   def item_params
     params.require(:item).permit(
       :title, :category, :platform, :description, :description_ja, :title_ja, :age, :functional,
-      :brand, :model_number, :suggested_price, :confirmed_price, :disposal_fee, :jimoty_category, :condition_guess,
+      :brand, :model_number, :suggested_price, :confirmed_price, :disposal_fee, :jimoty_category,
+      :condition_guess, :waste_category_key, :listable,
       photos: [], follow_up_answers: [], follow_up_question_texts: []
     )
   end

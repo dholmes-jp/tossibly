@@ -28,84 +28,24 @@
     <h3 class="h6 mb-3">Compare your options</h3>
 
         <%
-          classifier   = ItemPathClassifier.new(@item)
-          bucket       = classifier.call
-          single_path  = bucket == :single_path
-          comps        = ItemPathClassifier::PLACEHOLDER_COMPS
-          asking_range = "#{yen(comps[:asking_low])}&ndash;#{yen(comps[:asking_high])}".html_safe
-          fee_appliance = ItemPathClassifier::APPLIANCE_RECYCLING_FEE
-          fee_bulky     = ItemPathClassifier::BULKY_GENERIC_FEE
-          dropoff       = ItemPathClassifier::DROPOFF_POINTS
+          waste_category = @item.waste_category
+          single_path    = !@item.listable
+          comps          = { nearby_listings: 5, asking_low: 1_000, asking_high: 4_000 }
+          asking_range   = "#{yen(comps[:asking_low])}&ndash;#{yen(comps[:asking_high])}".html_safe
 
-          dispose =
-            case bucket
-            when :designated_small_appliance
-              {
-                chip: "Free",
-                blurb: "One of Meguro's nine designated small-appliance types — hand it in whole, no paperwork.",
-                cost: "Free",
-                stat: { k: "Drop-off", v: "#{dropoff} points in Meguro" },
-                facts: [["Category", "Designated small appliance"], ["Cost", "Free"], ["Application", "Not required"]],
-                steps: [
-                  "No need to remove the battery — mobile-type devices are collected whole.",
-                  "Drop it into any small home-appliance collection box in Meguro.",
-                  "Nothing to book: no application is needed."
-                ]
-              }
-            when :appliance_recycling_law
-              {
-                chip: "Paid",
-                blurb: "Covered by Japan's Home Appliance Recycling Law, so it goes through the recycling route rather than ward collection.",
-                cost: yen(fee_appliance),
-                stat: { k: "Apply via", v: "Pick-up Center" },
-                facts: [["Category", "Appliance Recycling Law"], ["Cost", yen(fee_appliance)], ["Application", "Required"]],
-                steps: [
-                  "Arrange collection through the Home Appliance Recycling Pick-up Center, or hand it back to the original retailer.",
-                  "Pay the recycling fee plus a transport charge when it's collected.",
-                  "There is no ward drop-off for this category."
-                ]
-              }
-            when :bulky_generic
-              {
-                chip: "Paid",
-                blurb: "Large-sized waste — apply first, then put it out on the collection date you're given.",
-                cost: yen(fee_bulky),
-                stat: { k: "Apply via", v: "Phone / online" },
-                facts: [["Category", "Large-sized waste"], ["Cost", yen(fee_bulky)], ["Application", "Required first"]],
-                steps: [
-                  "Submit an application before any collection date is assigned.",
-                  "You'll be given a collection date and the location to leave it.",
-                  "Take it to that location by 8:00am on the assigned date."
-                ]
-              }
-            when :single_path
-              bin = classifier.single_path_bin
-              {
-                chip: nil,
-                blurb: "This goes straight out with your #{bin} — nothing to list, nothing to arrange.",
-                cost: nil,
-                stat: nil,
-                facts: [["Category", bin.capitalize], ["Application", "Not required"]],
-                steps: [
-                  "Empty and give it a quick rinse if it held food or drink.",
-                  "Put it out with your #{bin} on the normal collection day.",
-                  "No application needed."
-                ]
-              }
-            else # :small_item_generic
-              {
-                chip: "Free",
-                blurb: "Non-combustible waste — it goes out on the regular schedule with nothing to arrange.",
-                cost: "Free",
-                stat: { k: "Collected", v: "Twice monthly" },
-                facts: [["Category", "Non-combustible waste"], ["Cost", "Free"], ["Application", "Not required"]],
-                steps: [
-                  "Set it out as non-combustible waste.",
-                  "Collection runs twice a month — check your ward calendar for dates.",
-                  "No application needed."
-                ]
-              }
-            end
+          dispose = if waste_category
+            {
+              chip: waste_category.chip_label,
+              blurb: waste_category.blurb,
+              cost: waste_category.cost_label,
+              stat: waste_category.collection_frequency.present? ? { k: "Collected", v: waste_category.collection_frequency } : nil,
+              facts: [["Category", waste_category.name], ["Cost", waste_category.cost_label],
+                      ["Application", waste_category.application_required? ? "Required" : "Not required"]],
+              steps: waste_category.steps
+            }
+          else
+            { chip: nil, blurb: "Disposal category not yet determined for this item.", cost: nil, stat: nil, facts: [], steps: [] }
+          end
         %>
 
         <% unless single_path %>
