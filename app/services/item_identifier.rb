@@ -4,10 +4,24 @@ class ItemIdentifier
   end
 
   def call
+    categories_description = WasteCategoryLookup.all.map { |c| "- #{c.key}: #{c.name}" }.join("\n        ")
+
     prompt = <<-PROMPT
       Identify this secondhand item. Look closely for a visible brand/manufacturer name or
       model number (e.g. on a label or panel) and include them if you can make them out —
       only leave them null if genuinely not legible, don't guess.
+
+      Classify this item into exactly one Meguro waste-disposal category, by what the physical
+      object would be as trash — not by its resale desirability. Choose the single best match:
+        #{categories_description}
+
+      Separately and independently, decide `listable`: true if this specific item, in its
+      actual condition, has real reuse value to someone else (working, complete enough to be
+      useful, not degraded to pure waste) — false only if it has none. Base this ONLY on the
+      item's own condition/completeness visible in the photo, never on which waste category it
+      falls into. A fully reusable object (a tote bag, a jar, a crate) can share a disposal
+      category with pure waste and must still be marked listable if it's genuinely reusable —
+      do not infer listability from category membership.
 
       The seller is always separately asked these four fixed questions, so follow_up_questions
       must never ask about them or anything covered by them:
@@ -19,7 +33,9 @@ class ItemIdentifier
       For follow_up_questions, give up to 3 short questions (or an empty array if none are
       needed — that's the common case for large appliances, since the four fixed questions
       above already cover most of what's needed) about things you genuinely cannot determine
-      from the photo, tailored to this specific item type. Rules:
+      from the photo, tailored to this specific item type. Never pad the array with a blank,
+      empty, or placeholder question just to reach a round number — every entry must be a real,
+      necessary question. Rules:
         - Only ask what's NOT visible/determinable from the photo.
         - Never ask about color, shape, or anything clearly visible in the image.
         - Never ask anything that would require the seller to use a tool (tape measure,
@@ -41,9 +57,13 @@ class ItemIdentifier
     chat = RubyLLM.chat(model: "gpt-4o").with_schema(ItemIdentificationSchema)
     response = chat.ask(prompt, with: @photos.map { |photo| photo.tempfile.path })
 
-    response.content.symbolize_keys.tap { |result| Rails.logger.info("ItemIdentifier result: #{result}") }
+    result = response.content.symbolize_keys
+    result[:follow_up_questions] = Array(result[:follow_up_questions]).map(&:to_s).reject(&:blank?).first(3)
+    Rails.logger.info("ItemIdentifier result: #{result}")
+    result
   rescue StandardError => e
     Rails.logger.error("ItemIdentifier failed: #{e.message}")
-    { name: nil, brand: nil, category: nil, model_number: nil, condition_guess: nil, follow_up_questions: [] }
+    { name: nil, brand: nil, category: nil, model_number: nil, condition_guess: nil, waste_category_key: nil,
+      listable: true, follow_up_questions: [] }
   end
 end
