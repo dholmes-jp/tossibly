@@ -11,6 +11,11 @@ class ItemDescriber
       And these seller-provided answers: #{@answers.to_json}
       And the attached photos of the item.
 
+      Write `title`, `category`, and `description` entirely in English. Write `title_ja` and
+      `description_ja` entirely in Japanese. These must be genuinely independent content in each
+      language — never the same text duplicated across both, and never Japanese text placed into
+      the English-named fields or vice versa.
+
       Write this as a real Jimoty (ジモティー) classifieds listing — plain and practical, like a
       neighbor describing something they're passing along locally. This is NOT sales or marketing
       copy, so do not write it like one.
