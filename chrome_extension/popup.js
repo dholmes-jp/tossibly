@@ -1,6 +1,6 @@
 // Replace the following URL to Heroku URL
-// const BASE_URL = "http://localhost:3000";
-const BASE_URL = "https://tossibly-519656c75f63.herokuapp.com";
+const BASE_URL = "http://localhost:3000";
+// const BASE_URL = "https://tossibly-519656c75f63.herokuapp.com";
 
 function listenClick() {
   const button = document.getElementById("load-items");
