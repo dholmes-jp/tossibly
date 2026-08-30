@@ -207,32 +207,103 @@ appliance_recycling_law:
   name: "Appliance Recycling Law item"
   blurb: "Covered by Japan's Home Appliance Recycling Law, so it goes through the recycling route rather than ward collection."
   steps:
-    - "Arrange collection through the Home Appliance Recycling Pick-up Center, or hand it back to the original retailer."
-    - "Pay the recycling fee plus a transport charge when it's collected (transport waived if self-delivered to a designated dealer)."
-    - "There is no ward drop-off for this category."
-  cost_yen: 4300
-  cost_note: "Placeholder for the demo — real recycling fee varies by manufacturer/category/size, no fee table sourced yet."
+    - "Apply online with the Home Appliance Recycling Ticket Center (24 hours), or hand the item back to the retailer you bought it from — or the one selling you the replacement."
+    - "Your exact recycling fee depends on the manufacturer and size class; the RKC fee list publishes the per-brand amount."
+    - "Pay the recycling fee plus a collection/transport charge when it's picked up. The transport charge is waived if you take it to a designated dealer yourself."
+    - "There is no ward collection for this category — it cannot be put out as large-sized waste."
+  # Fees revised early 2026 and differ depending on manufacturer,
+  # so even air conditioners are now a range rather than one number.
+  # Category-level low/high is the full span across the four subitems below,
+  # used only when we can't tell which of the four an item is.
+  cost_yen_low: 550
+  cost_yen_high: 6149
+  collection_fee_note: "A collection and transport fee of roughly ¥1,000–3,000 is charged separately on top, and varies by retailer or collection agent. It's waived if you deliver the item to a designated dealer yourself."
+  application_url: "https://kaden23rc.jp/"
+  application_label: "Home Appliance Recycling Ticket Center"
   chip_label: "Paid"
   collection_frequency: "On request via Pick-up Center"
   application_required: true
   position: 8
   subitems:
-    - { key: air_conditioners, name: "Air conditioners" }
-    - { key: televisions, name: "Televisions" }
-    - { key: refrigerators_freezers, name: "Refrigerators and freezers" }
-    - { key: washing_machines_dryers, name: "Washing machines and dryers" }
+    - key: air_conditioners
+      name: "Air conditioners"
+      cost_yen_low: 550
+      cost_yen_high: 1034
+      keywords: ["air conditioner", "aircon", "air-con", "split unit"]
+    - key: televisions
+      name: "Televisions"
+      cost_yen_low: 1870
+      cost_yen_high: 3700
+      keywords: ["tv", "television", "flat screen", "flatscreen"]
+    - key: refrigerators_freezers
+      name: "Refrigerators and freezers"
+      cost_yen_low: 3740
+      cost_yen_high: 6149
+      keywords: ["refrigerator", "fridge", "freezer"]
+    - key: washing_machines_dryers
+      name: "Washing machines and dryers"
+      cost_yen_low: 2530
+      cost_yen_high: 3300
+      keywords: ["washing machine", "washer", "clothes dryer", "tumble dryer", "laundry machine", "dryer"]
+
 
 large_sized_waste:
   name: "Large-sized waste"
   blurb: "Large-sized waste — apply first, then put it out on the collection date you're given."
   steps:
-    - "Submit an application before any collection date is assigned."
-    - "You'll be given a collection date and the location to leave it."
-    - "Take it to that location by 8:00am on the assigned date."
-  cost_yen: 2000
-  cost_note: "Placeholder for the demo — real per-item fee comes from the city's fee schedule, not sourced yet."
+    - "Apply first — online any time, or by phone on 03-5715-0053 (Mon–Sat, 8:00–19:00, closed Sundays and Dec 29–Jan 3)."
+    - "You'll be given a collection date, a reference number, and the fee for your item."
+    - "Buy a paid disposal sticker (有料粗大ごみ処理券) for that amount at a designated shop, and write the collection date and reference number on it."
+    - "Stick it on the item and put it out at the instructed spot by 8:00am on the collection date."
+  # Meguro's 5-tier fee schedule, current since the Oct 2023 revision. Each tier's
+  # `name` lists the city's own published example items; `keywords` extends those
+  # with reasonable equivalents so identification output actually matches.
+  # Anything unmatched falls back to the category range below, flagged as approximate.
+  cost_yen_low: 400
+  cost_yen_high: 3000
+  application_url: "https://www2.sodai-web.jp/meguro/index.html"
+  application_label: "Meguro bulky waste online application"
   chip_label: "Paid"
   collection_frequency: "On request — apply first"
   application_required: true
   position: 9
-  subitems: []
+  subitems:
+    - key: tier_400
+      name: "Storage boxes, suitcases, table chairs, vacuum cleaners, futons"
+      cost_yen_low: 400
+      cost_yen_high: 400
+      keywords: ["suitcase", "storage box", "clothes box", "chair", "vacuum", "futon", "duvet", "bedding", "fan", "lamp", "light fixture", "air purifier", "hanger rack", "kids bike", "kids bicycle", "children's bicycle"]
+    - key: tier_800
+      name: "Microwaves, single-person sofas, tabletop sewing machines, water heaters"
+      cost_yen_low: 800
+      cost_yen_high: 800
+      # Bicycles split by wheel size: 16" or under is ¥400, over 16" is ¥800.
+      # Adult bikes are the common case, so a bare "bicycle" resolves here.
+      keywords: ["microwave", "single sofa", "1-seater", "one-seater", "armchair", "sewing machine", "water heater", "bicycle", "bike"]
+    - key: tier_1300
+      name: "Bed mattresses, desks, dressing tables, dishwashers, fitness machines"
+      cost_yen_low: 1300
+      cost_yen_high: 1300
+      keywords: ["mattress", "desk", "bed frame", "dressing table", "vanity", "dishwasher", "exercise bike", "treadmill", "walking machine", "karaoke", "electric bicycle", "electric bike", "e-bike", "electric-assist"]
+    - key: tier_2100
+      name: "Sofas for two or more, organs, foot-pedal sewing machines"
+      cost_yen_low: 2100
+      cost_yen_high: 2100
+      keywords: ["sofa", "couch", "loveseat", "2-seater", "two-seater", "3-seater", "three-seater", "sectional", "organ"]
+    - key: tier_3000
+      name: "Double-pedestal desks"
+      cost_yen_low: 3000
+      cost_yen_high: 3000
+      keywords: ["double-pedestal desk", "double pedestal desk", "double pedestal"]
+    - key: storage_furniture_by_size
+      name: "Storage furniture (priced by size)"
+      # Meguro's real 5-tier fee schedule Each tier's `name` lists the city's own
+      # published example items; `keywords` extends those with reasonable
+      # equivalents so identification output actually matches. Anything
+      # unmatched falls back to the category range below, flagged as approximate.
+      cost_yen_low: 400
+      cost_yen_high: 3000
+      cost_label_override: "Depends on size"
+      cost_note: "Storage furniture is priced by size — Meguro charges on the sum of its two longest sides, so the exact fee is confirmed when you apply."
+      keywords: ["wardrobe", "closet", "bookcase", "bookshelf", "chest of drawers", "dresser", "cupboard", "shelving unit", "tansu", "cabinet", "sideboard"]
+## Replacement ending here ****************

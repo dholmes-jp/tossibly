@@ -29,6 +29,7 @@
 
         <%
           waste_category = @item.waste_category
+          fee            = DisposalFeeEstimator.call(@item)
           single_path    = !@item.listable
           comps          = { nearby_listings: 5, asking_low: 1_000, asking_high: 4_000 }
           asking_range   = "#{yen(comps[:asking_low])}&ndash;#{yen(comps[:asking_high])}".html_safe
@@ -37,14 +38,19 @@
             {
               chip: waste_category.chip_label,
               blurb: waste_category.blurb,
-              cost: waste_category.cost_label,
+              cost: fee.label,
               stat: waste_category.collection_frequency.present? ? { k: "Collected", v: waste_category.collection_frequency } : nil,
-              facts: [["Category", waste_category.name], ["Cost", waste_category.cost_label],
+              facts: [["Category", waste_category.name], ["Cost", fee.label],
                       ["Application", waste_category.application_required? ? "Required" : "Not required"]],
-              steps: waste_category.steps
+              steps: waste_category.steps,
+              notes: fee.notes,
+              apply_url: fee.application_url,
+              apply_label: fee.application_label
             }
           else
-            { chip: nil, blurb: "Disposal category not yet determined for this item.", cost: nil, stat: nil, facts: [], steps: [] }
+            { chip: nil, blurb: "Disposal category not yet determined for this item.",
+              cost: nil, stat: nil, facts: [], steps: [], notes: [],
+              apply_url: nil, apply_label: nil }
           end
         %>
 
@@ -66,19 +72,7 @@
                 <span class="path-name">Dispose</span>
               </div>
               <p class="path-blurb"><%= dispose[:blurb] %></p>
-              <div class="dispose-facts">
-                <% dispose[:facts].each do |key, value| %>
-                  <div class="dispose-fact">
-                    <span class="dispose-fact__k"><%= key %></span>
-                    <span class="dispose-fact__v"><%= value %></span>
-                  </div>
-                <% end %>
-              </div>
-              <ol class="dispose-steps">
-                <% dispose[:steps].each do |step| %>
-                  <li><%= step %></li>
-                <% end %>
-              </ol>
+              <%= render "items/dispose_details", dispose: dispose %>
             </div>
           </div>
         <% else %>
@@ -179,19 +173,7 @@
                 </button>
 
                 <div class="path-expanded">
-                  <div class="dispose-facts">
-                    <% dispose[:facts].each do |key, value| %>
-                      <div class="dispose-fact">
-                        <span class="dispose-fact__k"><%= key %></span>
-                        <span class="dispose-fact__v"><%= value %></span>
-                      </div>
-                    <% end %>
-                  </div>
-                  <ol class="dispose-steps">
-                    <% dispose[:steps].each do |step| %>
-                      <li><%= step %></li>
-                    <% end %>
-                  </ol>
+                  <%= render "items/dispose_details", dispose: dispose %>
                   <div class="path-back">
                     <button type="button" class="path-back__btn" data-action="item-decision#showBoth">
                       &larr; Compare both paths again
