@@ -502,6 +502,36 @@ $dispose-ink: $navy;
   }
 }
 
+.dispose-notes {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin: 0.25rem 0 0.75rem;
+}
+
+.dispose-note {
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: rgba($tossibly-black, 0.55);
+  margin: 0;
+  padding-left: 0.65rem;
+  border-left: 2px solid rgba($navy, 0.25);
+}
+
+.dispose-apply {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.75rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: $navy;
+  text-decoration: none;
+
+  &:hover { text-decoration: underline; }
+  &::after { content: "↗"; font-size: 0.9em; }
+}
+
 .path-back {
   margin-top: 0.5rem;
 }
