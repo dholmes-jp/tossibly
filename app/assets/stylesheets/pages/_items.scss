@@ -184,56 +184,93 @@
 
   .section-head {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    flex-direction: column;
     margin-bottom: 1rem;
+    gap: 24px;
 
-    h2 {
-      font-size: 1.1rem;
+    h1 {
+      font-size: 1.8rem;
       font-weight: 700;
+      font-family: $headers-font;
       margin: 0;
       display: flex;
       align-items: center;
       gap: 0.45rem;
-      color: $tossibly-black;
-
-      i { color: $primary; }
+      color: $forest;
     }
 
     .see-all {
-      font-size: 0.85rem;
+      font-size: 1rem;
       font-weight: 600;
-      color: $primary;
+      font-family: $headers-font;
+      color: $leaf;
       text-decoration: none;
+      cursor: pointer;
     }
   }
 
-  .decision-card {
-    background: white;
-    border-radius: 14px;
-    padding: 24px;
-    border: 1px solid rgba($tossibly-black, 0.08);
-  }
+  // .decision-card {
+    // background: white;
+    // border-radius: 14px;
+    // padding: 24px;
+    // border: 1px solid rgba($tossibly-black, 0.08);
+  // }
 
   // Full-width item header strip, stacked above the compare cards.
   .item-head {
+    // display: flex;
+    // align-items: flex-start;
+    // gap: 1rem;
+    // margin-bottom: 1.5rem;
+    // added
     display: flex;
-    align-items: flex-start;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
+    gap: 1.5rem;           // Increased gap
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background-color: $white;
+    border-radius: 20px;    // Increased corner radius
+    border: none;           // No border
+    box-shadow: none;       // No shadow
   }
 
   .item-head-thumb {
     flex-shrink: 0;
-    width: 72px;
-    height: 72px;
-    border-radius: 12px;
+    width: 216px;
+    height: 216px;
+    border-radius: 24px;
     object-fit: cover;
   }
 
   .item-head-info {
     min-width: 0;
+    h2 {
+      font-family: $headers-font;
+      color: $forest;
+      font-weight: 600;
+    }
+    p {
+      font-size: 1rem;
+      color: $tossibly-black;
+    }
   }
+}
+
+.item-status {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.item-status--working {
+  background: $mint;
+  color: $forest;
+}
+
+.item-status--notworking {
+  color: #666;
+  background-color: #d5d5d5;
 }
 
 // ---------------------------------------------------------------------------
@@ -244,21 +281,28 @@
 // only. Single-path items skip .view-control and .compare-paths entirely and
 // render one full-width .path-card--dispose inside .compare-single.
 //
-// $orange (Jimoty) and $navy (Dispose) come from config/_colors; the two "ink"
+// $sun (Jimoty) and $navy (Dispose) come from config/_colors; the two "ink"
 // tints below are just darker text colours for use on the tinted chip fills.
 // ---------------------------------------------------------------------------
+.decision-card h3 {
+  font-family: $headers-font;
+  color: $forest;
+  font-size: 1.4rem;
+  font-weight: 600;
+}
 
-$jimoty-ink: #8a4a12;
+$jimoty-ink: $sun;
 $dispose-ink: $navy;
 
 .view-control {
   display: inline-flex;
-  gap: 4px;
-  padding: 4px;
+  gap: 8px;
+  padding: 8px;
   margin-bottom: 1rem;
-  background: $light-gray;
-  border: 1px solid rgba($tossibly-black, 0.1);
+  background: $tossibly-white;
+  // border: 1px solid rgba($forest, 0.1);
   border-radius: 999px;
+  color: $forest;
 }
 
 .view-control__btn {
@@ -266,17 +310,19 @@ $dispose-ink: $navy;
   border: none;
   background: transparent;
   cursor: pointer;
-  font-size: 0.78rem;
-  font-weight: 700;
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-family: $body-font;
   padding: 6px 14px;
   border-radius: 999px;
-  color: rgba($tossibly-black, 0.65);
+  // color: rgba($tossibly-black, 0.65);
+  color: $forest;
   transition: background 0.15s, color 0.15s;
 
-  &:hover:not(.is-on) { color: $tossibly-black; }
+  &:hover:not(.is-on) { color: $forest; }
 
-  &.is-on { color: #fff; background: $tossibly-black; }
-  &.is-on[data-state="jimoty"] { background: $orange; }
+  &.is-on { color: #fff; background: $forest; }
+  &.is-on[data-state="jimoty"] { background: $sun; color: $forest;}
   &.is-on[data-state="dispose"] { background: $navy; }
 }
 
@@ -285,6 +331,7 @@ $dispose-ink: $navy;
   gap: 1rem;
   align-items: stretch;
   margin-bottom: 1rem;
+  font-family: $headers-font;
 }
 
 .compare-single {
@@ -342,8 +389,12 @@ $dispose-ink: $navy;
   padding: 20px 22px;
 }
 
-.path-card--jimoty { border-top-color: $orange; }
-.path-card--dispose { border-top-color: $navy; }
+.path-card--jimoty {
+  border-top-color: $sun;
+}
+.path-card--dispose {
+  border-top-color: $navy;
+}
 
 .path-card__head {
   display: flex;
@@ -353,9 +404,9 @@ $dispose-ink: $navy;
 }
 
 .path-name {
-  font-weight: 700;
-  font-size: 1.05rem;
-  color: $tossibly-black;
+  font-weight: 800;
+  font-size: 1.4rem;
+  // color: $forest;
 }
 
 .path-card--dispose .path-name { color: $navy; }
@@ -368,12 +419,12 @@ $dispose-ink: $navy;
   padding: 0.25rem 0.6rem;
   border-radius: 999px;
 
-  .path-card--jimoty & { background: rgba($orange, 0.15); color: $jimoty-ink; }
+  .path-card--jimoty & { background: rgba($sun, 0.15); color: #c7ab38; }
   .path-card--dispose & { background: rgba($navy, 0.1); color: $dispose-ink; }
 }
 
 .path-blurb {
-  font-size: 0.85rem;
+  font-size: 1rem;
   line-height: 1.5;
   color: rgba($tossibly-black, 0.7);
   margin: 0;
@@ -390,13 +441,13 @@ $dispose-ink: $navy;
   border-radius: 8px;
   padding: 7px 10px;
 
-  .path-card--jimoty & { background: rgba($orange, 0.1); }
+  .path-card--jimoty & { background: rgba($sun, 0.2); }
   .path-card--dispose & { background: rgba($navy, 0.07); }
 }
 
 .path-stat__k {
   display: block;
-  font-size: 0.62rem;
+  font-size: 0.8rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -404,7 +455,7 @@ $dispose-ink: $navy;
 }
 
 .path-stat__v {
-  font-size: 0.82rem;
+  font-size: 1rem;
   font-weight: 700;
   color: $tossibly-black;
 }
@@ -441,8 +492,8 @@ $dispose-ink: $navy;
     font-size: 0.9rem;
 
     &:focus {
-      border-color: $orange;
-      box-shadow: 0 0 0 0.2rem rgba($orange, 0.2);
+      border-color: $sun;
+      box-shadow: 0 0 0 0.2rem rgba($sun, 0.2);
     }
   }
 }
@@ -456,6 +507,23 @@ $dispose-ink: $navy;
 .jimoty-form__save {
   align-self: flex-start;
   margin-top: 0.2rem;
+}
+
+// added for editing button
+.jimoty-edit-btn {
+  border: none;
+  background-color: $sun;
+  padding: 4px 24px;
+  border-radius: 99px;
+  margin-left: auto;
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: $forest;
+  i {
+    font-size: 0.8em;
+    padding-right: .5em;
+  }
 }
 
 // Dispose expanded body (informational only — no form on this side).
@@ -555,9 +623,9 @@ $dispose-ink: $navy;
 }
 
 .btn-platform {
-  font-size: 0.8rem;
+  font-size: 1.1rem;
   font-weight: 700;
-  padding: 0.5rem 0.75rem;
+  padding: 8px;
   border-radius: 6px;
   border: none;
   cursor: pointer;
@@ -567,15 +635,18 @@ $dispose-ink: $navy;
   letter-spacing: 0.01em;
   text-decoration: none;
   transition: opacity 0.15s, transform 0.1s;
+  width: 100%;
+  text-align: center;
+  justify-content: center;
+  font-family: $body-font;
 
   &:hover {
     opacity: 0.85;
     transform: translateY(-1px);
-    color: #fff;
   }
 }
 
-.btn-jimoty { background: $orange; color: #fff; }
+.btn-jimoty { background: $sun; color: $forest; }
 .btn-dispose { background: $navy; color: #fff; }
 
 @media (max-width: 767.98px) {
