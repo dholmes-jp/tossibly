@@ -1,0 +1,30 @@
+<%= form_with model: @item, method: :patch, class: "jimoty-form" do |f| %>
+  <div class="jimoty-field">
+    <%= f.label :title, "Listing title", class: "form-label" %>
+    <%= f.text_field :title, class: "form-control" %>
+  </div>
+  <div class="jimoty-field">
+    <%= f.label :description, "Listing description (English)", class: "form-label" %>
+    <%= f.text_area :description, rows: 4, class: "form-control" %>
+    <p class="jimoty-field__note">
+      The Japanese description used by the extension isn't shown here.
+    </p>
+  </div>
+  <div class="jimoty-field">
+    <%= f.label :confirmed_price, "Listing price (¥)", class: "form-label" %>
+    <%# confirmed_price column-defaults to 0. Show the saved value, or 0 when nothing has been
+                          set yet — the AI suggestion is never dropped into the field, only shown in the note below. %>
+    <%= f.number_field :confirmed_price, value: @item.confirmed_price.to_i,
+                            min: 0, class: "form-control" %>
+    <% if @item.suggested_price.present? %>
+      <p class="jimoty-field__note">
+        AI suggested <%= yen(@item.suggested_price) %> from
+        <%= comps[:nearby_listings] %> nearby listings (<%= asking_range %>)
+      </p>
+    <% end %>
+  </div>
+  <%# description_ja is intentionally left untouched on save. Regenerating the
+                        Japanese copy the Chrome extension autofills on Jimoty needs a real
+                        translation (LLM) call, which belongs in its own pass — not this form. %>
+  <%= f.submit "Save listing details", class: "btn-platform btn-jimoty jimoty-form__save" %>
+<% end %>

@@ -1,0 +1,29 @@
+<div class="jimoty-details">
+  <div class="jimoty-field">
+    <p class="form-label">Listing title</p>
+    <p class="jimoty-field__value">
+      <%= @item.title %>
+    </p>
+  </div>
+  <div class="jimoty-field">
+    <p class="form-label">Listing description (English)</p>
+    <p class="jimoty-field__value">
+      <%= @item.description %>
+    </p>
+    <p class="jimoty-field__note">
+      The Japanese description used by the extension isn't shown here.
+    </p>
+  </div>
+  <div class="jimoty-field">
+    <p class="form-label">Listing price (¥)</p>
+    <p class="jimoty-field__value">
+      <%= yen(@item.confirmed_price.to_i) %>
+    </p>
+    <% if @item.suggested_price.present? %>
+      <p class="jimoty-field__note">
+        AI suggested <%= yen(@item.suggested_price) %> from
+        <%= comps[:nearby_listings] %> nearby listings (<%= asking_range %>)
+      </p>
+    <% end %>
+  </div>
+</div>
