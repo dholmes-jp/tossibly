@@ -1,8 +1,8 @@
 class ItemDescriber
-  def initialize(identification, answers, photos)
+  def initialize(identification, answers, photo_paths)
     @identification = identification
     @answers = answers
-    @photos = Array(photos).compact_blank
+    @photo_paths = Array(photo_paths).compact_blank
   end
 
   def call
@@ -45,7 +45,7 @@ class ItemDescriber
     PROMPT
 
     chat = RubyLLM.chat(model: "gpt-4o").with_schema(ItemListingSchema)
-    response = chat.ask(prompt, with: @photos.map { |photo| photo.tempfile.path })
+    response = chat.ask(prompt, with: @photo_paths)
 
     response.content.symbolize_keys
   rescue StandardError => e

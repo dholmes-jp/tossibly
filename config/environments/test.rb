@@ -39,6 +39,10 @@ Rails.application.configure do
   # Set host to be used by links generated in mailer templates.
   config.action_mailer.default_url_options = { host: "example.com" }
 
+  # Turbo Stream broadcasts render views outside a request, so url_for/image_tag need a
+  # host here too — otherwise Rails' renderer silently falls back to "example.org".
+  config.action_controller.default_url_options = { host: "example.com" }
+
   # Print deprecation notices to the stderr.
   config.active_support.deprecation = :stderr
 
