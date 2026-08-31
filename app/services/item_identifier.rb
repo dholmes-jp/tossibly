@@ -23,6 +23,13 @@ class ItemIdentifier
       category with pure waste and must still be marked listable if it's genuinely reusable —
       do not infer listability from category membership.
 
+      Also produce `jimoty_search_keyword`: a Japanese search term we use to find similar
+      secondhand listings near the seller. Combine the brand and the item category in Japanese
+      script — e.g. "日立冷蔵庫", "パナソニック電子レンジ". If the brand isn't legible, use the most
+      specific Japanese category term you can instead, e.g. "2ドア冷蔵庫". Never return a bare
+      generic word on its own (e.g. "スイッチ", "テーブル") — that matches thousands of unrelated
+      listings — and never romaji, since this is searched against a Japanese site.
+
       The seller is always separately asked these four fixed questions, so follow_up_questions
       must never ask about them or anything covered by them:
         - Approximately how old is the item?
@@ -59,11 +66,12 @@ class ItemIdentifier
 
     result = response.content.symbolize_keys
     result[:follow_up_questions] = Array(result[:follow_up_questions]).map(&:to_s).reject(&:blank?).first(3)
+    result[:jimoty_search_keyword] = result[:jimoty_search_keyword].to_s.strip.presence
     Rails.logger.info("ItemIdentifier result: #{result}")
     result
   rescue StandardError => e
     Rails.logger.error("ItemIdentifier failed: #{e.message}")
     { name: nil, brand: nil, category: nil, model_number: nil, condition_guess: nil, waste_category_key: nil,
-      listable: true, follow_up_questions: [] }
+      listable: true, jimoty_search_keyword: nil, follow_up_questions: [] }
   end
 end

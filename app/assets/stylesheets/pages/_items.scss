@@ -253,6 +253,15 @@
       color: $tossibly-black;
     }
   }
+
+  .decision-pending {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 2.5rem 1rem;
+    text-align: center;
+  }
 }
 
 .item-status {
@@ -372,7 +381,8 @@ $dispose-ink: $navy;
 .compare-paths[data-state="dispose"] .path-slot--dispose {
   .path-blurb,
   .path-stats,
-  .path-cta { display: none; }
+  .path-cta,
+  .jimoty-explainer { display: none; }
 
   .path-expanded { display: block; }
 }
@@ -458,6 +468,19 @@ $dispose-ink: $navy;
   font-size: 1rem;
   font-weight: 700;
   color: $tossibly-black;
+}
+
+.path-stats-empty {
+  font-size: 0.85rem;
+  color: rgba($forest, 0.6);
+  margin: 0;
+}
+
+.jimoty-explainer {
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: rgba($forest, 0.65);
+  margin: 0;
 }
 
 .path-cta {

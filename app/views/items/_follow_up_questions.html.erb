@@ -5,6 +5,7 @@
   <%= hidden_field_tag "item[condition_guess]", identification[:condition_guess] %>
   <%= hidden_field_tag "item[waste_category_key]", identification[:waste_category_key] %>
   <%= hidden_field_tag "item[listable]", identification[:listable] %>
+  <%= hidden_field_tag "item[jimoty_search_keyword]", identification[:jimoty_search_keyword] %>
 
   <% (identification[:follow_up_questions] || []).each do |question| %>
     <div class="scan-field">
