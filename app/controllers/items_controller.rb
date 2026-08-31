@@ -1,5 +1,5 @@
 class ItemsController < ApplicationController
-  before_action :set_item, only: %i[show edit update destroy]
+  before_action :set_item, only: %i[show update destroy]
 
   def index
     @items = current_user.items.order(created_at: :desc)
@@ -63,14 +63,11 @@ class ItemsController < ApplicationController
     end
   end
 
-  def edit
-  end
-
   def update
     if @item.update(item_params)
       redirect_to @item, notice: "Item updated."
     else
-      render :edit, status: :unprocessable_entity
+      render :show, status: :unprocessable_entity
     end
   end
 
