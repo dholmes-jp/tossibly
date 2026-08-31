@@ -3,19 +3,19 @@
     <% if item.photos.attached? %>
       <%= image_tag item.photos.first, class: "item-head-thumb", alt: item.title %>
     <% end %>
-
     <div class="item-head-info">
-      <h1 class="h5 mb-1"><%= item.title %></h1>
+      <h2 class="h4 mb-2"><%= item.title %></h2>
       <p class="text-muted small mb-2">
-        <%= item.functional ? "Working" : "Not working" %>
+        <span class="item-status <%= item.functional ? "item-status--working" : "item-status--notworking" %>">
+          <%= item.functional ? "Working" : "Not working" %>
+        </span>
         <% if item.brand.present? %> &middot; <%= item.brand %><% end %>
         <% if item.model_number.present? %> &middot; <%= item.model_number %><% end %>
       </p>
       <% if item.category.present? %>
         <p class="text-muted small mb-2">Waste category: <strong><%= item.category %></strong></p>
       <% end %>
-
-      <%= link_to "Edit details", edit_item_path(item), class: "small" %>
+      <%= item.description %>
     </div>
   </div>
 
@@ -26,9 +26,8 @@
       <p class="submit-overlay-subline">This usually takes a few seconds</p>
     </div>
   <% else %>
-    <h3 class="h6 mb-3">Compare your options</h3>
-
-        <%
+    <h3 class="mb-3">Compare your options</h3>
+    <%
           waste_category = item.waste_category
           fee            = DisposalFeeEstimator.call(item)
           single_path    = !item.listable
@@ -54,140 +53,112 @@
               apply_url: nil, apply_label: nil }
           end
         %>
-
-        <% unless single_path %>
-          <div class="view-control" role="group" aria-label="Which path to show">
-            <button type="button" class="view-control__btn is-on" data-state="both" aria-pressed="true"
+    <% unless single_path %>
+      <div class="view-control" role="group" aria-label="Which path to show">
+        <button type="button" class="view-control__btn is-on" data-state="both" aria-pressed="true"
                     data-item-decision-target="viewButton" data-action="item-decision#showBoth">Compare both</button>
-            <button type="button" class="view-control__btn" data-state="jimoty" aria-pressed="false"
+        <button type="button" class="view-control__btn" data-state="jimoty" aria-pressed="false"
                     data-item-decision-target="viewButton" data-action="item-decision#expandJimoty">Jimoty</button>
-            <button type="button" class="view-control__btn" data-state="dispose" aria-pressed="false"
+        <button type="button" class="view-control__btn" data-state="dispose" aria-pressed="false"
                     data-item-decision-target="viewButton" data-action="item-decision#expandDispose">Dispose</button>
+      </div>
+    <% end %>
+    <% if single_path %>
+      <div class="compare-single">
+        <div class="path-card path-card--dispose">
+          <div class="path-card__head">
+            <span class="path-name">Dispose</span>
           </div>
-        <% end %>
-
-        <% if single_path %>
-          <div class="compare-single">
-            <div class="path-card path-card--dispose">
-              <div class="path-card__head">
-                <span class="path-name">Dispose</span>
-              </div>
-              <p class="path-blurb"><%= dispose[:blurb] %></p>
-              <%= render "items/dispose_details", dispose: dispose %>
+          <p class="path-blurb"><%= dispose[:blurb] %></p>
+          <%= render "items/dispose_details", dispose: dispose %>
+        </div>
+      </div>
+    <% else %>
+      <div class="compare-paths" data-state="both" data-item-decision-target="paths">
+        <div class="path-slot path-slot--jimoty">
+          <div class="path-card path-card--jimoty">
+            <div class="path-card__head">
+              <span class="path-name">Jimoty</span>
+              <span class="path-chip">Free to list</span>
             </div>
-          </div>
-        <% else %>
-          <div class="compare-paths" data-state="both" data-item-decision-target="paths">
-            <div class="path-slot path-slot--jimoty">
-              <div class="path-card path-card--jimoty">
-                <div class="path-card__head">
-                  <span class="path-name">Jimoty</span>
-                  <span class="path-chip">Free to list</span>
+            <p class="path-blurb">
+              Listing it locally is low-effort &mdash; buyers come to you, and there's no shipping to deal with.
+            </p>
+            <div class="path-stats">
+              <div class="path-stat">
+                <span class="path-stat__k">Nearby</span>
+                <span class="path-stat__v"><%= comps[:nearby_listings] %> similar listings</span>
+              </div>
+              <div class="path-stat">
+                <span class="path-stat__k">Asking</span>
+                <span class="path-stat__v"><%= asking_range %></span>
+              </div>
+            </div>
+            <%= link_to "https://jmty.jp/articles/new?prefecture_id=0/", class: "btn-platform btn-jimoty path-cta", target: "_blank", rel: "noopener" do %>
+              List on Jimoty <i class="fa-solid fa-caret-right"></i>
+            <% end %>
+            <div class="path-expanded">
+              <div data-controller="jimoty-edit">
+                <div data-jimoty-edit-target="description">
+                  <button
+                    type="button"
+                    class="jimoty-edit-btn"
+                    data-action="click->jimoty-edit#edit">
+                    <i class="fa-solid fa-pen-to-square"></i>Edit
+                  </button>
+                  <%= render "items/jimoty_description", item: item, comps: comps, asking_range: asking_range %>
                 </div>
-                <p class="path-blurb">
-                  Listing it locally is low-effort &mdash; buyers come to you, and there's no shipping to deal with.
-                </p>
-                <div class="path-stats">
-                  <div class="path-stat">
-                    <span class="path-stat__k">Nearby</span>
-                    <span class="path-stat__v"><%= comps[:nearby_listings] %> similar listings</span>
-                  </div>
-                  <div class="path-stat">
-                    <span class="path-stat__k">Asking</span>
-                    <span class="path-stat__v"><%= asking_range %></span>
-                  </div>
+                <div data-jimoty-edit-target="form" hidden>
+                  <%= render "items/jimoty_form", item: item, comps: comps, asking_range: asking_range %>
                 </div>
-                <button type="button" class="btn-platform btn-jimoty path-cta"
-                        data-action="item-decision#expandJimoty">
-                  <i class="fas fa-location-dot"></i> List on Jimoty &rarr;
+              </div>
+              <div class="path-back">
+                <button type="button" class="path-back__btn" data-action="item-decision#showBoth">
+                  &larr; Compare both paths again
                 </button>
-
-                <div class="path-expanded">
-                  <%= form_with model: item, method: :patch, class: "jimoty-form" do |f| %>
-                    <div class="jimoty-field">
-                      <%= f.label :title, "Listing title", class: "form-label" %>
-                      <%= f.text_field :title, class: "form-control" %>
-                    </div>
-
-                    <div class="jimoty-field">
-                      <%= f.label :description, "Listing description (English)", class: "form-label" %>
-                      <%= f.text_area :description, rows: 4, class: "form-control" %>
-                      <p class="jimoty-field__note">
-                        The Japanese description used by the extension isn't shown here.
-                      </p>
-                    </div>
-
-                    <div class="jimoty-field">
-                      <%= f.label :confirmed_price, "Listing price (¥)", class: "form-label" %>
-                      <%# confirmed_price column-defaults to 0. Show the saved value, or 0 when nothing has been
-                          set yet — the AI suggestion is never dropped into the field, only shown in the note below. %>
-                      <%= f.number_field :confirmed_price, value: item.confirmed_price.to_i,
-                            min: 0, class: "form-control" %>
-                      <% if item.suggested_price.present? %>
-                        <p class="jimoty-field__note">
-                          AI suggested <%= yen(item.suggested_price) %> from
-                          <%= comps[:nearby_listings] %> nearby listings (<%= asking_range %>)
-                        </p>
-                      <% end %>
-                    </div>
-
-                    <%# description_ja is intentionally left untouched on save. Regenerating the
-                        Japanese copy the Chrome extension autofills on Jimoty needs a real
-                        translation (LLM) call, which belongs in its own pass — not this form. %>
-
-                    <%= f.submit "Save listing details", class: "btn-platform btn-jimoty jimoty-form__save" %>
-                  <% end %>
-
-                  <div class="path-back">
-                    <button type="button" class="path-back__btn" data-action="item-decision#showBoth">
-                      &larr; Compare both paths again
-                    </button>
-                  </div>
-                </div>
               </div>
             </div>
-
-            <div class="path-slot path-slot--dispose">
-              <div class="path-card path-card--dispose">
-                <div class="path-card__head">
-                  <span class="path-name">Dispose</span>
-                  <% if dispose[:chip] %><span class="path-chip"><%= dispose[:chip] %></span><% end %>
+          </div>
+        </div>
+        <div class="path-slot path-slot--dispose">
+          <div class="path-card path-card--dispose">
+            <div class="path-card__head">
+              <span class="path-name">Dispose</span>
+              <% if dispose[:chip] %><span class="path-chip"><%= dispose[:chip] %></span><% end %>
+            </div>
+            <p class="path-blurb"><%= dispose[:blurb] %></p>
+            <div class="path-stats">
+              <% if dispose[:cost] %>
+                <div class="path-stat">
+                  <span class="path-stat__k">Cost</span>
+                  <span class="path-stat__v"><%= dispose[:cost] %></span>
                 </div>
-                <p class="path-blurb"><%= dispose[:blurb] %></p>
-                <div class="path-stats">
-                  <% if dispose[:cost] %>
-                    <div class="path-stat">
-                      <span class="path-stat__k">Cost</span>
-                      <span class="path-stat__v"><%= dispose[:cost] %></span>
-                    </div>
-                  <% end %>
-                  <% if dispose[:stat] %>
-                    <div class="path-stat">
-                      <span class="path-stat__k"><%= dispose[:stat][:k] %></span>
-                      <span class="path-stat__v"><%= dispose[:stat][:v] %></span>
-                    </div>
-                  <% end %>
+              <% end %>
+              <% if dispose[:stat] %>
+                <div class="path-stat">
+                  <span class="path-stat__k"><%= dispose[:stat][:k] %></span>
+                  <span class="path-stat__v"><%= dispose[:stat][:v] %></span>
                 </div>
-                <button type="button" class="btn-platform btn-dispose path-cta"
+              <% end %>
+            </div>
+            <button type="button" class="btn-platform btn-dispose path-cta"
                         data-action="item-decision#expandDispose">
-                  <i class="fas fa-truck"></i> See disposal steps &rarr;
+              See disposal steps <i class="fa-solid fa-caret-right"></i>
+            </button>
+            <div class="path-expanded">
+              <%= render "items/dispose_details", dispose: dispose %>
+              <div class="path-back">
+                <button type="button" class="path-back__btn" data-action="item-decision#showBoth">
+                  &larr; Compare both paths again
                 </button>
-
-                <div class="path-expanded">
-                  <%= render "items/dispose_details", dispose: dispose %>
-                  <div class="path-back">
-                    <button type="button" class="path-back__btn" data-action="item-decision#showBoth">
-                      &larr; Compare both paths again
-                    </button>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
-        <% end %>
-
-        <p class="small text-muted mb-0">
-          No rush &mdash; this item is saved as <strong>Pending</strong> in My Items. Decide now, or come back later.
-        </p>
+        </div>
+      </div>
+    <% end %>
+    <p class="small text-muted mb-0">
+      No rush &mdash; this item is saved as <strong>Pending</strong> in My Items. Decide now, or come back later.
+    </p>
   <% end %>
 </div>

@@ -1,7 +1,9 @@
 <div class="container items-show">
   <div class="section-head">
-    <h2><i class="fas fa-route"></i> What Do You Want To Do?</h2>
-    <%= link_to "Back to My Items", items_path, class: "see-all" %>
+    <%= link_to items_path, class: "see-all" do %>
+      <i class="fa-solid fa-arrow-left"></i>Back to My Items
+    <% end %>
+    <h1><!--i class="fas fa-route"></i--> What Do You Want To Do?</h1>
   </div>
 
   <%= turbo_stream_from @item %>
