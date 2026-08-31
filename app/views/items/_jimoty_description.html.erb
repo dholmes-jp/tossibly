@@ -19,10 +19,19 @@
     <p class="jimoty-field__value">
       <%= yen(item.confirmed_price.to_i) %>
     </p>
-    <% if item.suggested_price.present? %>
+    <% if item.typical_price.present? %>
       <p class="jimoty-field__note">
-        AI suggested <%= yen(item.suggested_price) %> from
-        <%= comps[:nearby_listings] %> nearby listings (<%= asking_range %>)
+        Tossibly suggests starting at <%= yen(item.typical_price) %> &mdash; expect buyers to negotiate down.
+      </p>
+    <% end %>
+    <% if item.nearby_listings_found? %>
+      <p class="jimoty-field__note">
+        <% if item.search_scope == "tokyo" %>
+          Nothing nearby right now, so this looks at listings across Tokyo.
+        <% else %>
+          Based on <%= item.nearby_count %> similar items listed near you right now.
+        <% end %>
+        These are asking prices, not what they sold for.
       </p>
     <% end %>
   </div>
