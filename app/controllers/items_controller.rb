@@ -4,6 +4,7 @@ class ItemsController < ApplicationController
   def index
     @items = current_user.items.order(created_at: :desc)
     @items = @items.where(status: params[:status]) if params[:status].present?
+    @platform = params[:platform].presence || "other"
     @items = @items.where(platform: params[:platform]) if params[:platform].present?
   end
 
@@ -64,10 +65,16 @@ class ItemsController < ApplicationController
   end
 
   def update
+    # if @item.update(item_params)
+    #   redirect_to @item, notice: "Item updated."
+    # else
+    #   render :show, status: :unprocessable_entity
+    # end
+    # note: changed for "status" in index page
     if @item.update(item_params)
-      redirect_to @item, notice: "Item updated."
+      redirect_back fallback_location: items_path, notice: "Item updated."
     else
-      render :show, status: :unprocessable_entity
+      redirect_back fallback_location: items_path, alert: "Update failed."
     end
   end
 
@@ -90,7 +97,7 @@ class ItemsController < ApplicationController
     params.require(:item).permit(
       :title, :category, :platform, :description, :description_ja, :title_ja, :age, :functional,
       :brand, :model_number, :suggested_price, :confirmed_price, :disposal_fee, :jimoty_category,
-      :condition_guess, :waste_category_key, :listable, :jimoty_search_keyword,
+      :condition_guess, :waste_category_key, :listable, :jimoty_search_keyword, :status,
       photos: [], follow_up_answers: [], follow_up_question_texts: []
     )
   end
