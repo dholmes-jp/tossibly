@@ -1,19 +1,27 @@
-<div class="container py-5">
-  <h2>Log in</h2>
-  <%= simple_form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-    <div class="form-inputs">
+<%# app/views/devise/sessions/new.html.erb — Log in %>
+<%# Styles: app/assets/stylesheets/pages/_auth.scss %>
+<div class="auth">
+  <%= render "devise/shared/auth_panel", art: "login_drawing.png" %>
+
+  <div class="auth-card">
+    <p class="auth-card__eyebrow">Welcome back</p>
+    <h1 class="auth-card__title">Log in to Tossibly</h1>
+
+    <%= simple_form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
       <%= f.input :email,
-                required: false,
-                autofocus: true,
-                input_html: { autocomplete: "email" } %>
+                  required: false,
+                  autofocus: true,
+                  placeholder: "you@example.com",
+                  input_html: { autocomplete: "email" } %>
       <%= f.input :password,
-                required: false,
-                input_html: { autocomplete: "current-password" } %>
-      <%= f.input :remember_me, as: :boolean if devise_mapping.rememberable? %>
-    </div>
-    <div class="form-actions">
-      <%= f.button :submit, "Log in" %>
-    </div>
-  <% end %>
-  <%= render "devise/shared/links" %>
+                  required: false,
+                  placeholder: "Your password",
+                  input_html: { autocomplete: "current-password" } %>
+      <%= f.input :remember_me, as: :boolean, label: "Keep me logged in" if devise_mapping.rememberable? %>
+
+      <%= f.button :submit, "Log in", class: "auth-btn" %>
+    <% end %>
+
+    <%= render "devise/shared/links" %>
+  </div>
 </div>

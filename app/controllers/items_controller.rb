@@ -30,6 +30,7 @@ class ItemsController < ApplicationController
   end
 
   def create
+    photos = Array(item_params[:photos]).reject(&:blank?)
     answers = build_answers(item_params).merge(condition: params[:condition], note: params[:note])
     identification = item_params.slice(:brand, :category, :model_number, :condition_guess)
     # Defaults to "listable" if the form doesn't send a value.
@@ -37,7 +38,7 @@ class ItemsController < ApplicationController
     listable = item_params[:listable].nil? || ActiveModel::Type::Boolean.new.cast(item_params[:listable])
 
     if listable
-      generated = ItemDescriber.new(identification, answers, item_params[:photos]).call || {}
+      generated = ItemDescriber.new(identification, answers, photos).call || {}
 
       # ayaka added / start
       jimoty_categories = JimotyCategorySelector.new.call(

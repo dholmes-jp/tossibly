@@ -3,30 +3,45 @@
 <%# CONTRACT: every data-photo-analyzer target/action and the #identification /
     #follow_up_questions ids are wired to photo_analyzer_controller.js and
     ItemsController#identify — restyle freely, never rename these. %>
+
 <div class="scan-page" data-controller="submit-overlay">
+
   <p class="scan-page__eyebrow">Scan an item</p>
   <h1 class="scan-page__title">Show me what you're getting rid of.</h1>
   <p class="scan-page__helper">One clear photo is enough to start.</p>
+
   <%= form_with model: @item, url: items_path, method: :post, multipart: true, data: { controller: "photo-analyzer" } do |f| %>
+
     <div class="scan-page__label-row">
       Photos
       <span class="photo-picker-count" data-photo-analyzer-target="count">0 of 2 photos</span>
     </div>
-    <%# filmstrip first, add-tile second: CSS grows the add-tile to a big drop
-        zone while the filmstrip is empty. Keep the two tags on one line —
-        the :empty selector breaks if whitespace sneaks into the filmstrip. %>
+
+    <%# Drop zone on top, then the chosen photos below it (2 tiles side by side),
+        then the Identify button. photo_analyzer_controller.js renders the
+        tiles into .photo-filmstrip; keep that div empty of whitespace so the
+        :empty rule can hide it until there are photos. %>
     <div class="scan-zone">
+      <button type="button" class="scan-action scan-action--drop" data-photo-analyzer-target="addBar" data-action="photo-analyzer#openPicker">
+        <%= render "shared/scan_camera" %>
+        <span class="scan-action__label" data-photo-analyzer-target="addBarLabel">Add Photos</span>
+        <span class="scan-action__helper">Take a photo — or choose up to 2 from your device.</span>
+      </button>
+
+      <p class="scan-page__helper scan-page__helper--tip">Two photos beat one — grab an angle showing any damage.</p>
+
       <div class="photo-filmstrip" data-photo-analyzer-target="filmstrip"></div>
-      <button type="button" class="scan-action scan-action--drop" data-photo-analyzer-target="addBar" data-action="photo-analyzer#openPicker"><%= render "shared/scan_camera" %><span class="scan-action__label" data-photo-analyzer-target="addBarLabel">Add Photos</span><span class="scan-action__helper">Take a photo — or choose up to 2 from your device.</span></button>
     </div>
-    <p class="scan-page__helper scan-page__helper--tip">Two photos beat one — grab an angle showing any damage.</p>
+
     <%= f.file_field :photos, multiple: true, accept: "image/*", capture: "environment",
           id: "item_photos", class: "visually-hidden",
           data: { photo_analyzer_target: "input", action: "change->photo-analyzer#filesSelected" } %>
+
     <button type="button" class="scan-btn scan-btn--sun" data-photo-analyzer-target="continueButton"
             data-action="photo-analyzer#analyze" disabled>
       Identify this item &rarr;
     </button>
+
     <%# Scanning state: first photo as background, sun line sweeping over it.
         photo_analyzer_controller.js drops the photo into .scan-scanning__photo. %>
     <div class="scan-scanning d-none" data-photo-analyzer-target="loading">
@@ -37,9 +52,11 @@
         <span>Shape &middot; material &middot; condition</span>
       </div>
     </div>
+
     <%# Result state — revealed by the controller once identify returns %>
     <div class="scan-details d-none" data-photo-analyzer-target="details">
       <div id="identification"></div>
+
       <div class="scan-field">
         <span class="scan-field__label">Does it still work? What shape is it in?</span>
         <div class="condition-pills" data-photo-analyzer-target="conditionPills">
@@ -48,22 +65,26 @@
               <input type="radio" name="condition" value="<%= value %>" class="visually-hidden"
                      data-photo-analyzer-target="conditionRadio"
                      data-action="change->photo-analyzer#conditionChanged"
-              <%= "checked" if value == "Good" %>>
+                     <%= "checked" if value == "Good" %>>
               <%= value %>
             </label>
           <% end %>
         </div>
       </div>
+
       <%= hidden_field_tag "item[functional]", "true", data: { photo_analyzer_target: "functionalInput" } %>
+
       <div class="scan-field">
         <label class="scan-field__label" for="note">Anything else we should know? (optional)</label>
         <%= text_field_tag :note, nil, class: "form-control",
               placeholder: "e.g. scratch on the back, comes with original box" %>
       </div>
+
       <div id="follow_up_questions"></div>
       <%# filled in by the identify turbo-stream response once photos are chosen %>
     </div>
   <% end %>
+
   <div class="submit-overlay d-none" data-submit-overlay-target="overlay">
     <div class="spinner-border" role="status" aria-hidden="true"></div>
     <p class="submit-overlay-headline">Tossibly is checking the best way forward for this item&hellip;</p>
