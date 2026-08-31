@@ -16,10 +16,9 @@
                           set yet — the AI suggestion is never dropped into the field, only shown in the note below. %>
     <%= f.number_field :confirmed_price, value: item.confirmed_price.to_i,
                             min: 0, class: "form-control" %>
-    <% if item.suggested_price.present? %>
+    <% if item.typical_price.present? %>
       <p class="jimoty-field__note">
-        AI suggested <%= yen(item.suggested_price) %> from
-        <%= comps[:nearby_listings] %> nearby listings (<%= asking_range %>)
+        Tossibly suggested <%= yen(item.typical_price) %> based on <%= item.nearby_count %> nearby listings.
       </p>
     <% end %>
   </div>
