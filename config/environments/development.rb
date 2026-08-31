@@ -41,6 +41,11 @@ Rails.application.configure do
   # Set localhost to be used by links generated in mailer templates.
   config.action_mailer.default_url_options = { host: "localhost", port: 3000 }
 
+  # Turbo Stream broadcasts render views outside a request (e.g. from ProcessItemJob), so
+  # url_for/image_tag need a host here too — otherwise Rails' renderer silently falls back
+  # to "example.org" instead of raising, producing a dead image URL rather than an error.
+  config.action_controller.default_url_options = { host: "localhost", port: 3000 }
+
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
 
