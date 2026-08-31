@@ -1,0 +1,294 @@
+// app/assets/stylesheets/pages/_auth.scss
+// Devise pages: log in, sign up, account settings.
+// Tokens from config/_colors.scss + config/_fonts.scss. Inputs are the same
+// shape as the scan page (14px radius); the primary button is the sun pill.
+
+$auth-error: #B4432F;   // form-error colour only; not a brand token
+
+// ---------- Layout ----------
+.auth {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 32px 20px 64px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  font-family: $body-font;
+  color: $ink;
+
+  @media (min-width: 900px) {
+    grid-template-columns: 1fr 1.15fr;
+    align-items: stretch;
+  }
+
+  // settings page: card only, narrower
+  &--single {
+    max-width: 720px;
+    @media (min-width: 900px) { grid-template-columns: 1fr; }
+  }
+}
+
+// ---------- Forest side panel (desktop only) ----------
+// Artwork bleeds edge-to-edge under the rounded top corners; text sits below.
+.auth-panel {
+  display: none;
+  flex-direction: column;
+  border-radius: 32px;
+  overflow: hidden;
+  background: $forest;
+  color: $mint;
+
+  @media (min-width: 900px) { display: flex; }
+
+  &__art {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  &__body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 32px;
+    padding: 20px 40px 40px;
+  }
+
+  &__chips {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 18px;
+  }
+
+  &__tagline {
+    margin: 0 0 12px;
+    font-family: $headers-font;
+    font-size: clamp(30px, 3.2vw, 40px);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: $sun;
+  }
+
+  &__sub {
+    margin: 0;
+    max-width: 32ch;
+    font-size: 15px;
+    line-height: 1.5;
+    color: $mint;
+  }
+
+  &__steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-size: 14px;
+
+    li::before {
+      content: "✳";
+      margin-right: 10px;
+      color: $sun;
+    }
+  }
+}
+
+.auth-chip {
+  padding: 5px 14px;
+  border: 1.5px solid $mint;
+  border-radius: 999px;
+  font-size: 13px;
+  color: $mint;
+}
+
+// ---------- The form card ----------
+.auth-card {
+  padding: 36px;
+  border-radius: 24px;
+  background: $tossibly-white;
+
+  @media (max-width: 640px) { padding: 24px 20px; }
+
+  &__eyebrow {
+    margin: 0 0 4px;
+    font-size: 14px;
+    font-weight: 700;
+    color: $leaf;
+  }
+
+  &__title {
+    margin: 0 0 24px;
+    font-family: $headers-font;
+    font-size: 30px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: $forest;
+  }
+
+  &__section {
+    margin-top: 28px;
+    padding-top: 24px;
+    border-top: 1px solid rgba($forest, 0.12);
+
+    h3 {
+      margin: 0 0 4px;
+      font-family: $headers-font;
+      font-size: 18px;
+      font-weight: 800;
+      color: $forest;
+    }
+
+    > p {
+      margin: 0 0 16px;
+      font-size: 14px;
+      color: rgba($ink, 0.6);
+    }
+  }
+
+  // --- simple_form / Bootstrap pieces, restyled ---
+  .form-label,
+  label:not(.form-check-label) {
+    margin-bottom: 6px;
+    font-size: 14px;
+    font-weight: 700;
+    color: $forest;
+  }
+
+  .form-control {
+    padding: 12px 14px;
+    border: 1.5px solid rgba($forest, 0.25);
+    border-radius: 14px;
+    background: #fff;
+    font-size: 15px;
+
+    &::placeholder { color: rgba($ink, 0.35); }
+
+    &:focus {
+      border-color: $forest;
+      box-shadow: none;
+    }
+
+    &.is-invalid {
+      border-color: $auth-error;
+      background-image: none;
+    }
+  }
+
+  .form-text {
+    font-size: 13px;
+    color: rgba($ink, 0.55);
+  }
+
+  .invalid-feedback {
+    font-size: 13px;
+    color: $auth-error;
+  }
+
+  .form-check {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 4px 0 18px;
+    padding-left: 0;
+
+    .form-check-input {
+      width: 18px;
+      height: 18px;
+      margin: 0;
+      border-color: rgba($forest, 0.4);
+      accent-color: $forest;
+
+      &:checked {
+        background-color: $forest;
+        border-color: $forest;
+      }
+      &:focus { box-shadow: none; }
+    }
+
+    .form-check-label {
+      font-size: 14px;
+      font-weight: 500;
+      color: $ink;
+    }
+  }
+
+  .alert {
+    margin-bottom: 18px;
+    padding: 12px 14px;
+    border: none;
+    border-radius: 14px;
+    background: rgba($sun, 0.45);
+    color: $forest;
+    font-size: 14px;
+    font-weight: 600;
+  }
+}
+
+.auth-note {
+  margin: -8px 0 16px;
+  font-size: 13px;
+  color: rgba($ink, 0.6);
+}
+
+// ---------- Primary button (beats Bootstrap's .btn-primary on specificity) ----------
+.auth .auth-btn {
+  display: block;
+  width: 100%;
+  margin-top: 8px;
+  padding: 14px 24px;
+  border: 0;
+  border-radius: 999px;
+  background: $sun;
+  color: $forest;
+  font-size: 16px;
+  font-weight: 700;
+  transition: background 0.15s;
+
+  &:hover,
+  &:focus-visible {
+    background: $mint;
+    color: $forest;
+  }
+}
+
+// ---------- Secondary links under the form ----------
+.auth-links {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 20px;
+  font-size: 14px;
+  color: rgba($ink, 0.7);
+
+  p { margin: 0; }
+
+  a {
+    color: $forest;
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+
+    &:hover { color: $leaf; }
+  }
+}
+
+// ---------- Danger zone (account deletion) ----------
+.auth-danger button {
+  padding: 10px 18px;
+  border: 1.5px solid rgba($auth-error, 0.5);
+  border-radius: 999px;
+  background: none;
+  color: $auth-error;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+
+  &:hover {
+    background: $auth-error;
+    color: #fff;
+  }
+}

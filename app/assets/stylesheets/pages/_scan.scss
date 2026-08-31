@@ -53,22 +53,52 @@
   }
 }
 
-// ---------- Photo zone: filmstrip tiles + add tile in one row ----------
+// ---------- Photo zone: drop zone on top, chosen photos below ----------
 .scan-zone {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 14px;
 }
 
-// The filmstrip div must stay (JS renders into it); display:contents lets its
-// tiles sit in the same flex row as the add tile.
-.scan-page .photo-filmstrip { display: contents; }
+// The drop zone (scan-action--drop from components/_scan_action.scss).
+// Always full width; shrinks once both photos are in and it's disabled.
+.scan-page .scan-action--drop {
+  width: 100%;
+  min-height: 200px;
 
-.scan-page .photo-filmstrip-tile {
+  &:disabled,
+  &.disabled {
+    min-height: 88px;
+    padding: 16px;
+
+    .scan-action__icon { width: 28px; height: 28px; margin-bottom: 6px; }
+    .scan-action__label { font-size: 14px; }
+    .scan-action__helper { display: none; }
+  }
+}
+
+.scan-page__helper--tip { margin: 0; }
+
+// Chosen photos: two tiles snug side by side, hidden until there's at least one.
+// Extra-specific selectors on purpose: older scan styles elsewhere set a fixed
+// tile width, and these must win.
+.scan-page .photo-filmstrip {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  max-width: 340px;          // two ~160px thumbnails; keeps the Identify button above the fold
+
+  &:empty { display: none; }
+}
+
+.scan-page .photo-filmstrip .photo-filmstrip-tile {
   position: relative;
-  width: 160px;
-  aspect-ratio: 1;
-  border-radius: 20px;
+  width: 100%;
+  max-width: none;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  margin: 0;
+  border-radius: 16px;
   overflow: hidden;
   background: rgba($mint, 0.5);
 
@@ -80,7 +110,7 @@
   }
 }
 
-.scan-page .photo-filmstrip-remove {
+.scan-page .photo-filmstrip .photo-filmstrip-remove {
   position: absolute;
   top: 8px;
   right: 8px;
@@ -92,31 +122,10 @@
   border-radius: 50%;
   background: rgba($forest, 0.85);
   color: $cream;
-  font-size: 12px;
+  font-size: 13px;
   cursor: pointer;
 
   &:hover { background: $forest; }
-}
-
-// The add tile (scan-action--drop from components/_scan_action.scss).
-// Compact while photos exist; grows into the hero drop zone while empty.
-.scan-page .scan-action--drop {
-  flex: 1 1 200px;
-  min-height: 160px;
-
-  .scan-action__helper { display: none; }
-  .scan-action__icon { width: 32px; height: 32px; margin-bottom: 8px; }
-  .scan-action__label { font-size: 14px; }
-}
-
-// Empty state: no tiles yet, the drop zone becomes the hero
-.scan-page .photo-filmstrip:empty + .scan-action--drop {
-  flex-basis: 100%;
-  min-height: 280px;
-
-  .scan-action__helper { display: block; }
-  .scan-action__icon { width: 48px; height: 48px; margin-bottom: 16px; }
-  .scan-action__label { font-size: 19px; }
 }
 
 // ---------- Buttons ----------
@@ -345,8 +354,6 @@
 // ---------- Mobile ----------
 @media (max-width: 640px) {
   .scan-page { padding: 20px 16px 48px; }
-
-  .scan-page .photo-filmstrip-tile { width: calc(50% - 7px); }
 
   .scan-btn { width: 100%; text-align: center; }
 }

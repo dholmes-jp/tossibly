@@ -1,0 +1,15 @@
+<%# app/views/devise/shared/_auth_panel.html.erb %>
+<%# Forest side panel next to the login / sign-up card (desktop only).
+    Pass the artwork filename from the view:
+      render "devise/shared/auth_panel", art: "login_drawing.png" %>
+<aside class="auth-panel">
+  <%= image_tag art, alt: "", class: "auth-panel__art" %>
+
+  <div class="auth-panel__body">
+    <div>
+      <h2 class="auth-panel__tagline">Before you toss it, see what's possible.</h2>
+      <p class="auth-panel__sub">Sell it, give it away, or recycle it — in Japan, without the Japanese.</p>
+    </div>
+
+  </div>
+</aside>
