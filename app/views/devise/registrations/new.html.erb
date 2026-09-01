@@ -1,25 +1,45 @@
-<div class="container py-5">
-  <h2>Sign up</h2>
-  <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-    <%= f.error_notification %>
-    <div class="form-inputs">
+<%# app/views/devise/registrations/new.html.erb — Sign up %>
+<%# Styles: app/assets/stylesheets/pages/_auth.scss %>
+<div class="auth">
+  <%= render "devise/shared/auth_panel", art: "sign_up.png" %>
+
+  <div class="auth-card">
+    <p class="auth-card__eyebrow">New here?</p>
+    <h1 class="auth-card__title">Let's get you set up.</h1>
+
+    <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+      <%= f.error_notification %>
+
+      <%= f.input :name,
+                  required: true,
+                  autofocus: true,
+                  label: "Your name",
+                  placeholder: "Maya",
+                  input_html: { autocomplete: "name" } %>
       <%= f.input :email,
-                required: true,
-                autofocus: true,
-                input_html: { autocomplete: "email" }%>
+                  required: true,
+                  placeholder: "you@example.com",
+                  input_html: { autocomplete: "email" } %>
       <%= f.input :password,
-                required: true,
-                hint: ("#{@minimum_password_length} characters minimum" if @minimum_password_length),
-                input_html: { autocomplete: "new-password" } %>
+                  required: true,
+                  placeholder: "Choose a password",
+                  hint: ("#{@minimum_password_length} characters minimum" if @minimum_password_length),
+                  input_html: { autocomplete: "new-password" } %>
       <%= f.input :password_confirmation,
-                required: true,
-                input_html: { autocomplete: "new-password" } %>
-      <%= f.input :name, required: true, autofocus: true %>
-      <%= f.input :address, required: true %>
-    </div>
-    <div class="form-actions">
-      <%= f.button :submit, "Sign up" %>
-    </div>
-  <% end %>
-  <%= render "devise/shared/links" %>
+                  required: true,
+                  label: "Confirm password",
+                  placeholder: "Type it again",
+                  input_html: { autocomplete: "new-password" } %>
+      <%= f.input :address,
+                  required: true,
+                  label: "Your address in Japan",
+                  placeholder: "1-2-3 Nakameguro, Meguro-ku, Tokyo",
+                  hint: "We use this to show your street's collection days. Currently Meguro-ku only.",
+                  input_html: { autocomplete: "street-address" } %>
+
+      <%= f.button :submit, "Create my account", class: "auth-btn" %>
+    <% end %>
+
+    <%= render "devise/shared/links" %>
+  </div>
 </div>

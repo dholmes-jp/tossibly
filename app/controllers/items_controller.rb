@@ -30,6 +30,35 @@ class ItemsController < ApplicationController
   end
 
   def create
+    photos = Array(item_params[:photos]).reject(&:blank?)
+    answers = build_answers(item_params).merge(condition: params[:condition], note: params[:note])
+    identification = item_params.slice(:brand, :category, :model_number, :condition_guess)
+    # Defaults to "listable" if the form doesn't send a value.
+    # Logic is that it's safer to show Jimoty than to possibly hide it for an item.
+    listable = item_params[:listable].nil? || ActiveModel::Type::Boolean.new.cast(item_params[:listable])
+
+    if listable
+      generated = ItemDescriber.new(identification, answers, photos).call || {}
+
+      # ayaka added / start
+      jimoty_categories = JimotyCategorySelector.new.call(
+        {
+          identification: identification,
+          answers: answers,
+          listing: generated
+        }
+      ) || {}
+      # ayaka added / end
+
+      generated = generated.merge(platform: "jimoty")
+    else
+      # Non-listable items never get Jimoty listing copy generated at all — not just hidden.
+      # Built from what identify already determined; no extra AI call, and guarantees `title`
+      # presence since identification[:name] never reaches the server.
+      plain_title = [identification[:brand],
+                     identification[:category]].compact_blank.join(" ").presence || "Unlisted item"
+      generated = { title: plain_title, description: "Not offered on Jimoty — routed straight to disposal." }
+      jimoty_categories = {}
     identification = item_params.slice(:brand, :category, :model_number, :condition_guess).to_h
     answers = build_answers(item_params).merge("condition" => params[:condition], "note" => params[:note])
     # Defaults to "listable" if the form doesn't send a value.
