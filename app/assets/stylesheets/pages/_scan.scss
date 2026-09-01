@@ -148,6 +148,17 @@
     &:hover:not(:disabled) { background: $mint; color: $forest; }
     &:disabled { opacity: 0.5; cursor: default; }
   }
+
+  // Secondary pill: same shape as --sun, quieter. Used for the "other" action
+  // in the skip-case card and the save-success panel.
+  &--outline {
+    background: transparent;
+    color: $forest;
+    box-shadow: inset 0 0 0 1.5px rgba($forest, 0.4);
+
+    &:hover:not(:disabled) { background: rgba($forest, 0.06); }
+    &:disabled { opacity: 0.5; cursor: default; }
+  }
 }
 
 // ---------- Scanning state: photo background + sweeping sun line ----------
@@ -274,6 +285,210 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+}
+
+// ---------- Skip-case: "Nothing to decide here" + Toss It card ----------
+// Mirrors the .path-card--dispose language from _items.scss (chip, blurb, stat
+// pairs, numbered steps) so this reads as the same product.
+.scan-single-path {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.single-path-intro {
+  h3 {
+    margin: 0 0 6px;
+    font-family: $headers-font;
+    font-size: 22px;
+    font-weight: 800;
+    color: $forest;
+  }
+
+  p {
+    margin: 0;
+    font-size: 15px;
+    color: rgba($ink, 0.75);
+  }
+}
+
+.toss-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 20px;
+  border-radius: 18px;
+  border-top: 3px solid $leaf;
+  background: $cream;
+}
+
+.toss-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.toss-card__name {
+  font-family: $headers-font;
+  font-size: 20px;
+  font-weight: 800;
+  color: $forest;
+}
+
+.toss-chip {
+  flex-shrink: 0;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba($forest, 0.1);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: $forest;
+}
+
+.toss-card__blurb {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.5;
+  color: rgba($ink, 0.75);
+}
+
+.toss-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.toss-stat {
+  flex: 1 1 120px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: rgba($forest, 0.06);
+
+  .k {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: rgba($ink, 0.55);
+  }
+
+  .v {
+    font-size: 15px;
+    font-weight: 700;
+    color: $ink;
+  }
+}
+
+.toss-steps {
+  margin: 0;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: rgba($ink, 0.8);
+}
+
+// Shared by the skip-case card and the save-success panel.
+.end-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+
+  .scan-btn {
+    margin-top: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    // The camera glyph (shared/scan_camera) has no intrinsic size — pin it to
+    // the label's cap height so the button stays a normal pill.
+    .scan-action__icon {
+      width: 18px;
+      height: 18px;
+      margin: 0;
+      flex: 0 0 auto;
+      opacity: 1;
+    }
+  }
+}
+
+.end-caption {
+  flex-basis: 100%;
+  margin: 0;
+  font-size: 13px;
+  color: rgba($ink, 0.6);
+}
+
+// ---------- Save-success panel (replaces #follow_up_questions on create) ----------
+.scan-success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+
+  &__check {
+    width: 64px;
+    height: 64px;
+    color: $leaf;
+  }
+
+  h3 {
+    margin: 0;
+    font-family: $headers-font;
+    font-size: 24px;
+    font-weight: 800;
+    color: $forest;
+  }
+
+  &__lede {
+    margin: 0;
+    font-size: 15px;
+    color: rgba($ink, 0.75);
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    margin-top: 4px;
+    padding: 14px;
+    border-radius: 16px;
+    background: $cream;
+    text-align: left;
+  }
+
+  &__thumb {
+    width: 56px;
+    height: 56px;
+    flex-shrink: 0;
+    border-radius: 12px;
+    object-fit: cover;
+  }
+
+  &__title {
+    font-size: 15px;
+    font-weight: 700;
+    color: $forest;
+  }
+
+  &__status {
+    margin-top: 2px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: rgba($ink, 0.55);
+  }
+
+  .end-actions { justify-content: center; }
 }
 
 .scan-page .form-control {
