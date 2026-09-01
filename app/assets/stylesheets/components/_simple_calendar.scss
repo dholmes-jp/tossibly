@@ -1,0 +1,75 @@
+.simple-calendar table,
+.simple-calendar thead,
+.simple-calendar tbody,
+.simple-calendar tfoot,
+.simple-calendar tr,
+.simple-calendar td,
+.simple-calendar th {
+  border: none;
+}
+
+.calendar.month table {
+  height: 70vh;
+}
+.table-striped > tbody > tr:nth-of-type(odd) > * {
+  background-color: transparent;
+}
+
+.dot {
+  display: block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-top: .3rem;
+}
+
+.dot--combustibles {
+  background-color: #f28b82;
+}
+
+.dot--recyclables {
+  background-color: #81c995;
+}
+
+.dot--non-combustibles {
+  background-color: #8ab4f8;
+}
+.categories {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.categories p{
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-bottom: 0.3rem;
+}
+
+.simple-calendar thead th{
+  color: $forest;
+}
+
+.simple-calendar thead td {
+  color: $tossibly-black;
+}
+.calendar-schedule-title {
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.schedule-delete {
+  border: none;
+  background-color: transparent;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+.calendar-schedule-title:hover {
+    .schedule-delete {
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
