@@ -1,0 +1,42 @@
+<main class="items-page">
+  <div class="calendar month">
+    <%= month_calendar do |date| %>
+      <%= date.day %>
+      <% if @weekly_schedule[date.wday] %>
+        <span class="dot dot--<%= @weekly_schedule[date.wday] %>"></span>
+      <% end %>
+      <% if date.saturday? && (date.day.between?(1, 7) || date.day.between?(15, 21)) %>
+        <span class="dot dot--non-combustibles"></span>
+      <% end %>
+      <% @schedules.select { |schedule| schedule.scheduled_date == date }.each do |schedule| %>
+        <div class="calendar-schedule-title">
+          <%= schedule.title %>
+          <%= button_to schedule_path(schedule),
+                  method: :delete,
+                  class: "schedule-delete",
+                  data: { turbo_confirm: "Delete this schedule?" } do %>
+            <i class="fa-solid fa-trash-can" aria-hidden="true"></i>
+          <% end %>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+  <div class="calendar-info">
+    <div class="categories">
+      <p><span class="dot dot--combustibles"></span>combustibles</p>
+      <p><span class="dot dot--non-combustibles"></span>recyclable</p>
+      <p><span class="dot dot--recyclables"></span>non-combustibles</p>
+    </div>
+  </div>
+  <%= simple_form_for @schedule do |f| %>
+    <div class="title">
+      <%= f.input :title, label: "title" %>
+    </div>
+    <div class="date">
+      <%= f.input :scheduled_date, as: :date, label: "date" %>
+    </div>
+    <div class="submit">
+      <%= f.button :submit %>
+    </div>
+  <% end %>
+</main>
