@@ -23,6 +23,22 @@
     gap: .25rem;
   }
 
+  .dropdown-menu.dropdown-menu-end.show{
+    border: none;
+    background-color: $mint;
+    border-radius: 12px;
+    margin-top: 10px;
+  }
+
+  .dropdown-item {
+    width: fit-content;
+    display: block;
+  }
+  .dropdown-item:hover,
+  .dropdown-item:focus {
+      background: transparent;
+    }
+
   // Nav links — a.nav-item so the avatar <li> isn't affected
   a.nav-item {
     display: inline-flex;

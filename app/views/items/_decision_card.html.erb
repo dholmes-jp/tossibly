@@ -1,0 +1,170 @@
+<div id="<%= dom_id(item, :decision) %>" class="decision-card" data-controller="item-decision">
+  <div class="item-head">
+    <% if item.photos.attached? %>
+      <%= image_tag item.photos.first, class: "item-head-thumb", alt: item.title %>
+    <% end %>
+    <div class="item-head-info">
+      <h2 class="h4 mb-2"><%= item.title %></h2>
+      <p class="text-muted small mb-2">
+        <span class="item-status <%= item.functional ? "item-status--working" : "item-status--notworking" %>">
+          <%= item.functional ? "Working" : "Not working" %>
+        </span>
+        <% if item.brand.present? %> &middot; <%= item.brand %><% end %>
+        <% if item.model_number.present? %> &middot; <%= item.model_number %><% end %>
+      </p>
+      <% if item.waste_category %>
+        <p class="text-muted small mb-2">Waste category: <strong><%= item.waste_category.name %></strong></p>
+      <% end %>
+      <%= item.description %>
+    </div>
+  </div>
+
+  <% if !item.processed? && item.listable? %>
+    <div class="decision-pending">
+      <div class="spinner-border" role="status" aria-hidden="true"></div>
+      <p class="submit-overlay-headline">Looking at what similar items are going for nearby&hellip;</p>
+      <p class="submit-overlay-subline">This usually takes a few seconds</p>
+    </div>
+  <% else %>
+    <h3 class="mb-3">Compare your options</h3>
+    <%
+          waste_category = item.waste_category
+          fee            = DisposalFeeEstimator.call(item)
+          single_path    = !item.listable
+
+          dispose = if waste_category
+            {
+              chip: waste_category.chip_label,
+              blurb: waste_category.blurb,
+              cost: fee.label,
+              stat: waste_category.collection_frequency.present? ? { k: "Collected", v: waste_category.collection_frequency } : nil,
+              facts: [["Category", waste_category.name], ["Cost", fee.label],
+                      ["Application", waste_category.application_required? ? "Required" : "Not required"]],
+              steps: waste_category.steps,
+              notes: fee.notes,
+              apply_url: fee.application_url,
+              apply_label: fee.application_label
+            }
+          else
+            { chip: nil, blurb: "Disposal category not yet determined for this item.",
+              cost: nil, stat: nil, facts: [], steps: [], notes: [],
+              apply_url: nil, apply_label: nil }
+          end
+        %>
+    <% unless single_path %>
+      <div class="view-control" role="group" aria-label="Which path to show">
+        <button type="button" class="view-control__btn is-on" data-state="both" aria-pressed="true"
+                    data-item-decision-target="viewButton" data-action="item-decision#showBoth">Compare both</button>
+        <button type="button" class="view-control__btn" data-state="jimoty" aria-pressed="false"
+                    data-item-decision-target="viewButton" data-action="item-decision#expandJimoty">List It</button>
+        <button type="button" class="view-control__btn" data-state="dispose" aria-pressed="false"
+                    data-item-decision-target="viewButton" data-action="item-decision#expandDispose">Toss It</button>
+      </div>
+    <% end %>
+    <% if single_path %>
+      <div class="compare-single">
+        <div class="path-card path-card--dispose">
+          <div class="path-card__head">
+            <span class="path-name">Toss It</span>
+          </div>
+          <p class="path-blurb"><%= dispose[:blurb] %></p>
+          <%= render "items/dispose_details", dispose: dispose %>
+        </div>
+      </div>
+    <% else %>
+      <div class="compare-paths" data-state="both" data-item-decision-target="paths">
+        <div class="path-slot path-slot--jimoty">
+          <div class="path-card path-card--jimoty">
+            <div class="path-card__head">
+              <span class="path-name">List It</span>
+              <span class="path-chip">Free to list</span>
+            </div>
+            <p class="path-blurb">
+              Someone nearby may want this. You'll agree a price and a pickup time with them, so expect some back-and-forth.
+            </p>
+            <div class="path-stats">
+              <% if item.nearby_listings_found? %>
+                <div class="path-stat">
+                  <span class="path-stat__k">Nearby</span>
+                  <span class="path-stat__v"><%= item.nearby_count %> similar listings</span>
+                </div>
+                <div class="path-stat">
+                  <span class="path-stat__k">Listed free</span>
+                  <span class="path-stat__v"><%= item.free_count %> of <%= item.nearby_count %></span>
+                </div>
+              <% else %>
+                <p class="path-stats-empty">No similar listings nearby right now.</p>
+              <% end %>
+            </div>
+            <p class="jimoty-explainer">
+              Jimoty is Japan's biggest local classifieds site &mdash; free to post, and buyers collect in person.
+              Popular for furniture and appliances that are awkward to ship.
+            </p>
+            <%= link_to "https://jmty.jp/articles/new?prefecture_id=0/", class: "btn-platform btn-jimoty path-cta", target: "_blank", rel: "noopener" do %>
+              List on Jimoty <i class="fa-solid fa-caret-right"></i>
+            <% end %>
+            <div class="path-expanded">
+              <div data-controller="jimoty-edit">
+                <div data-jimoty-edit-target="description">
+                  <button
+                    type="button"
+                    class="jimoty-edit-btn"
+                    data-action="click->jimoty-edit#edit">
+                    <i class="fa-solid fa-pen-to-square"></i>Edit
+                  </button>
+                  <%= render "items/jimoty_description", item: item %>
+                </div>
+                <div data-jimoty-edit-target="form" hidden>
+                  <%= render "items/jimoty_form", item: item %>
+                </div>
+              </div>
+              <div class="path-back">
+                <button type="button" class="path-back__btn" data-action="item-decision#showBoth">
+                  &larr; Compare both paths again
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="path-slot path-slot--dispose">
+          <div class="path-card path-card--dispose">
+            <div class="path-card__head">
+              <span class="path-name">Toss It</span>
+              <% if dispose[:chip] %><span class="path-chip"><%= dispose[:chip] %></span><% end %>
+            </div>
+            <p class="path-blurb"><%= dispose[:blurb] %></p>
+            <div class="path-stats">
+              <% if dispose[:cost] %>
+                <div class="path-stat">
+                  <span class="path-stat__k">Cost</span>
+                  <span class="path-stat__v"><%= dispose[:cost] %></span>
+                </div>
+              <% end %>
+              <% if dispose[:stat] %>
+                <div class="path-stat">
+                  <span class="path-stat__k"><%= dispose[:stat][:k] %></span>
+                  <span class="path-stat__v"><%= dispose[:stat][:v] %></span>
+                </div>
+              <% end %>
+            </div>
+            <button type="button" class="btn-platform btn-dispose path-cta"
+                        data-action="item-decision#expandDispose">
+              See how to toss it <i class="fa-solid fa-caret-right"></i>
+            </button>
+            <div class="path-expanded">
+              <%= render "items/dispose_details", dispose: dispose %>
+              <div class="path-back">
+                <button type="button" class="path-back__btn" data-action="item-decision#showBoth">
+                  &larr; Compare both paths again
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+    <p class="small text-muted mb-0">
+      No rush &mdash; this item is saved as <strong>Pending</strong> in My Items. Decide now, or come back later.
+    </p>
+  <% end %>
+</div>
