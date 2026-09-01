@@ -44,7 +44,7 @@ class ItemDescriber
       color — not a pitch headline.
     PROMPT
 
-    chat = RubyLLM.chat(model: "gpt-4o").with_schema(ItemListingSchema)
+    chat = RubyLLM.chat(model: "gpt-5").with_schema(ItemListingSchema)
     response = chat.ask(prompt, with: @photo_paths)
 
     response.content.symbolize_keys
