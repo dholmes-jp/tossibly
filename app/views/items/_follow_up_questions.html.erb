@@ -7,6 +7,29 @@
   <%= hidden_field_tag "item[listable]", identification[:listable] %>
   <%= hidden_field_tag "item[jimoty_search_keyword]", identification[:jimoty_search_keyword] %>
 
+  <div class="scan-field">
+    <span class="scan-field__label">Does it still work? What shape is it in?</span>
+    <div class="condition-pills" data-photo-analyzer-target="conditionPills">
+      <% ["New", "Like new", "Good", "Fair", "Not working"].each do |value| %>
+        <label class="condition-pill <%= "active" if value == "Good" %>">
+          <input type="radio" name="condition" value="<%= value %>" class="visually-hidden"
+                 data-photo-analyzer-target="conditionRadio"
+                 data-action="change->photo-analyzer#conditionChanged"
+                 <%= "checked" if value == "Good" %>>
+          <%= value %>
+        </label>
+      <% end %>
+    </div>
+  </div>
+
+  <%= hidden_field_tag "item[functional]", "true", data: { photo_analyzer_target: "functionalInput" } %>
+
+  <div class="scan-field">
+    <label class="scan-field__label" for="note">Anything else we should know? (optional)</label>
+    <%= text_field_tag :note, nil, class: "form-control",
+          placeholder: "e.g. scratch on the back, comes with original box" %>
+  </div>
+
   <% (identification[:follow_up_questions] || []).each do |question| %>
     <div class="scan-field">
       <label class="scan-field__label"><%= question %></label>
@@ -15,6 +38,6 @@
     </div>
   <% end %>
 
-  <%= submit_tag "Create listing →", class: "scan-btn scan-btn--sun",
-        data: { turbo_submits_with: "Creating…" } %>
+  <%= submit_tag "Save to Items →", class: "scan-btn scan-btn--sun",
+        data: { turbo_submits_with: "Saving…" } %>
 </div>

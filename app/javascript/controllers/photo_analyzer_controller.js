@@ -94,8 +94,13 @@ export default class extends Controller {
 
     Turbo.renderStreamMessage(await response.text())
 
-    const conditionGuess = document.querySelector('input[name="item[condition_guess]"]')?.value
-    this.selectConditionFromGuess(conditionGuess)
+    // The condition pills / functionalInput target only exist in the ask-case
+    // (_follow_up_questions). The skip-case (_single_path_result) renders neither,
+    // so guard before touching them or applyCondition() throws on a missing target.
+    if (this.hasFunctionalInputTarget) {
+      const conditionGuess = document.querySelector('input[name="item[condition_guess]"]')?.value
+      this.selectConditionFromGuess(conditionGuess)
+    }
 
     this.loadingTarget.classList.add("d-none")
     this.detailsTarget.classList.remove("d-none")

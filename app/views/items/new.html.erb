@@ -53,35 +53,14 @@
       </div>
     </div>
 
-    <%# Result state — revealed by the controller once identify returns %>
+    <%# Result state — revealed by the controller once identify returns.
+        Both #identification and #follow_up_questions are filled in by the
+        identify turbo-stream response. #follow_up_questions receives either
+        _follow_up_questions (ask case: condition pills + note + dynamic
+        questions) or _single_path_result (skip case: disposal info card). %>
     <div class="scan-details d-none" data-photo-analyzer-target="details">
       <div id="identification"></div>
-
-      <div class="scan-field">
-        <span class="scan-field__label">Does it still work? What shape is it in?</span>
-        <div class="condition-pills" data-photo-analyzer-target="conditionPills">
-          <% ["New", "Like new", "Good", "Fair", "Not working"].each do |value| %>
-            <label class="condition-pill <%= "active" if value == "Good" %>">
-              <input type="radio" name="condition" value="<%= value %>" class="visually-hidden"
-                     data-photo-analyzer-target="conditionRadio"
-                     data-action="change->photo-analyzer#conditionChanged"
-                     <%= "checked" if value == "Good" %>>
-              <%= value %>
-            </label>
-          <% end %>
-        </div>
-      </div>
-
-      <%= hidden_field_tag "item[functional]", "true", data: { photo_analyzer_target: "functionalInput" } %>
-
-      <div class="scan-field">
-        <label class="scan-field__label" for="note">Anything else we should know? (optional)</label>
-        <%= text_field_tag :note, nil, class: "form-control",
-              placeholder: "e.g. scratch on the back, comes with original box" %>
-      </div>
-
       <div id="follow_up_questions"></div>
-      <%# filled in by the identify turbo-stream response once photos are chosen %>
     </div>
   <% end %>
 
