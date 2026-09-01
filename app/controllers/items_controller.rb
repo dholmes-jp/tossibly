@@ -20,11 +20,22 @@ class ItemsController < ApplicationController
 
     locals = { identification: @identification }
 
+    # Skip the follow-up questions only when the item is judged not listable AND
+    # it's an ordinary, non-fee-tiered waste category (a candy wrapper, a PET
+    # bottle). A not-listable appliance-law / large-sized-waste item still needs
+    # condition details for the disposal estimate, so it keeps the full form.
+    skip_followups = !@identification[:listable] &&
+                     !DisposalFeeEstimator::FEE_TIERED_CATEGORIES.include?(@identification[:waste_category_key])
+
     respond_to do |format|
       format.turbo_stream do
         render turbo_stream: [
           turbo_stream.replace("identification", partial: "items/identification", locals: locals),
-          turbo_stream.replace("follow_up_questions", partial: "items/follow_up_questions", locals: locals)
+          turbo_stream.replace(
+            "follow_up_questions",
+            partial: skip_followups ? "items/single_path_result" : "items/follow_up_questions",
+            locals: locals
+          )
         ]
       end
     end
@@ -88,7 +99,16 @@ class ItemsController < ApplicationController
 
     if @item.save
       ProcessItemJob.perform_later(@item, identification: identification, answers: answers) if listable
-      redirect_to @item, notice: "Item created."
+      respond_to do |format|
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.replace(
+            "follow_up_questions", partial: "items/save_success", locals: { item: @item }
+          )
+        end
+        # Fallback for non-Turbo requests only (curl, tests without Capybara/Turbo);
+        # the real browser flow always hits format.turbo_stream.
+        format.html { redirect_to @item, notice: "Item created." }
+      end
     else
       render :new, status: :unprocessable_entity
     end

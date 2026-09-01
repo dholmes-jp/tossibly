@@ -23,6 +23,19 @@ class ItemIdentifier
       category with pure waste and must still be marked listable if it's genuinely reusable —
       do not infer listability from category membership.
 
+      Independently of condition, force `listable: false` for items with no realistic
+      secondhand market, even if they still function:
+        - Opened or partially-used consumables and chemicals: aerosol/spray cans, paint,
+          adhesives, lubricants, oils, cleaning products, pesticides.
+        - Cosmetics, toiletries, and personal-care products once opened.
+        - Food, drink, supplements, and medication.
+        - Anything hazardous, flammable, pressurized, or perishable.
+      A brand-new, factory-sealed one of these might sell; a used or opened one is
+      disposal-only. This is about what people can legally and practically resell — it is NOT
+      the same as reasoning from the waste category, and it does not change the
+      tote-bag/jar/crate rule above (an ordinary reusable object in a "trash" category is
+      still listable).
+
       Also produce `jimoty_search_keyword`: a Japanese search term we use to find similar
       secondhand listings near the seller. Combine the brand and the item category in Japanese
       script — e.g. "日立冷蔵庫", "パナソニック電子レンジ". If the brand isn't legible, use the most

@@ -1,0 +1,26 @@
+<div id="follow_up_questions" class="scan-success">
+  <svg class="scan-success__check" viewBox="0 0 64 64" aria-hidden="true">
+    <circle cx="32" cy="32" r="26" fill="none" stroke="currentColor" stroke-width="3"/>
+    <path d="M21 33 L28 40 L44 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+  <h3>Saved</h3>
+  <p class="scan-success__lede">Decide what to do with it whenever you're ready.</p>
+
+  <div class="scan-success__item">
+    <% if item.photos.attached? %>
+      <%= image_tag item.photos.first, class: "scan-success__thumb", alt: item.title %>
+    <% end %>
+    <div>
+      <div class="scan-success__title"><%= item.title %></div>
+      <div class="scan-success__status">Pending</div>
+    </div>
+  </div>
+
+  <div class="end-actions">
+    <%= link_to new_item_path, class: "scan-btn scan-btn--sun" do %>
+      <%= render "shared/scan_camera" %> Upload Another Picture
+    <% end %>
+    <%= link_to "Go to My Items →", items_path, class: "scan-btn scan-btn--outline" %>
+    <p class="end-caption">No rush — this item is saved as Pending in My Items.</p>
+  </div>
+</div>
