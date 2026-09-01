@@ -90,7 +90,7 @@ class JimotyCategorySelector
     PROMPT
 
     chat = RubyLLM
-           .chat(model: "gpt-4o")
+           .chat(model: "gpt-5")
            .with_schema(JimotyCategoryChoiceSchema)
 
     response = chat.ask(prompt)
