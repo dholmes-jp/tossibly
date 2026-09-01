@@ -300,6 +300,24 @@ $dash-viewall: 120px;   // width reserved on the right for the "View all" button
   &--ready { background: $sun; }
 }
 
+.dashboard-pill {
+  color: $cream;
+}
+.dashboard-pill--pending {
+  background: $forest;
+  color: $cream;
+}
+.dashboard-pill--listed {
+  background-color: #EF8354;
+}
+.dashboard-pill--booked {
+  background-color: #4ab0b9;
+}
+.dashboard-pill--disposed {
+  background: #fff;
+  border: 1px solid $forest;
+  color: $forest;
+}
 // Empty state (fills the cards' space when there are no items)
 .dashboard-empty {
   flex: 1 1 auto;

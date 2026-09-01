@@ -1,15 +1,12 @@
 <%# app/views/items/index.html.erb — My items %>
 <%# Styles: app/assets/stylesheets/components/_items.scss %>
-
 <%
   filtering   = params[:status].present? || params[:platform].present?
   total       = current_user.items.count
   shown       = @items.size
   count_label = (filtering && shown != total) ? "#{shown} of #{total} items" : pluralize(total, "item")
 %>
-
 <main class="items-page">
-
   <%# ---------- Header ---------- %>
   <div class="items-header">
     <h1>My items <span class="items-count"><%= count_label %></span></h1>
@@ -18,37 +15,42 @@
       <span class="scan-action__label">Scan an item</span>
     <% end %>
   </div>
-
-  <%# ---------- Status filter (same links/params as before) ---------- %>
-  <div class="items-chips">
-    <%= link_to "All",
-          items_path(platform: params[:platform]),
-          class: "items-chip #{'items-chip--active' if params[:status].blank?}" %>
-    <% Item::STATUSES.each do |status| %>
-      <%= link_to status.humanize,
-            items_path(status: status, platform: params[:platform]),
-            class: "items-chip #{'items-chip--active' if params[:status] == status}" %>
-    <% end %>
-  </div>
-
   <%# ---------- Platform filter ---------- %>
   <div class="items-chips items-chips--platforms">
-    <%= link_to "All platforms",
-          items_path(status: params[:status]),
+    <%= link_to "All items",
+          items_path,
           class: "items-chip #{'items-chip--active' if params[:platform].blank?}" %>
-    <% Item::PLATFORMS.each do |platform| %>
-      <%= link_to platform.humanize,
-            items_path(status: params[:status], platform: platform),
-            class: "items-chip #{'items-chip--active' if params[:platform] == platform}" %>
+    <% Item::PLATFORMS.each do |platform, label| %>
+      <%= link_to label,
+        items_path(platform: platform),
+        class: "items-chip #{'items-chip--active' if params[:platform] == platform}" %>
     <% end %>
   </div>
-
+  <%# ---------- Status filter by platform ---------- %>
+  <% statuses =
+    if params[:platform].present?
+      Item::STATUSES_BY_PLATFORM[params[:platform]]
+    else
+      Item::STATUSES_BY_PLATFORM.values.flatten.uniq
+    end
+  %>
+  <% if statuses.present? %>
+    <div class="items-chips">
+      <%= link_to "All",
+          items_path(platform: params[:platform]),
+          class: "items-chip #{'items-chip--active' if params[:status].blank?}" %>
+      <% statuses.each do |status| %>
+        <%= link_to Item::STATUS_LABELS[status],
+      items_path(status: status, platform: params[:platform]),
+      class: "items-chip #{'items-chip--active' if params[:status] == status}" %>
+      <% end %>
+    </div>
+  <% end %>
   <%# ---------- List ---------- %>
   <% if @items.any? %>
     <div class="items-list">
       <% @items.each do |item| %>
         <article class="items-card">
-
           <div class="items-card__photo">
             <% if item.photos.attached? %>
               <%= image_tag item.photos.first, alt: item.title %>
@@ -58,7 +60,6 @@
               <i class="fa-solid fa-box-open" aria-hidden="true"></i>
             <% end %>
           </div>
-
           <div class="items-card__body">
             <%# The title link is stretched to cover the whole card %>
             <h2 class="items-card__title">
@@ -69,7 +70,20 @@
               <span class="items-pill <%= 'items-pill--warn' unless item.functional %>">
                 <%= item.functional ? "Working" : "Not working" %>
               </span>
-
+              <%# Status %>
+              <details class="items-status">
+                <summary class="items-status__current  items-pill status--<%= item.status %>">
+                  <%= Item::STATUS_LABELS[item.status] || item.status.humanize %>
+                </summary>
+                <%= form_with model: item, method: :patch, class: "items-status__form" do |form| %>
+                  <%= form.select :status,
+                  item.available_statuses.map { |status|
+                    [Item::STATUS_LABELS[status] || status.humanize, status]
+                  },
+                  {},
+                  onchange: "this.form.requestSubmit()" %>
+                <% end %>
+              </details>
               <%# Delete: sits above the stretched link so it doesn't open the item %>
               <%= button_to item_path(item),
                     method: :delete,
@@ -80,19 +94,16 @@
                     title: "Delete" do %>
                 <i class="fa-solid fa-trash-can" aria-hidden="true"></i>
               <% end %>
-
               <% if item.age.present? %>
                 <span><%= item.age.to_s.include?("year") ? item.age : pluralize(item.age, "year") %> old</span>
               <% end %>
             </div>
           </div>
-
           <i class="fa-solid fa-chevron-right items-card__chevron" aria-hidden="true"></i>
         </article>
       <% end %>
     </div>
-
-  <%# ---------- Empty states ---------- %>
+    <%# ---------- Empty states ---------- %>
   <% else %>
     <div class="items-empty">
       <% if filtering %>
@@ -108,5 +119,4 @@
       <% end %>
     </div>
   <% end %>
-
 </main>
