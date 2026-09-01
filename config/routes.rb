@@ -9,6 +9,7 @@ Rails.application.routes.draw do
       post :identify
     end
   end
+  resources :schedules, only: [ :index, :create, :update, :destroy]
 
   # This is for chrome extension
   namespace :api, defaults: { format: :json } do

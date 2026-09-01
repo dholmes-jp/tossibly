@@ -76,6 +76,7 @@ end
 
 # Custom added gems here
 gem "ruby_llm"
+gem "simple_calendar"
 # This is for CORS == Cross-origin resource sharing/ chrome extension
 gem "rack-cors"
 gem "cloudinary"
