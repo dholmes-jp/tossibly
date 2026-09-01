@@ -2,8 +2,20 @@ class Item < ApplicationRecord
   belongs_to :user
   has_many_attached :photos
 
-  STATUSES  = %w[pending path_chosen listed disposal_booked passed_on disposed].freeze
-  PLATFORMS = %w[jimoty dispose].freeze
+  STATUSES_BY_PLATFORM = {
+    "jimoty" => %w[pending listed],
+    "other" => %w[pending disposal_booked disposed]
+  }.freeze
+  STATUS_LABELS = {
+    "pending" => "Pending",
+    "listed" => "Listed",
+    "disposal_booked" => "Booked",
+    "disposed" => "Disposed"
+  }.freeze
+  PLATFORMS = {
+    "jimoty" => "Listable",
+    "other" => "Toss it"
+  }.freeze
 
   store_accessor :nearby_listings,
                  :nearby_count, :free_count, :typical_price,
@@ -33,5 +45,9 @@ class Item < ApplicationRecord
 
   def photo_urls
     photos.map { |photo| photo.blob.url }
+  end
+
+  def available_statuses
+    STATUSES_BY_PLATFORM.fetch(platform, ["pending"])
   end
 end

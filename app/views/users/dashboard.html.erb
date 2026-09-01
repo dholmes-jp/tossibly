@@ -47,11 +47,19 @@
       <% @recent_items.each do |item| %>
         <% status = item.respond_to?(:status) ? item.status.to_s : "" %>
         <% status_label, pill_mod =
-             case status
-             when /listed/ then ["Listed on #{item.platform.to_s.capitalize}", ""]
-             when /ready/  then ["Ready to post", "dashboard-pill--ready"]
-             else               ["In progress", ""]
-             end %>
+            case status
+            when "pending"
+              ["Pending", "dashboard-pill--pending"]
+            when "listed"
+              ["Listed", "dashboard-pill--listed"]
+            when "disposal_booked"
+              ["Booked", "dashboard-pill--booked"]
+            when "disposed"
+              ["Disposed", "dashboard-pill--disposed"]
+            else
+              ["Pending", "dashboard-pill--pending"]
+            end
+          %>
         <%= link_to item_path(item), class: "dashboard-card" do %>
           <div class="dashboard-card__photo">
             <% if item.photos.attached? %>
@@ -76,7 +84,6 @@
           <p>Nothing scanned yet. Your items will show up here.</p>
         </div>
       <% end %>
-
       <%= link_to new_item_path, class: "dashboard-scan scan-action scan-action--hero" do %>
         <%= render "shared/scan_camera" %>
         <span class="scan-action__label">Scan an item</span>
