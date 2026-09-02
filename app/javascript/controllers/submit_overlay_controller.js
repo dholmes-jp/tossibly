@@ -29,6 +29,19 @@ export default class extends Controller {
     document.removeEventListener("pageshow", this.hide)
   }
 
-  show() { this.overlayTarget.classList.remove("d-none") }
+  // Wired to the Set Reminder buttons: those are fast, no-AI disposal saves, so
+  // the "checking the best way forward" copy is misleading for them. Runs on
+  // click, before the native submit and turbo:submit-start, so the next show()
+  // no-ops itself once.
+  skip() { this.suppressNext = true }
+
+  show() {
+    if (this.suppressNext) {
+      this.suppressNext = false
+      return
+    }
+    this.overlayTarget.classList.remove("d-none")
+  }
+
   hide() { this.overlayTarget.classList.add("d-none") }
 }

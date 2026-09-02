@@ -7,38 +7,14 @@
   <%= hidden_field_tag "item[listable]", false %>
   <%= hidden_field_tag "item[jimoty_search_keyword]", identification[:jimoty_search_keyword] %>
   <%= hidden_field_tag :set_reminder, "1" %>
-  <% category = WasteCategoryLookup.find(identification[:waste_category_key]) %>
-  <div class="single-path-intro">
-    <h3>Nothing to decide here</h3>
-    <p>This is everyday trash — no reason to add it to My Items. Here's how to toss it.</p>
-  </div>
-  <% if category %>
-    <div class="toss-card">
-      <div class="toss-card__head">
-        <span class="toss-card__name">Toss It</span>
-        <span class="toss-chip"><%= category.chip_label %></span>
-      </div>
-      <p class="toss-card__blurb"><%= category.blurb %></p>
-      <div class="toss-stats">
-        <div class="toss-stat"><span class="k">Cost</span><span class="v"><%= category.cost_label %></span></div>
-        <% if category.collection_frequency.present? %>
-          <div class="toss-stat"><span class="k">Collected</span><span class="v"><%= category.collection_frequency %></span></div>
-        <% end %>
-      </div>
-      <ol class="toss-steps">
-        <% category.steps.each do |step| %>
-          <li><%= step %></li>
-        <% end %>
-      </ol>
-    </div>
-  <% else %>
-    <p class="text-muted">Disposal category not yet determined for this item.</p>
-  <% end %>
+
+  <%= render "items/disposal_card", dispose: dispose %>
+
   <div class="end-actions">
     <%= link_to new_item_path, class: "scan-btn scan-btn--sun" do %>
-      <%= render "shared/scan_camera" %> Upload Another Picture
+      <%= render "shared/scan_camera" %> Scan Another Item
     <% end %>
     <%= submit_tag "Set Reminder", class: "scan-btn scan-btn--outline",
-          data: { turbo_submits_with: "Saving…" } %>
+          data: { turbo_submits_with: "Saving…", action: "submit-overlay#skip" } %>
   </div>
 </div>

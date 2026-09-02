@@ -18,14 +18,15 @@ class ItemsController < ApplicationController
   def identify
     @identification = ItemIdentifier.new(photos).call
 
-    locals = { identification: @identification }
-
-    # Skip the follow-up questions only when the item is judged not listable AND
-    # it's an ordinary, non-fee-tiered waste category (a candy wrapper, a PET
-    # bottle). A not-listable appliance-law / large-sized-waste item still needs
-    # condition details for the disposal estimate, so it keeps the full form.
-    skip_followups = !@identification[:listable] &&
-                     !DisposalFeeEstimator::FEE_TIERED_CATEGORIES.include?(@identification[:waste_category_key])
+    # Non-listable items now get a real disposal card straight away — free or
+    # fee-tiered alike — so branch on listability alone. A never-saved preview
+    # Item is enough for DisposalFeeEstimator, which only reads accessors.
+    preview_item = Item.new(
+      waste_category_key: @identification[:waste_category_key],
+      title: provisional_title(@identification),
+      category: @identification[:category]
+    )
+    locals = { identification: @identification, dispose: DisposalPanelPresenter.call(preview_item) }
 
     respond_to do |format|
       format.turbo_stream do
@@ -33,7 +34,7 @@ class ItemsController < ApplicationController
           turbo_stream.replace("identification", partial: "items/identification", locals: locals),
           turbo_stream.replace(
             "follow_up_questions",
-            partial: skip_followups ? "items/single_path_result" : "items/follow_up_questions",
+            partial: @identification[:listable] ? "items/reuse_prompt_result" : "items/single_path_result",
             locals: locals
           )
         ]
@@ -79,10 +80,7 @@ class ItemsController < ApplicationController
     listable = item_params[:listable].nil? || ActiveModel::Type::Boolean.new.cast(item_params[:listable])
     # identification[:name] never reaches the server, so this guarantees the presence
     # validation passes. For listable items ProcessItemJob overwrites it moments later.
-    name_parts = [identification["brand"], identification["category"]]
-    provisional_title = name_parts.compact_blank.join(" ").presence || "Unlisted item"
-
-    attrs = { title: provisional_title, listable: listable }
+    attrs = { title: provisional_title(identification), listable: listable }
 
     unless listable
       # Non-listable items never get Jimoty listing copy or a nearby-listing search — the job
@@ -168,6 +166,15 @@ class ItemsController < ApplicationController
 
   def photos
     params[:photos]
+  end
+
+  # A best-effort English title from the identification, used before any AI copy
+  # exists: as the preview Item's title in #identify and as the saved record's
+  # title in #create. identify's hash has symbol keys (ItemIdentifier), create's
+  # local has string keys (item_params.slice), so read both.
+  def provisional_title(identification)
+    [identification["brand"] || identification[:brand],
+     identification["category"] || identification[:category]].compact_blank.join(" ").presence || "Unlisted item"
   end
 
   def item_params

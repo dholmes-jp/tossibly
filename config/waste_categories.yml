@@ -306,4 +306,17 @@ large_sized_waste:
       cost_label_override: "Depends on size"
       cost_note: "Storage furniture is priced by size — Meguro charges on the sum of its two longest sides, so the exact fee is confirmed when you apply."
       keywords: ["wardrobe", "closet", "bookcase", "bookshelf", "chest of drawers", "dresser", "cupboard", "shelving unit", "tansu", "cabinet", "sideboard"]
+
+potted_plant:
+  name: "Potted plant"
+  blurb: "A potted plant is really three kinds of waste at once — this splits it into what actually needs to happen with each part."
+  steps:
+    - "Leaves and roots: bag with your combustible waste."
+    - "Soil: not collected as ordinary waste — take it to a garden center or gardening shop that accepts soil, or reuse it in another pot or your garden."
+    - "Pot: ceramic or ordinary plastic pots go out as non-combustible waste; recyclable plastic pots go with your plastics collection."
+  cost_yen: 0
+  chip_label: "Free"
+  application_required: false
+  position: 10
+  subitems: []
 ## Replacement ending here ****************
