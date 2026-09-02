@@ -1,170 +1,234 @@
-<div id="<%= dom_id(item, :decision) %>" class="decision-card" data-controller="item-decision">
-  <div class="item-head">
-    <% if item.photos.attached? %>
-      <%= image_tag item.photos.first, class: "item-head-thumb", alt: item.title %>
-    <% end %>
-    <div class="item-head-info">
-      <h2 class="h4 mb-2"><%= item.title %></h2>
-      <p class="text-muted small mb-2">
-        <span class="item-status <%= item.functional ? "item-status--working" : "item-status--notworking" %>">
-          <%= item.functional ? "Working" : "Not working" %>
-        </span>
-        <% if item.brand.present? %> &middot; <%= item.brand %><% end %>
-        <% if item.model_number.present? %> &middot; <%= item.model_number %><% end %>
-      </p>
-      <% if item.waste_category %>
-        <p class="text-muted small mb-2">Waste category: <strong><%= item.waste_category.name %></strong></p>
-      <% end %>
-      <%= item.description %>
-    </div>
-  </div>
+<%# app/views/items/_decision_card.html.erb — item decision page body %>
+<%# Live-updated via turbo_stream_from @item: the wrapper id below must stay. %>
+<%# Renders items/jimoty_form (in the edit dialog) and items/dispose_details unchanged. %>
+<%# JS: decision_card_controller.js (details toggle + edit dialog). %>
+<%# Styles: app/assets/stylesheets/pages/_decision.scss %>
+
+<div id="<%= dom_id(item, :decision) %>" class="decision-card decide" data-controller="decision-card">
 
   <% if !item.processed? && item.listable? %>
-    <div class="decision-pending">
+    <div class="decide-pending">
       <div class="spinner-border" role="status" aria-hidden="true"></div>
-      <p class="submit-overlay-headline">Looking at what similar items are going for nearby&hellip;</p>
-      <p class="submit-overlay-subline">This usually takes a few seconds</p>
+      <p class="decide-pending__headline">Looking at what similar items are going for nearby&hellip;</p>
+      <p class="decide-pending__sub">This usually takes a few seconds</p>
     </div>
-  <% else %>
-    <h3 class="mb-3">Compare your options</h3>
-    <%
-          waste_category = item.waste_category
-          fee            = DisposalFeeEstimator.call(item)
-          single_path    = !item.listable
 
-          dispose = if waste_category
-            {
-              chip: waste_category.chip_label,
-              blurb: waste_category.blurb,
-              cost: fee.label,
-              stat: waste_category.collection_frequency.present? ? { k: "Collected", v: waste_category.collection_frequency } : nil,
-              facts: [["Category", waste_category.name], ["Cost", fee.label],
-                      ["Application", waste_category.application_required? ? "Required" : "Not required"]],
-              steps: waste_category.steps,
-              notes: fee.notes,
-              apply_url: fee.application_url,
-              apply_label: fee.application_label
-            }
-          else
-            { chip: nil, blurb: "Disposal category not yet determined for this item.",
-              cost: nil, stat: nil, facts: [], steps: [], notes: [],
-              apply_url: nil, apply_label: nil }
-          end
-        %>
-    <% unless single_path %>
-      <div class="view-control" role="group" aria-label="Which path to show">
-        <button type="button" class="view-control__btn is-on" data-state="both" aria-pressed="true"
-                    data-item-decision-target="viewButton" data-action="item-decision#showBoth">Compare both</button>
-        <button type="button" class="view-control__btn" data-state="jimoty" aria-pressed="false"
-                    data-item-decision-target="viewButton" data-action="item-decision#expandJimoty">List It</button>
-        <button type="button" class="view-control__btn" data-state="dispose" aria-pressed="false"
-                    data-item-decision-target="viewButton" data-action="item-decision#expandDispose">Toss It</button>
-      </div>
-    <% end %>
-    <% if single_path %>
-      <div class="compare-single">
-        <div class="path-card path-card--dispose">
-          <div class="path-card__head">
-            <span class="path-name">Toss It</span>
+  <% else %>
+    <%
+      waste_category = item.waste_category
+      fee            = DisposalFeeEstimator.call(item)
+      single_path    = !item.listable
+
+      dispose = if waste_category
+        {
+          chip: waste_category.chip_label,
+          blurb: waste_category.blurb,
+          cost: fee.label,
+          stat: waste_category.collection_frequency.present? ? { k: "Collected", v: waste_category.collection_frequency } : nil,
+          facts: [["Category", waste_category.name], ["Cost", fee.label],
+                  ["Application", waste_category.application_required? ? "Required" : "Not required"]],
+          steps: waste_category.steps,
+          notes: fee.notes,
+          apply_url: fee.application_url,
+          apply_label: fee.application_label
+        }
+      else
+        { chip: nil, blurb: "Disposal category not yet determined for this item.",
+          cost: nil, stat: nil, facts: [], steps: [], notes: [],
+          apply_url: nil, apply_label: nil }
+      end
+
+      # Which path gets the "Tossibly suggests" tag. Working + listable → List, otherwise Toss.
+      suggested    = (item.functional && !single_path) ? :list : :toss
+      priced_count = item.nearby_listings_found? ? [item.nearby_count.to_i - item.free_count.to_i, 0].max : 0
+      area_label   = item.search_scope == "tokyo" ? "Across Tokyo" : "Meguro + nearby wards"
+    %>
+
+    <p class="decide-summary">
+      <% if single_path %>
+        <strong>This one goes the disposal route.</strong> Here's exactly how to do it under Meguro rules.
+      <% elsif suggested == :list %>
+        <strong>Both options are realistic.</strong> Listing it is free and someone nearby may take it; tossing it correctly is simpler but usually costs money.
+      <% else %>
+        <strong>Tossing it is the cleaner option.</strong> It's marked not working, though some people take items for parts.
+      <% end %>
+    </p>
+
+    <div class="decide-board <%= 'decide-board--single' if single_path %>">
+
+      <%# ================= Item card ================= %>
+      <article class="decide-item">
+        <div class="decide-item__photo">
+          <% if item.photos.attached? %>
+            <%= image_tag item.photos.first, alt: item.title %>
+          <% end %>
+        </div>
+
+        <span class="decide-pill <%= item.functional ? '' : 'decide-pill--warn' %>">
+          <%= item.functional ? "Working" : "Not working" %>
+        </span>
+        <h2 class="decide-item__title"><%= item.title %></h2>
+        <% meta = [item.brand, item.model_number].compact_blank.join(" · ") %>
+        <% if meta.present? %><p class="decide-item__meta"><%= meta %></p><% end %>
+
+        <dl class="decide-rows">
+          <% if item.category.present? %><div><dt>Category</dt><dd><%= item.category %></dd></div><% end %>
+          <% if item.brand.present? %><div><dt>Brand</dt><dd><%= item.brand %></dd></div><% end %>
+          <div><dt>Condition</dt><dd><%= item.functional ? "Working" : "Not working" %></dd></div>
+          <% if waste_category %><div><dt>Waste type</dt><dd><%= waste_category.name %></dd></div><% end %>
+        </dl>
+
+        <% if item.description.present? %>
+          <div class="decide-noticed">
+            <p class="decide-noticed__label">What we noticed</p>
+            <p class="decide-noticed__preview"><%= item.description %></p>
+            <details class="decide-more">
+              <summary>Show more</summary>
+              <p class="decide-noticed__full"><%= item.description %></p>
+            </details>
           </div>
-          <p class="path-blurb"><%= dispose[:blurb] %></p>
+        <% end %>
+
+        <% unless single_path %>
+          <button type="button" class="decide-btn decide-btn--secondary decide-item__edit"
+                  data-action="decision-card#openEditor">Edit item details</button>
+        <% end %>
+      </article>
+
+      <%# ================= List It ================= %>
+      <% unless single_path %>
+        <article class="decide-option decide-option--list <%= 'decide-option--suggested' if suggested == :list %>">
+          <% if suggested == :list %><span class="decide-suggests">Tossibly suggests</span><% end %>
+
+          <div class="decide-option__head">
+            <div>
+              <h3 class="decide-option__title">List it</h3>
+              <p class="decide-option__sub">Pass it on to someone nearby, free or for a price.</p>
+            </div>
+            <span class="decide-tag">Reuse</span>
+          </div>
+
+          <div class="decide-metrics">
+            <% if item.nearby_listings_found? %>
+              <div class="decide-metric"><b><%= item.nearby_count %></b><span>similar live listings</span></div>
+              <div class="decide-metric"><b><%= item.free_count %> free</b><span><%= priced_count %> priced</span></div>
+              <% if item.typical_price.present? %>
+                <div class="decide-metric"><b><%= yen(item.typical_price) %></b><span>typical asking price</span></div>
+              <% else %>
+                <div class="decide-metric"><b>Free</b><span>to list</span></div>
+              <% end %>
+            <% else %>
+              <div class="decide-metric"><b>0</b><span>similar listings nearby</span></div>
+              <div class="decide-metric"><b>Free</b><span>to list</span></div>
+              <div class="decide-metric"><b>Pickup</b><span>buyer collects</span></div>
+            <% end %>
+          </div>
+
+          <dl class="decide-rows">
+            <div><dt>Search area</dt><dd><%= area_label %></dd></div>
+            <div><dt>Listing cost</dt><dd>Free</dd></div>
+            <div><dt>Prices shown</dt><dd>Asking, not sold</dd></div>
+          </dl>
+
+          <div class="decide-info">
+            <% if !item.nearby_listings_found? %>
+              No comparable items are live nearby right now. Listings can still work &mdash; demand changes week to week.
+            <% elsif item.search_scope == "tokyo" %>
+              Not enough comparable items were live in Meguro-ku, so the search widened to listings across Tokyo.
+            <% else %>
+              <%= item.nearby_count %> comparable items are live in Meguro and nearby wards, so the numbers above reflect your area.
+            <% end %>
+          </div>
+
+          <div class="decide-actions">
+            <button type="button" class="decide-btn decide-btn--primary"
+                    data-action="decision-card#choose" data-decision-card-panel-param="list">Choose List It</button>
+            <button type="button" class="decide-btn decide-btn--secondary"
+                    data-action="decision-card#toggle" data-decision-card-panel-param="list">See details</button>
+          </div>
+
+          <div class="decide-details" hidden data-decision-card-target="panel" data-panel="list">
+            <p class="decide-details__title">What happens next</p>
+            <ol class="decide-steps">
+              <li><b>Set your price</b>Choose free, or enter your own amount. Other listings are a reference, not an appraisal.</li>
+              <li><b>Review the listing</b>Tossibly has drafted the title, description, condition and pickup notes.</li>
+              <li><b>Post on Jimoty</b>Your draft stays here while you complete the posting step.</li>
+            </ol>
+            <div class="decide-inline">
+              <div><strong>Draft listing ready</strong><span>Price, title and description are editable</span></div>
+              <button type="button" class="decide-mini" data-action="decision-card#openEditor">Edit draft</button>
+            </div>
+            <div class="decide-inline">
+              <div><strong>Ready to post?</strong><span>Opens Jimoty in a new tab &mdash; paste the Japanese draft there</span></div>
+              <%= link_to "https://jmty.jp/articles/new?prefecture_id=0/", class: "decide-mini decide-mini--primary", target: "_blank", rel: "noopener" do %>
+                Post on Jimoty <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
+              <% end %>
+            </div>
+          </div>
+        </article>
+      <% end %>
+
+      <%# ================= Toss It ================= %>
+      <article class="decide-option decide-option--toss <%= 'decide-option--suggested' if suggested == :toss %>">
+        <% if suggested == :toss %><span class="decide-suggests">Tossibly suggests</span><% end %>
+
+        <div class="decide-option__head">
+          <div>
+            <h3 class="decide-option__title">Toss it</h3>
+            <p class="decide-option__sub">Dispose of it correctly under Meguro rules.</p>
+          </div>
+          <span class="decide-tag"><%= dispose[:chip].presence || "Dispose" %></span>
+        </div>
+
+        <div class="decide-metrics">
+          <div class="decide-metric"><b><%= dispose[:cost].presence || "TBD" %></b><span>cost</span></div>
+          <div class="decide-metric">
+            <b><%= waste_category&.application_required? ? "Required" : "Not needed" %></b><span>application</span>
+          </div>
+          <div class="decide-metric">
+            <b><%= dispose[:stat] ? dispose[:stat][:v] : "Ward rules" %></b><span><%= dispose[:stat] ? dispose[:stat][:k].downcase : "route" %></span>
+          </div>
+        </div>
+
+        <dl class="decide-rows">
+          <% dispose[:facts].each do |k, v| %>
+            <div><dt><%= k %></dt><dd><%= v %></dd></div>
+          <% end %>
+        </dl>
+
+        <div class="decide-info">
+          <%= dispose[:notes].first.presence || dispose[:blurb] %>
+        </div>
+
+        <div class="decide-actions">
+          <button type="button" class="decide-btn decide-btn--primary"
+                  data-action="decision-card#choose" data-decision-card-panel-param="toss">Choose Toss It</button>
+          <button type="button" class="decide-btn decide-btn--secondary"
+                  data-action="decision-card#toggle" data-decision-card-panel-param="toss">See details</button>
+        </div>
+
+        <div class="decide-details" <%= 'hidden' unless single_path %> data-decision-card-target="panel" data-panel="toss">
+          <p class="decide-details__title">How to toss it correctly</p>
           <%= render "items/dispose_details", dispose: dispose %>
         </div>
-      </div>
-    <% else %>
-      <div class="compare-paths" data-state="both" data-item-decision-target="paths">
-        <div class="path-slot path-slot--jimoty">
-          <div class="path-card path-card--jimoty">
-            <div class="path-card__head">
-              <span class="path-name">List It</span>
-              <span class="path-chip">Free to list</span>
-            </div>
-            <p class="path-blurb">
-              Someone nearby may want this. You'll agree a price and a pickup time with them, so expect some back-and-forth.
-            </p>
-            <div class="path-stats">
-              <% if item.nearby_listings_found? %>
-                <div class="path-stat">
-                  <span class="path-stat__k">Nearby</span>
-                  <span class="path-stat__v"><%= item.nearby_count %> similar listings</span>
-                </div>
-                <div class="path-stat">
-                  <span class="path-stat__k">Listed free</span>
-                  <span class="path-stat__v"><%= item.free_count %> of <%= item.nearby_count %></span>
-                </div>
-              <% else %>
-                <p class="path-stats-empty">No similar listings nearby right now.</p>
-              <% end %>
-            </div>
-            <p class="jimoty-explainer">
-              Jimoty is Japan's biggest local classifieds site &mdash; free to post, and buyers collect in person.
-              Popular for furniture and appliances that are awkward to ship.
-            </p>
-            <%= link_to "https://jmty.jp/articles/new?prefecture_id=0/", class: "btn-platform btn-jimoty path-cta", target: "_blank", rel: "noopener" do %>
-              List on Jimoty <i class="fa-solid fa-caret-right"></i>
-            <% end %>
-            <div class="path-expanded">
-              <div data-controller="jimoty-edit">
-                <div data-jimoty-edit-target="description">
-                  <button
-                    type="button"
-                    class="jimoty-edit-btn"
-                    data-action="click->jimoty-edit#edit">
-                    <i class="fa-solid fa-pen-to-square"></i>Edit
-                  </button>
-                  <%= render "items/jimoty_description", item: item %>
-                </div>
-                <div data-jimoty-edit-target="form" hidden>
-                  <%= render "items/jimoty_form", item: item %>
-                </div>
-              </div>
-              <div class="path-back">
-                <button type="button" class="path-back__btn" data-action="item-decision#showBoth">
-                  &larr; Compare both paths again
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="path-slot path-slot--dispose">
-          <div class="path-card path-card--dispose">
-            <div class="path-card__head">
-              <span class="path-name">Toss It</span>
-              <% if dispose[:chip] %><span class="path-chip"><%= dispose[:chip] %></span><% end %>
-            </div>
-            <p class="path-blurb"><%= dispose[:blurb] %></p>
-            <div class="path-stats">
-              <% if dispose[:cost] %>
-                <div class="path-stat">
-                  <span class="path-stat__k">Cost</span>
-                  <span class="path-stat__v"><%= dispose[:cost] %></span>
-                </div>
-              <% end %>
-              <% if dispose[:stat] %>
-                <div class="path-stat">
-                  <span class="path-stat__k"><%= dispose[:stat][:k] %></span>
-                  <span class="path-stat__v"><%= dispose[:stat][:v] %></span>
-                </div>
-              <% end %>
-            </div>
-            <button type="button" class="btn-platform btn-dispose path-cta"
-                        data-action="item-decision#expandDispose">
-              See how to toss it <i class="fa-solid fa-caret-right"></i>
-            </button>
-            <div class="path-expanded">
-              <%= render "items/dispose_details", dispose: dispose %>
-              <div class="path-back">
-                <button type="button" class="path-back__btn" data-action="item-decision#showBoth">
-                  &larr; Compare both paths again
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    <% end %>
-    <p class="small text-muted mb-0">
+      </article>
+    </div>
+
+    <p class="decide-footnote">
       No rush &mdash; this item is saved as <strong>Pending</strong> in My Items. Decide now, or come back later.
     </p>
+
+    <%# ================= Edit draft dialog (their jimoty_form, unchanged) ================= %>
+    <% unless single_path %>
+      <dialog class="decide-dialog" data-decision-card-target="dialog" data-action="click->decision-card#backdrop">
+        <div class="decide-dialog__inner">
+          <h4>Review listing draft</h4>
+          <p>Changes are saved without leaving the comparison screen.</p>
+          <%= render "items/jimoty_form", item: item %>
+          <button type="button" class="decide-btn decide-btn--secondary decide-dialog__cancel"
+                  data-action="decision-card#closeEditor">Cancel</button>
+        </div>
+      </dialog>
+    <% end %>
   <% end %>
 </div>
