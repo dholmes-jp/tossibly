@@ -25,15 +25,15 @@ export default class extends Controller {
       })
   }
 
-  // "Choose X": make sure that card's details are open and in view.
-  // (Card colours follow the suggestion, not the choice — see _decision.scss.)
+  // "Choose X" (only used when there's no external link to send the user to):
+  // open that card's details in place. No scrolling — the panel appears right
+  // under the button, and scrollIntoView kept parking it under the sticky navbar.
   choose(event) {
     const name = event.params.panel
     const panel = this.panelTargets.find((p) => p.dataset.panel === name)
     if (!panel) return
 
     if (panel.hidden) this.toggle(event)
-    panel.scrollIntoView({ behavior: "smooth", block: "nearest" })
   }
 
   openEditor() {

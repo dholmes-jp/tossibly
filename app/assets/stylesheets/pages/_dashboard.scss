@@ -214,7 +214,7 @@ $dash-viewall: 120px;   // width reserved on the right for the "View all" button
     padding: 8px 18px;
     border: 1.5px solid $forest;
     border-radius: 16px;
-    background: #fff;
+    background: $tossibly-white;
     font-family: $headers-font;
     font-size: 18px;
     font-weight: 400;
@@ -317,7 +317,7 @@ $dash-viewall: 120px;   // width reserved on the right for the "View all" button
   }
 
   &--disposed {
-    background: #fff;
+    background: $tossibly-white;
     border: 1px solid $forest;
     color: $forest;
   }

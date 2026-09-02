@@ -161,7 +161,7 @@ $auth-error: #B4432F;   // form-error colour only; not a brand token
     padding: 12px 14px;
     border: 1.5px solid rgba($forest, 0.25);
     border-radius: 14px;
-    background: #fff;
+    background: $tossibly-white;
     font-size: 15px;
 
     &::placeholder { color: rgba($ink, 0.35); }
@@ -289,6 +289,6 @@ $auth-error: #B4432F;   // form-error colour only; not a brand token
 
   &:hover {
     background: $auth-error;
-    color: #fff;
+    color: $tossibly-white;
   }
 }

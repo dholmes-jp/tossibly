@@ -141,8 +141,9 @@
           </div>
 
           <div class="decide-actions">
+            <%# Quick path for users who've already decided: straight to Jimoty. %>
             <%= link_to "https://jmty.jp/articles/new?prefecture_id=0/", class: "decide-btn decide-btn--primary", target: "_blank", rel: "noopener" do %>
-              Post on Jimoty <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
+              Choose List It <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
             <% end %>
             <button type="button" class="decide-btn decide-btn--secondary"
                     data-action="decision-card#toggle" data-decision-card-panel-param="list">More details</button>
@@ -243,15 +244,16 @@
         </div>
 
         <div class="decide-actions">
-          <%# Fast path for users who've already decided: straight to the ward's
-              application when one is needed; otherwise open the how-to steps. %>
+          <%# Quick path for users who've already decided: straight to the ward's
+              online application. Categories with nothing to apply for (combustible,
+              recyclables…) have no URL, so the button opens the steps instead. %>
           <% if dispose[:apply_url].present? %>
             <%= link_to dispose[:apply_url], class: "decide-btn decide-btn--primary", target: "_blank", rel: "noopener" do %>
-              Apply online <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
+              Choose Toss It <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
             <% end %>
           <% else %>
             <button type="button" class="decide-btn decide-btn--primary"
-                    data-action="decision-card#choose" data-decision-card-panel-param="toss">How to toss it</button>
+                    data-action="decision-card#choose" data-decision-card-panel-param="toss">Choose Toss It</button>
           <% end %>
           <button type="button" class="decide-btn decide-btn--secondary"
                   data-action="decision-card#toggle" data-decision-card-panel-param="toss">More details</button>
