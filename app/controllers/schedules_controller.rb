@@ -1,20 +1,14 @@
 class SchedulesController < ApplicationController
   def index
-    # 0 = Sunday / 1 = Monday / 2 = Tuesday / 3 = Wednesday / 4 = Thursday / 5 = Friday / 6 = Saturday
-    @weekly_schedule = {
-      2 => :combustibles,
-      5 => :combustibles,
-      4 => :recyclables
-    }
     @schedules = current_user.schedules
     @schedule = current_user.schedules.new(
-      scheduled_date: params[:date]
+      scheduled_date: params[:date],
+      item_id: params[:item_id]
     )
   end
 
   def create
     @schedule = current_user.schedules.new(schedule_params)
-
     if @schedule.save
       redirect_to schedules_path
     else
@@ -41,6 +35,6 @@ class SchedulesController < ApplicationController
   private
 
   def schedule_params
-    params.require(:schedule).permit(:title, :scheduled_date)
+    params.require(:schedule).permit(:title, :scheduled_date, :item_id)
   end
 end
