@@ -71,18 +71,22 @@
                 <%= item.functional ? "Working" : "Not working" %>
               </span>
               <%# Status %>
+              <%# Status: pill opens a menu of buttons, each one PATCHes the status %>
               <details class="items-status">
-                <summary class="items-status__current  items-pill status--<%= item.status %>">
+                <summary class="items-status__current items-pill status--<%= item.status %>">
                   <%= Item::STATUS_LABELS[item.status] || item.status.humanize %>
+                  <i class="fa-solid fa-angle-down" aria-hidden="true"></i>
                 </summary>
-                <%= form_with model: item, method: :patch, class: "items-status__form" do |form| %>
-                  <%= form.select :status,
-                  item.available_statuses.map { |status|
-                    [Item::STATUS_LABELS[status] || status.humanize, status]
-                  },
-                  {},
-                  onchange: "this.form.requestSubmit()" %>
-                <% end %>
+                <div class="items-status__menu">
+                  <% item.available_statuses.each do |status| %>
+                    <%= button_to Item::STATUS_LABELS[status] || status.humanize,
+                          item_path(item),
+                          method: :patch,
+                          params: { item: { status: status } },
+                          class: "items-status__option #{'items-status__option--active' if status == item.status}",
+                          form_class: "items-status__option-form" %>
+                  <% end %>
+                </div>
               </details>
               <%# Delete: sits above the stretched link so it doesn't open the item %>
               <%= button_to item_path(item),
