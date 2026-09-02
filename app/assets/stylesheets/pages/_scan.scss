@@ -4,32 +4,36 @@
 // Everything is scoped under .scan-page so older rules for this page
 // (photo-add-bar, condition-pill, submit-overlay) can't fight back.
 
+// Heading follows the shared spec (dashboard / My items / show):
+//   padding 24px 30px 64px · eyebrow 14/700 forest, 6px below ·
+//   h1 32/800, lh 1.1 · helper 8px below h1 · 24px before the content.
+// The frame stays narrow (760px) on purpose — it's a single-column form.
 .scan-page {
   max-width: 760px;
   margin: 0 auto;
-  padding: 24px 20px 64px;
+  padding: 24px 30px 64px;
   font-family: $body-font;
   color: $ink;
 
   &__eyebrow {
-    margin: 0 0 4px;
+    margin: 0 0 6px;
     font-size: 14px;
     font-weight: 700;
     color: $forest;
   }
 
   &__title {
-    margin: 0 0 6px;
+    margin: 0;
     font-family: $headers-font;
-    font-size: clamp(26px, 4vw, 32px);
+    font-size: 32px;
     font-weight: 800;
-    line-height: 1.15;
+    line-height: 1.1;
     letter-spacing: -0.02em;
     color: $forest;
   }
 
   &__helper {
-    margin: 0 0 20px;
+    margin: 8px 0 24px;
     font-size: 15px;
     color: rgba($ink, 0.65);
 
@@ -495,7 +499,7 @@
   padding: 12px 14px;
   border: 1.5px solid rgba($forest, 0.25);
   border-radius: 14px;
-  background: #fff;
+  background: $tossibly-white;
   font-size: 15px;
 
   &:focus {

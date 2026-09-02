@@ -1,14 +1,12 @@
+<%# app/views/shared/_flashes.html.erb — bottom-right toast bubble.
+    Auto-dismissed by flash_controller.js; styles in components/_alert.scss %>
 <% if notice %>
-  <div class="alert alert-info alert-dismissible fade show m-1" role="alert" data-controller="flash">
+  <div class="flash flash--notice" role="status" data-controller="flash">
     <%= notice %>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
-    </button>
   </div>
 <% end %>
 <% if alert %>
-  <div class="alert alert-warning alert-dismissible fade show m-1" role="alert" data-controller="flash">
+  <div class="flash flash--alert" role="alert" data-controller="flash">
     <%= alert %>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
-    </button>
   </div>
 <% end %>

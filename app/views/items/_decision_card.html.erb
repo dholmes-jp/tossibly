@@ -141,23 +141,66 @@
           </div>
 
           <div class="decide-actions">
-            <button type="button" class="decide-btn decide-btn--primary"
-                    data-action="decision-card#choose" data-decision-card-panel-param="list">Choose List It</button>
+            <%# Quick path for users who've already decided: straight to Jimoty. %>
+            <%= link_to "https://jmty.jp/articles/new?prefecture_id=0/", class: "decide-btn decide-btn--primary", target: "_blank", rel: "noopener" do %>
+              Choose List It <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
+            <% end %>
             <button type="button" class="decide-btn decide-btn--secondary"
-                    data-action="decision-card#toggle" data-decision-card-panel-param="list">See details</button>
+                    data-action="decision-card#toggle" data-decision-card-panel-param="list">More details</button>
           </div>
 
           <div class="decide-details" hidden data-decision-card-target="panel" data-panel="list">
-            <p class="decide-details__title">What happens next</p>
-            <ol class="decide-steps">
-              <li><b>Set your price</b>Choose free, or enter your own amount. Other listings are a reference, not an appraisal.</li>
-              <li><b>Review the listing</b>Tossibly has drafted the title, description, condition and pickup notes.</li>
-              <li><b>Post on Jimoty</b>Your draft stays here while you complete the posting step.</li>
-            </ol>
-            <div class="decide-inline">
-              <div><strong>Draft listing ready</strong><span>Price, title and description are editable</span></div>
-              <button type="button" class="decide-mini" data-action="decision-card#openEditor">Edit draft</button>
+            <%# 1) Tossibly's recommendation from the nearby-listing analysis, as bullets %>
+            <div class="decide-block">
+              <p class="decide-details__title">Tossibly's take</p>
+              <ul class="decide-bullets">
+              <% if item.typical_price.present? %>
+                <li><strong>Tossibly suggests starting at <%= yen(item.typical_price) %></strong> &mdash; expect buyers to negotiate down.</li>
+              <% elsif item.nearby_listings_found? %>
+                <li><strong>Tossibly suggests listing it free</strong> &mdash; every similar item nearby is being given away.</li>
+              <% else %>
+                <li><strong>No price suggestion yet</strong> &mdash; no comparable listings are live nearby right now.</li>
+              <% end %>
+              <% if item.nearby_listings_found? %>
+                <li>Based on <strong><%= item.nearby_count %> similar items</strong> listed
+                  <%= item.search_scope == "tokyo" ? "across Tokyo" : "near you" %> right now,
+                  <%= item.free_count %> of them free.</li>
+                <% if item.search_scope == "tokyo" %>
+                  <li>Nothing comparable was live in Meguro-ku, so the search widened to all of Tokyo.</li>
+                <% end %>
+                <li>These are asking prices, not what items actually sold for.</li>
+              <% else %>
+                <li>Demand changes week to week &mdash; a listing can still work, and it's free to post.</li>
+              <% end %>
+              </ul>
             </div>
+
+            <%# 2) The AI-written listing draft %>
+            <div class="decide-block">
+              <p class="decide-details__title">Your listing draft</p>
+              <div class="decide-draft">
+              <div class="decide-draft__field">
+                <p class="decide-draft__label">Listing title</p>
+                <p class="decide-draft__value"><%= item.title %></p>
+              </div>
+              <div class="decide-draft__field">
+                <p class="decide-draft__label">Listing description (English)</p>
+                <p class="decide-draft__value"><%= item.description %></p>
+              </div>
+              <div class="decide-draft__field">
+                <p class="decide-draft__label">Your listing price</p>
+                <p class="decide-draft__value">
+                  <%= item.confirmed_price.to_i.zero? ? "Free" : yen(item.confirmed_price.to_i) %>
+                </p>
+              </div>
+              </div>
+              <div class="decide-draft__actions">
+                <span>Title, description and price are editable</span>
+                <button type="button" class="decide-mini" data-action="decision-card#openEditor">Edit draft</button>
+              </div>
+            </div>
+
+            <%# 3) How to post it %>
             <div class="decide-inline">
               <div><strong>Ready to post?</strong><span>Opens Jimoty in a new tab &mdash; paste the Japanese draft there</span></div>
               <%= link_to "https://jmty.jp/articles/new?prefecture_id=0/", class: "decide-mini decide-mini--primary", target: "_blank", rel: "noopener" do %>
@@ -201,10 +244,19 @@
         </div>
 
         <div class="decide-actions">
-          <button type="button" class="decide-btn decide-btn--primary"
-                  data-action="decision-card#choose" data-decision-card-panel-param="toss">Choose Toss It</button>
+          <%# Quick path for users who've already decided: straight to the ward's
+              online application. Categories with nothing to apply for (combustible,
+              recyclables…) have no URL, so the button opens the steps instead. %>
+          <% if dispose[:apply_url].present? %>
+            <%= link_to dispose[:apply_url], class: "decide-btn decide-btn--primary", target: "_blank", rel: "noopener" do %>
+              Choose Toss It <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
+            <% end %>
+          <% else %>
+            <button type="button" class="decide-btn decide-btn--primary"
+                    data-action="decision-card#choose" data-decision-card-panel-param="toss">Choose Toss It</button>
+          <% end %>
           <button type="button" class="decide-btn decide-btn--secondary"
-                  data-action="decision-card#toggle" data-decision-card-panel-param="toss">See details</button>
+                  data-action="decision-card#toggle" data-decision-card-panel-param="toss">More details</button>
         </div>
 
         <div class="decide-details" <%= 'hidden' unless single_path %> data-decision-card-target="panel" data-panel="toss">
