@@ -1,0 +1,30 @@
+<%# app/views/items/_reuse_prompt_result.html.erb
+    Listable items only: the same disposal card the non-listable path shows, then a
+    pitch that the item could be passed on, with a client-side reveal of the
+    (unchanged) follow-up form — #identify's response already carries everything
+    the form needs, so no second request. %>
+<div id="follow_up_questions" class="scan-reuse-result" data-controller="reuse-reveal">
+  <%= render "items/disposal_card", dispose: dispose %>
+
+  <div class="reuse-prompt">
+    <h4>This may be worth passing on.</h4>
+    <p>It looks usable, so someone nearby may want it. Tossibly can check similar Jimoty
+       listings and compare that option with disposal.</p>
+    <div class="end-actions">
+      <button type="button" class="scan-btn scan-btn--sun" data-action="reuse-reveal#show">
+        Compare my options &rarr;
+      </button>
+      <button type="submit" name="set_reminder" value="1" class="scan-btn scan-btn--outline"
+              data-action="reuse-reveal#skipToReminder submit-overlay#skip"
+              data-turbo-submits-with="Saving…">
+        Set Reminder
+      </button>
+    </div>
+  </div>
+
+  <%# waste_category_key is already a hidden field inside _follow_up_questions, so
+      it's not repeated here — no double-submit under the same name. %>
+  <div class="reuse-followups d-none" data-reuse-reveal-target="followups">
+    <%= render "items/follow_up_questions", identification: identification %>
+  </div>
+</div>
