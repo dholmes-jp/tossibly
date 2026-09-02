@@ -54,7 +54,7 @@
 .simple-calendar thead td {
   color: $tossibly-black;
 }
-.calendar-schedule-title {
+.schedule-item {
   display: flex;
   justify-content: space-between;
   cursor: pointer;
@@ -67,9 +67,23 @@
   pointer-events: none;
   transition: opacity 0.2s ease;
 }
-.calendar-schedule-title:hover {
+.schedule-item:hover {
+  background-color: $mint;
     .schedule-delete {
       opacity: 1;
       pointer-events: auto;
     }
   }
+
+.schedule-item-img {
+  width: 25px;
+  height: 25px;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.schedule-item-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}

@@ -1,5 +1,6 @@
 class Item < ApplicationRecord
   belongs_to :user
+  has_many :schedules, dependent: :destroy
   has_many_attached :photos
 
   STATUSES_BY_PLATFORM = {
