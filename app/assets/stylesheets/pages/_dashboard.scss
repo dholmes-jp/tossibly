@@ -9,10 +9,13 @@
 $dash-gap: 20px;        // gap between cards
 $dash-viewall: 120px;   // width reserved on the right for the "View all" button
 
+// Page frame + heading follow the shared spec (same on every page):
+//   frame 1180 / 24px 30px 64px · eyebrow 14/700 forest, 6px below ·
+//   h1 32/800, lh 1.1, ls -0.02em · 24px between heading block and content
 .dashboard {
   max-width: 1180px;
   margin: 0 auto;
-  padding: 24px 30px 40px;
+  padding: 24px 30px 64px;
   font-family: $body-font;
   color: $ink;
 
@@ -20,14 +23,14 @@ $dash-viewall: 120px;   // width reserved on the right for the "View all" button
 }
 
 .dashboard-kicker {
-  margin: 0 0 4px;
+  margin: 0 0 6px;
   font-size: 14px;
   font-weight: 700;
   color: $forest;
 }
 
 .dashboard-heading {
-  margin: 0 0 20px;
+  margin: 0 0 24px;
   font-family: $headers-font;
   font-size: 32px;
   font-weight: 800;
@@ -287,7 +290,8 @@ $dash-viewall: 120px;   // width reserved on the right for the "View all" button
   }
 }
 
-// Status pill
+// Status pill — same colour system as the My items page (components/_items.scss):
+// pending = forest, listed = sun, booked = teal, disposed = outlined.
 .dashboard-pill {
   align-self: flex-start;
   padding: 4px 12px;
@@ -297,27 +301,28 @@ $dash-viewall: 120px;   // width reserved on the right for the "View all" button
   background: $mint;
   color: $forest;
 
-  &--ready { background: $sun; }
+  &--pending {
+    background: $forest;
+    color: $cream;
+  }
+
+  &--listed {
+    background: $sun;
+    color: $forest;
+  }
+
+  &--booked {
+    background: #4ab0b9;
+    color: $cream;
+  }
+
+  &--disposed {
+    background: #fff;
+    border: 1px solid $forest;
+    color: $forest;
+  }
 }
 
-.dashboard-pill {
-  color: $cream;
-}
-.dashboard-pill--pending {
-  background: $forest;
-  color: $cream;
-}
-.dashboard-pill--listed {
-  background-color: #EF8354;
-}
-.dashboard-pill--booked {
-  background-color: #4ab0b9;
-}
-.dashboard-pill--disposed {
-  background: #fff;
-  border: 1px solid $forest;
-  color: $forest;
-}
 // Empty state (fills the cards' space when there are no items)
 .dashboard-empty {
   flex: 1 1 auto;

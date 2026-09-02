@@ -1,6 +1,58 @@
-.alert {
+// Flash toast: a speech bubble pinned bottom-right with the tail on the
+// right side. Markup in shared/_flashes.html.erb, timing in
+// flash_controller.js (fades out just before it's removed).
+
+.flash {
   position: fixed;
-  bottom: 16px;
-  right: 16px;
-  z-index: 1000;
+  right: 24px;
+  bottom: 32px;
+  z-index: 1100;
+  max-width: 320px;
+  padding: 14px 20px;
+  border: 0;
+  border-radius: 16px;
+  background: $forest;
+  color: $cream;
+  font-family: $body-font;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.3;
+  animation: flash-in 0.25s ease-out both;
+  transition: opacity 0.4s, transform 0.4s;
+
+  // The tail: a rotated square hanging off the bottom-right edge, sharing
+  // the bubble's background so the two read as one shape.
+  &::after {
+    content: "";
+    position: absolute;
+    right: 24px;
+    bottom: -7px;
+    width: 14px;
+    height: 14px;
+    background: inherit;
+    transform: rotate(45deg);
+  }
+
+  // Error flash (e.g. "Update failed.") stays sun so it reads as a warning
+  &--alert {
+    background: $sun;
+    color: $forest;
+  }
+
+  // Added by flash_controller.js right before removal
+  &--leaving {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+@keyframes flash-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

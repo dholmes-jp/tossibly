@@ -272,14 +272,15 @@
   font-weight: 600;
 }
 
+// Same pairing as the My items page: sun = working, forest = not working
 .item-status--working {
-  background: $mint;
+  background: $sun;
   color: $forest;
 }
 
 .item-status--notworking {
-  color: #666;
-  background-color: #d5d5d5;
+  background: $forest;
+  color: $cream;
 }
 
 // ---------------------------------------------------------------------------
