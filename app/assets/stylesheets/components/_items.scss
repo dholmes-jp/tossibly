@@ -51,9 +51,9 @@
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin-bottom: 28px;
+  margin-bottom: 10px;
 
-  &--platforms { margin-bottom: 10px; }
+  &--platforms { margin-bottom: 28px; }
 }
 
 .items-chip {
@@ -76,17 +76,17 @@
   // Status row active: solid forest
   &--active,
   &--active:hover {
-    background: $mint;
-    border-color: $mint;
-    color: $forest;
+    background: $forest;
+    color: $cream;
   }
 }
 
+// Platform row active: mint, so the two rows read differently
 .items-chips--platforms .items-chip--active,
 .items-chips--platforms .items-chip--active:hover {
-  background: $forest;
-  border-color: $forest;
-  color: $cream;
+  background: $mint;
+  border-color: $mint;
+  color: $forest;
 }
 
 // ---------- Item cards ----------
@@ -184,41 +184,6 @@
   }
 }
 
-// For Status-form as it is inside of link(anker)
-.items-status,
-.items-delete-form {
-  position: relative;
-  z-index: 2;
-}
-.items-status {
-  &__current {
-    list-style: none;
-    color: $cream;
-  }
-}
-.items-pill.items-status__current {
-  color: $cream;
-}
-.items-pill.items-status__current.status--pending {
-  background: $forest;
-  color: $cream;
-}
-.items-pill.items-status__current.status--listed {
-  background-color: #EF8354;
-}
-.items-pill.items-status__current.status--disposal_booked {
-  background-color: #4ab0b9;
-}
-.items-pill.items-status__current.status--disposed {
-  background: #fff;
-  border: 1px solid $forest;
-  color: $forest;
-}
-
-form.items-status__form {
-  font-size: 0.9rem;
-  color: $tossibly-black;
-}
 // Delete button, next to the condition pill. z-index lifts it above the
 // stretched title link so clicking it doesn't open the item.
 .items-delete-form {
@@ -321,5 +286,28 @@ form.items-status__form {
     }
 
     &__chevron { display: none; }
+  }
+}
+// Trash: bare icon, same height as the status pill beside it
+.items-card__meta {
+  align-items: stretch;
+}
+
+.items-card__meta .items-delete {
+  align-self: stretch;
+  height: auto;
+  width: auto;
+  aspect-ratio: 1;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: rgba($forest, 0.6);
+  font-size: 15px;
+
+  &:hover,
+  &:focus-visible {
+    color: $forest;
+    background: rgba($forest, 0.08);
   }
 }
