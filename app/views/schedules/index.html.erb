@@ -2,15 +2,18 @@
   <div class="calendar month">
     <%= month_calendar do |date| %>
       <%= date.day %>
-      <% if @weekly_schedule[date.wday] %>
-        <span class="dot dot--<%= @weekly_schedule[date.wday] %>"></span>
-      <% end %>
-      <% if date.saturday? && (date.day.between?(1, 7) || date.day.between?(15, 21)) %>
-        <span class="dot dot--non-combustibles"></span>
+      <% Schedule::FIXED_COLLECTION_DOT_CLASSES.each do |waste_category_key, dot_class| %>
+        <% if Schedule.collected_on?(date, waste_category_key) %>
+          <span class="dot dot--<%= dot_class %>"></span>
+        <% end %>
       <% end %>
       <% @schedules.select { |schedule| schedule.scheduled_date == date }.each do |schedule| %>
-        <div class="calendar-schedule-title">
-          <%= schedule.title %>
+        <div class="schedule-item">
+          <div class="schedule-item-img">
+            <% if schedule.item && schedule.item.photos.attached? %>
+              <%= cl_image_tag schedule.item&.photos.first.key %>
+            <% end %>
+          </div>
           <%= button_to schedule_path(schedule),
                   method: :delete,
                   class: "schedule-delete",
@@ -24,19 +27,22 @@
   <div class="calendar-info">
     <div class="categories">
       <p><span class="dot dot--combustibles"></span>combustibles</p>
-      <p><span class="dot dot--non-combustibles"></span>recyclable</p>
-      <p><span class="dot dot--recyclables"></span>non-combustibles</p>
+      <p><span class="dot dot--recyclables"></span>recyclable</p>
+      <p><span class="dot dot--non-combustibles"></span>non-combustibles</p>
     </div>
   </div>
   <%= simple_form_for @schedule do |f| %>
     <div class="title">
-      <%= f.input :title, label: "title" %>
+      <%= f.association :item,
+      # collection: current_user.items.map { |item| [item.title, item.id] },
+      label: "Item",
+      prompt: "Select an item" %>
     </div>
     <div class="date">
       <%= f.input :scheduled_date, as: :date, label: "date" %>
     </div>
     <div class="submit">
-      <%= f.button :submit %>
+      <%= f.button :submit, "Add Schedule" %>
     </div>
   <% end %>
 </main>

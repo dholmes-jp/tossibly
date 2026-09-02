@@ -99,6 +99,12 @@ class ItemsController < ApplicationController
 
     if @item.save
       ProcessItemJob.perform_later(@item, identification: identification, answers: answers) if listable
+
+      # The single-path skip case ("Set Reminder" on _single_path_result) saves a
+      # throwaway, non-listable item purely so it can be attached to a calendar
+      # reminder, instead of the normal "saved to My Items" success screen.
+      return handle_set_reminder(@item) if params[:set_reminder] == "1"
+
       respond_to do |format|
         format.turbo_stream do
           render turbo_stream: turbo_stream.replace(
@@ -134,6 +140,27 @@ class ItemsController < ApplicationController
   end
 
   private
+
+  # "Set Reminder" on the single-path skip case (_single_path_result): the item
+  # is already saved by the time we get here. If its waste category has a real
+  # fixed collection day, add the schedule ourselves and jump to the month it
+  # falls in. Otherwise there's no date to guess — send the user to the
+  # calendar with the item preselected so they can add it manually once they
+  # know their date (e.g. after contacting the ward office for large-sized
+  # waste or an appliance-recycling-law item).
+  def handle_set_reminder(item)
+    scheduled_date = Schedule.next_collection_date_for(item.waste_category_key)
+
+    if scheduled_date
+      current_user.schedules.create!(item: item, title: item.title, scheduled_date: scheduled_date)
+      redirect_to schedules_path(start_date: scheduled_date),
+                  notice: "Added to your calendar for #{scheduled_date.strftime('%B %-d')}."
+    else
+      redirect_to schedules_path(item_id: item.id),
+                  notice: "#{item.waste_category&.name || 'This item'} doesn't have a fixed collection day — " \
+                          "contact Meguro ward to find yours, then add it to the calendar below."
+    end
+  end
 
   def set_item
     @item = current_user.items.find(params[:id])

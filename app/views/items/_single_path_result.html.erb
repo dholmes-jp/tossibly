@@ -1,11 +1,17 @@
-<div id="follow_up_questions" class="scan-single-path" data-controller="single-path-result">
+<div id="follow_up_questions" class="scan-single-path">
+  <%= hidden_field_tag "item[brand]", identification[:brand] %>
+  <%= hidden_field_tag "item[category]", identification[:category] %>
+  <%= hidden_field_tag "item[model_number]", identification[:model_number] %>
+  <%= hidden_field_tag "item[condition_guess]", identification[:condition_guess] %>
+  <%= hidden_field_tag "item[waste_category_key]", identification[:waste_category_key] %>
+  <%= hidden_field_tag "item[listable]", false %>
+  <%= hidden_field_tag "item[jimoty_search_keyword]", identification[:jimoty_search_keyword] %>
+  <%= hidden_field_tag :set_reminder, "1" %>
   <% category = WasteCategoryLookup.find(identification[:waste_category_key]) %>
-
   <div class="single-path-intro">
     <h3>Nothing to decide here</h3>
     <p>This is everyday trash — no reason to add it to My Items. Here's how to toss it.</p>
   </div>
-
   <% if category %>
     <div class="toss-card">
       <div class="toss-card__head">
@@ -28,14 +34,11 @@
   <% else %>
     <p class="text-muted">Disposal category not yet determined for this item.</p>
   <% end %>
-
   <div class="end-actions">
     <%= link_to new_item_path, class: "scan-btn scan-btn--sun" do %>
       <%= render "shared/scan_camera" %> Upload Another Picture
     <% end %>
-    <button type="button" class="scan-btn scan-btn--outline" data-action="single-path-result#setReminder">
-      Set Reminder
-    </button>
-    <p class="end-caption" data-single-path-result-target="toast"></p>
+    <%= submit_tag "Set Reminder", class: "scan-btn scan-btn--outline",
+          data: { turbo_submits_with: "Saving…" } %>
   </div>
 </div>
