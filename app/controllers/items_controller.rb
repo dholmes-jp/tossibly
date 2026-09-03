@@ -1,6 +1,11 @@
 class ItemsController < ApplicationController
   before_action :set_item, only: %i[show update destroy]
 
+  # See #save_item_with_retry below.
+  RETRYABLE_UPLOAD_ERRORS = [Faraday::TimeoutError, Faraday::ConnectionFailed,
+                             Net::ReadTimeout, Net::OpenTimeout].freeze
+  MAX_SAVE_ATTEMPTS = 3
+
   def index
     @items = current_user.items.order(created_at: :desc)
     @items = @items.where(status: params[:status]) if params[:status].present?
@@ -95,7 +100,7 @@ class ItemsController < ApplicationController
                                                       :condition_guess, :listable)
                                                 .merge(attrs))
 
-    if @item.save
+    if save_item_with_retry(@item)
       ProcessItemJob.perform_later(@item, identification: identification, answers: answers) if listable
 
       # The single-path skip case ("Set Reminder" on _single_path_result) saves a
@@ -138,6 +143,24 @@ class ItemsController < ApplicationController
   end
 
   private
+
+  # Cloudinary's upload (via ActiveStorage) can time out transiently. Retry the whole save a
+  # couple of times with a short backoff before giving up — cheaper and safer than reaching
+  # into Cloudinary/Faraday internals, and covers the actual failure mode reported (Faraday::
+  # TimeoutError / Net::ReadTimeout during @item.save's photo attach).
+  def save_item_with_retry(item, attempt: 1)
+    item.save
+  rescue *RETRYABLE_UPLOAD_ERRORS => e
+    Rails.logger.warn("Item save attempt #{attempt} failed (#{e.class}): #{e.message}")
+    if attempt < MAX_SAVE_ATTEMPTS
+      sleep(attempt) # 1s, then 2s
+      save_item_with_retry(item, attempt: attempt + 1)
+    else
+      Rails.logger.error("Item save failed after #{MAX_SAVE_ATTEMPTS} attempts (#{e.class}): #{e.message}")
+      item.errors.add(:base, "We couldn't save your photo right now — check your connection and try again.")
+      false
+    end
+  end
 
   # "Set Reminder" on the single-path skip case (_single_path_result): the item
   # is already saved by the time we get here. If its waste category has a real
