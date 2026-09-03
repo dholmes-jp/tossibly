@@ -18,11 +18,45 @@
         <div class="toss-stat"><span class="k"><%= dispose[:stat][:k] %></span><span class="v"><%= dispose[:stat][:v] %></span></div>
       <% end %>
     </div>
-    <ol class="toss-steps">
-      <% dispose[:steps].each do |step| %>
-        <li><%= step %></li>
-      <% end %>
-    </ol>
+    <%# Potted-plant tiles: each part shows the waste stream it ends up in.
+        flame = combustible, flame + slash = non-combustible (not the bin —
+        that means delete elsewhere in the app), shop = not collected. %>
+    <% streams = [
+         [/non-?combustible/i,                      "Non-combustible", '<span class="toss-part__stack"><i class="fa-solid fa-fire" aria-hidden="true"></i></span>'],
+         [/combustible/i,                           "Combustible",     '<i class="fa-solid fa-fire" aria-hidden="true"></i>'],
+         [/recycl|plastics collection/i,            "Recyclables",     '<i class="fa-solid fa-recycle" aria-hidden="true"></i>'],
+         [/not collected|garden cent|shop|store/i,  "Not collected",   '<i class="fa-solid fa-shop" aria-hidden="true"></i>']
+       ]
+       stream_for = ->(text) { streams.find { |pattern, _, _| text.match?(pattern) } } %>
+
+    <%# Potted plant: steps written as "Part: what to do" become one tile per part %>
+    <% parts = dispose[:steps].map do |step|
+         title, body = step.split(":", 2)
+         body ? { title: title.strip, body: body.strip, stream: stream_for.call(step) } : nil
+       end %>
+    <% if parts.any? && parts.all? %>
+      <div class="toss-parts">
+        <% parts.each do |part| %>
+          <% _, label, icon = part[:stream] %>
+          <div class="toss-part">
+            <span class="toss-part__icon"><%= icon ? icon.html_safe : (parts.index(part) + 1) %></span>
+            <span class="toss-part__title"><%= part[:title] %></span>
+            <% if label %><span class="toss-part__stream"><%= label %></span><% end %>
+            <span class="toss-part__body"><%= part[:body] %></span>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <%# Every other category: numbered rows %>
+      <ol class="toss-steps toss-steps--icons">
+        <% dispose[:steps].each_with_index do |step, i| %>
+          <li class="toss-step">
+            <span class="toss-step__icon"><%= i + 1 %></span>
+            <span class="toss-step__text"><%= step %></span>
+          </li>
+        <% end %>
+      </ol>
+    <% end %>
     <% if dispose[:notes].present? %>
       <div class="dispose-notes">
         <% dispose[:notes].each do |note| %>

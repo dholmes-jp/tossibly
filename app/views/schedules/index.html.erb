@@ -8,7 +8,8 @@
     "non_combustible" => "Non-combustible"
   }
 %>
-<main class="items-page">
+<main class="items-page schedules-page">
+  <p class="calendar-eyebrow">Collection schedule</p>
   <div class="calendar month">
     <%= month_calendar do |date| %>
       <span class="date-number"><%= date.day %></span>
@@ -53,9 +54,9 @@
   </div>
   <div class="calendar-info">
     <div class="categories">
-      <p><span class="dot dot--combustibles"></span>combustibles</p>
-      <p><span class="dot dot--recyclables"></span>recyclable</p>
-      <p><span class="dot dot--non-combustibles"></span>non-combustibles</p>
+      <p><span class="dot dot--combustibles"></span>Combustible</p>
+      <p><span class="dot dot--recyclables"></span>Recyclables</p>
+      <p><span class="dot dot--non-combustibles"></span>Non-combustible</p>
     </div>
   </div>
   <%# Hidden by default; the "+ Add schedule" trigger reveals it. Starts

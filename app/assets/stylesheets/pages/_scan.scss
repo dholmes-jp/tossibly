@@ -4,36 +4,32 @@
 // Everything is scoped under .scan-page so older rules for this page
 // (photo-add-bar, condition-pill, submit-overlay) can't fight back.
 
-// Heading follows the shared spec (dashboard / My items / show):
-//   padding 24px 30px 64px · eyebrow 14/700 forest, 6px below ·
-//   h1 32/800, lh 1.1 · helper 8px below h1 · 24px before the content.
-// The frame stays narrow (760px) on purpose — it's a single-column form.
 .scan-page {
   max-width: 760px;
   margin: 0 auto;
-  padding: 24px 30px 64px;
+  padding: 24px 20px 64px;
   font-family: $body-font;
   color: $ink;
 
   &__eyebrow {
-    margin: 0 0 6px;
+    margin: 0 0 4px;
     font-size: 14px;
     font-weight: 700;
     color: $forest;
   }
 
   &__title {
-    margin: 0;
+    margin: 0 0 6px;
     font-family: $headers-font;
-    font-size: 32px;
+    font-size: clamp(26px, 4vw, 32px);
     font-weight: 800;
-    line-height: 1.1;
+    line-height: 1.15;
     letter-spacing: -0.02em;
     color: $forest;
   }
 
   &__helper {
-    margin: 8px 0 24px;
+    margin: 0 0 20px;
     font-size: 15px;
     color: rgba($ink, 0.65);
 
@@ -268,16 +264,26 @@
     color: rgba($ink, 0.6);
   }
 
-  // Quiet "start over" aside, not a call to action — reuses &__sub's size/color
-  // as a muted text link with underline-on-hover.
-  &__correction {
-    display: inline-block;
-    margin: 10px 0 0;
-    font-size: 14px;
+  // "Not what you photographed?" and any other link in the result header:
+  // same grey as the subtitle, subtle underline instead of browser blue
+  a,
+  &__sub a {
     color: rgba($ink, 0.6);
-    text-decoration: none;
+    text-decoration: underline;
+    text-decoration-color: rgba($ink, 0.3);
+    text-underline-offset: 2px;
 
-    &:hover { text-decoration: underline; }
+    &:hover,
+    &:focus-visible {
+      color: $forest;
+      text-decoration-color: $forest;
+    }
+  }
+
+  &__confidence {
+    margin: 10px 0 0;
+    font-size: 15px;
+    color: rgba($ink, 0.75);
   }
 }
 
@@ -297,37 +303,23 @@
   gap: 20px;
 }
 
-// ---------- Single-path result: "This one has a clear path." + Toss It card ----------
-// Shown immediately for every non-listable item (free or fee-tiered). Mirrors the
-// .path-card--dispose language from _items.scss (chip, blurb, stat pairs, numbered
-// steps) so this reads as the same product.
+// ---------- Skip-case: "Nothing to decide here" + Toss It card ----------
+// Mirrors the .path-card--dispose language from _items.scss (chip, blurb, stat
+// pairs, numbered steps) so this reads as the same product.
+// Vertical rhythm: 8px heading → text, 16px text → buttons, 12px between buttons
 .scan-single-path {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
 }
 
-// ---------- Reuse-prompt result: disposal card + "worth passing on" pitch ----------
-// Listable items only. Same disposal card as the single-path result, then a short
-// pitch whose button reveals the (hidden) follow-up form client-side.
-.scan-reuse-result {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-// Plain block, not a card — keeps the same spacing rhythm as .single-path-intro.
-.reuse-prompt {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding-top: 4px;
-
-  h4 {
-    margin: 0;
+.single-path-intro {
+  h3 {
+    margin: 0 0 8px;
     font-family: $headers-font;
-    font-size: 18px;
+    font-size: 22px;
     font-weight: 800;
+    line-height: 1.2;
     color: $forest;
   }
 
@@ -337,38 +329,17 @@
     line-height: 1.5;
     color: rgba($ink, 0.75);
   }
-
-  .scan-btn { align-self: flex-start; margin-top: 6px; }
 }
 
-// Wrapper the reveal controller toggles .d-none on — no styling of its own beyond
-// what .scan-followups inside it already provides.
-.reuse-followups { display: block; }
-
-.single-path-intro {
-  h3 {
-    margin: 0 0 6px;
-    font-family: $headers-font;
-    font-size: 22px;
-    font-weight: 800;
-    color: $forest;
-  }
-
-  p {
-    margin: 0;
-    font-size: 15px;
-    color: rgba($ink, 0.75);
-  }
-}
-
+// Same look as the suggested card on the decision page: mint tint,
+// white tiles inside, no stripe.
 .toss-card {
   display: flex;
   flex-direction: column;
   gap: 14px;
   padding: 20px;
-  border-radius: 18px;
-  border-top: 3px solid $leaf;
-  background: $cream;
+  border-radius: 20px;
+  background: rgba($mint, 0.38);
 }
 
 .toss-card__head {
@@ -389,7 +360,7 @@
   flex-shrink: 0;
   padding: 4px 10px;
   border-radius: 999px;
-  background: rgba($forest, 0.1);
+  background: $tossibly-white;
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.02em;
@@ -412,8 +383,8 @@
 .toss-stat {
   flex: 1 1 120px;
   padding: 8px 12px;
-  border-radius: 10px;
-  background: rgba($forest, 0.06);
+  border-radius: 12px;
+  background: $tossibly-white;
 
   .k {
     display: block;
@@ -442,38 +413,162 @@
   color: rgba($ink, 0.8);
 }
 
-// Fee-tiered categories carry caveat notes + a ward application link. The shared
-// .dispose-* base rules (pages/_items.scss) are navy-accented for the show page;
-// re-tint them to this page's forest palette against the .toss-card cream.
-.toss-card {
-  .dispose-notes {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    margin: 0;
-  }
+// Numbered rows for every other category: same 32px mint circle as the
+// plant tiles, one step per row.
+.toss-steps--icons {
+  padding-left: 0;
+  list-style: none;
+  gap: 10px;
+}
 
-  .dispose-note {
-    margin: 0;
-    padding-left: 10px;
-    border-left: 2px solid rgba($forest, 0.3);
-    font-size: 12px;
-    line-height: 1.5;
-    color: rgba($ink, 0.6);
-  }
+.toss-step {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 16px;
+  background: $tossibly-white;
 
-  .dispose-apply {
-    align-self: flex-start;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 14px;
-    font-weight: 700;
+  &__icon {
+    display: grid;
+    place-items: center;
+    flex: 0 0 32px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: $mint;
     color: $forest;
-    text-decoration: none;
+    font-size: 14px;
+    font-weight: 800;
+  }
 
-    &:hover { text-decoration: underline; }
-    &::after { content: "↗"; font-size: 0.9em; }
+  &__text {
+    font-size: 14px;
+    line-height: 1.5;
+    color: rgba($ink, 0.8);
+  }
+}
+
+// Potted plant: one tile per part (leaves / soil / pot), three across on
+// desktop, stacked on the phone. The icon is the waste stream (flame /
+// crossed flame / shop).
+.toss-parts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.toss-part {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px;
+  border-radius: 16px;
+  background: $tossibly-white;
+
+  // Icon circle — change these two numbers together (circle 32 / glyph 15)
+  &__icon {
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    margin-bottom: 4px;
+    border-radius: 50%;
+    background: $mint;
+    color: $forest;
+    font-size: 15px;
+  }
+
+  // Non-combustible: the flame glyph with a drawn slash over it. The slash is
+  // a CSS line, not a glyph, so it's centred on the flame and its thickness
+  // and length are ours to set.
+  &__stack {
+    position: relative;
+    display: inline-grid;
+    place-items: center;
+    width: 1em;
+    height: 1em;
+
+    &::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 2.5px;                  // thickness
+      height: 1.05em;                // length (flame is ~1.25em tall diagonally)
+      border-radius: 2px;
+      background: $forest;
+      box-shadow: 0 0 0 1.5px $mint; // thin gap so the slash reads over the flame
+      transform: translate(-50%, -50%) rotate(45deg);
+    }
+  }
+
+  &__title {
+    font-family: $headers-font;
+    font-size: 15px;
+    font-weight: 800;
+    color: $forest;
+  }
+
+  // Which bin it ends up in
+  &__stream {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: $leaf;
+  }
+
+  &__body {
+    font-size: 13px;
+    line-height: 1.5;
+    color: rgba($ink, 0.75);
+  }
+}
+
+@media (max-width: 640px) {
+  .toss-parts { grid-template-columns: 1fr; }
+
+  .toss-part {
+    display: grid;
+    grid-template-columns: 32px 1fr;
+    grid-template-rows: auto auto auto;
+    column-gap: 12px;
+    row-gap: 2px;
+    align-items: center;
+
+    &__icon { grid-row: 1 / span 3; margin: 0; }
+  }
+}
+
+// Listable items: disposal card, then the "worth passing on" pitch
+// (items/_reuse_prompt_result). Same rhythm as .single-path-intro:
+// 16px between blocks, 8px heading → text, 16px text → buttons.
+.scan-reuse-result {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.reuse-prompt {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  h4 {
+    margin: 0 0 -8px;              // 8px to the paragraph (16px gap minus 8)
+    font-family: $headers-font;
+    font-size: 22px;
+    font-weight: 800;
+    line-height: 1.2;
+    color: $forest;
+  }
+
+  p {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.5;
+    color: rgba($ink, 0.75);
   }
 }
 
@@ -483,6 +578,7 @@
   flex-wrap: wrap;
   gap: 12px;
   align-items: center;
+  margin: 0;
 
   .scan-btn {
     margin-top: 0;
@@ -579,7 +675,7 @@
   padding: 12px 14px;
   border: 1.5px solid rgba($forest, 0.25);
   border-radius: 14px;
-  background: $tossibly-white;
+  background: #fff;
   font-size: 15px;
 
   &:focus {
