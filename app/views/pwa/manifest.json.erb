@@ -1,12 +1,14 @@
 {
 "name": "Tossibly",
+"short_name": "Tossibly",
 "icons": [
-<% files = Dir.entries(Rails.root.join("app/assets/images/icons/")).select {|f| !File.directory? f} %>
+<% icons_dir = Rails.root.join("app/assets/images/icons/") %>
+<% files = Dir.entries(icons_dir).select { |f| !File.directory?(icons_dir.join(f)) && f.match?(/-\d{2,4}x\d{2,4}\.png\z/) } %>
 <% files.each_with_index do |file, index| %>
-  <% match = file.match(/.+-(?<size>\d{2,3}x\d{2,3}).png/) %>
+  <% size = file.match(/-(?<size>\d{2,4}x\d{2,4})\.png\z/)[:size] %>
   {
   "src": "<%= image_path "icons/#{file}" %>",
-  "sizes": "<%= match && match[:size] %>",
+  "sizes": "<%= size %>",
   "type": "image/png"
   }<%= "," unless (files.size - 1) == index %>
 <% end %>
@@ -14,7 +16,7 @@
 "start_url": "/",
 "display": "standalone",
 "scope": "/",
-"description": "Tossibly.",
-"theme_color": "red",
-"background_color": "red"
+"description": "Before you toss it, see what's possible.",
+"theme_color": "#1E4B2D",
+"background_color": "#1E4B2D"
 }
