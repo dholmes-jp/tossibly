@@ -41,55 +41,89 @@ $dash-viewall: 120px;   // width reserved on the right for the "View all" button
   position: relative;
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  gap: 14px 32px;
-  padding: 16px 48px 16px 28px;   // a little extra right padding keeps the corner clear of "Sat"
+  align-items: flex-start;
+  gap: 10px 15px;
+  padding: 28px 52px 28px 32px;   // a little extra right padding keeps the corner clear of "Sat"
   border-radius: 24px;
   background: $mint;
   color: $forest;
+  // Every text element in the strip inherits this rather than repeating it —
+  // the fa-solid icons keep their own icon font regardless, since Font
+  // Awesome sets font-family directly on those classes.
+  font-family: $headers-font;
 
-  // Left: TODAY / 27 / Thursday
+  // Left: TODAY / Wed, Sep / 2
   &__date {
     display: flex;
     flex-direction: column;
-    padding-left: 14px;
+    padding-left: 16px;
     border-left: 3px solid $forest;
     line-height: 1;
+    height: fit-content;
   }
 
   &__eyebrow {
-    margin-bottom: 4px;
-    font-size: 11px;
+    margin-bottom: 6px;
+    font-size: 12px;
     font-weight: 800;
     letter-spacing: 0.1em;
     text-transform: uppercase;
   }
 
+  // "Wed, Sep" + the day number, wrapped so __day (flex-basis: 100%) always
+  // falls onto its own line below regardless of container width.
+  &__wrap {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px;
+  }
+
+  &__weekday,
+  &__month {
+    font-size: 16px;
+    font-weight: 600;
+  }
+
   &__day {
-    font-family: $headers-font;
-    font-size: 28px;
+    flex-basis: 100%;
+    margin-top: 2px;
+    font-size: 48px;
     font-weight: 800;
     line-height: 1;
   }
 
-  &__weekday {
-    margin-top: 4px;
-    font-size: 14px;
-  }
-
-  // Middle: Combustible collection / Put out by 8:00
+  // Middle: badge + "My scheduled items" label, the list, then "View full calendar"
   &__what {
     display: flex;
     flex-direction: column;
-    gap: 3px;
-    min-width: 180px;
+    gap: 8px;
+    min-width: 260px;
   }
 
-  &__title {
-    font-family: $headers-font;
-    font-size: 18px;
+  &__what-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  &__badge {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: $forest;
+    color: $cream;
+    font-size: 14px;
+  }
+
+  &__label {
+    font-size: 13px;
     font-weight: 800;
-    line-height: 1.15;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
   }
 
   &__sub {
@@ -97,36 +131,136 @@ $dash-viewall: 120px;   // width reserved on the right for the "View all" button
     color: rgba($forest, 0.7);
   }
 
-  // Right: the weekly pattern as day circles. Every slot is the same fixed
-  // width, so the circles sit at exactly equal intervals regardless of how
-  // long the label under each one is.
+  &__schedules {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__schedule {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 4px 0;
+    // border-bottom: 1px solid rgba($forest, 0.15);
+    font-size: 15px;
+
+    &:first-child { padding-top: 0; }
+    &:last-child { padding-bottom: 0; border-bottom: none; }
+  }
+
+  &__schedule-name {
+    font-weight: 700;
+  }
+
+  &__schedule-date {
+    flex: none;
+    font-size: 13px;
+    color: rgba($forest, 0.7);
+  }
+
+  &__viewall {
+    align-self: flex-start;
+    font-size: 14px;
+    font-weight: 800;
+    color: $forest;
+
+    i { margin-left: 4px; font-size: 12px; }
+
+    &:hover { color: $leaf; }
+  }
+
+  // "See details" — reveals __what-panel below. Only shown on very narrow
+  // phones (see the max-width: 479px rule); the panel stays forced open
+  // everywhere else regardless of the `hidden` attribute the disclosure
+  // controller toggles.
+  &__what-toggle {
+    display: none;
+    align-items: center;
+    gap: 6px;
+    align-self: flex-start;
+    padding: 0;
+    border: none;
+    background: none;
+    color: $forest;
+    font-family: $headers-font;
+    font-size: 14px;
+    font-weight: 800;
+    cursor: pointer;
+
+    i { font-size: 12px; }
+
+    &:hover { color: $leaf; }
+  }
+
+  &__what-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    // Bootstrap's reboot sets `[hidden] { display: none !important; }`
+    // globally, which otherwise always wins over a plain `display` here —
+    // matching !important (with higher selector specificity than
+    // Bootstrap's bare [hidden]) is the only way to force this open while
+    // the server-rendered `hidden` attribute is still present.
+    &[hidden] { display: flex !important; }
+  }
+
+  // Right: the upcoming pickups, one circle per actual collection date (not
+  // a generic weekly pattern) — every slot is the same fixed width, so the
+  // circles sit at exactly equal intervals regardless of label length.
   &__week {
     display: grid;
     grid-auto-flow: column;
-    grid-auto-columns: 112px;
+    grid-auto-columns: 96px;
+    align-items: start;
+    column-gap: 16px;
     margin: 0 0 0 auto;
-    padding: 0;
+    padding: 0 0 0 16px;
+    border-left: 1px solid rgba($forest, 0.15);
     list-style: none;
+    align-self: center;
   }
 
   &__slot {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 5px;
-    font-size: 12px;
+    gap: 8px;
+    font-size: 13px;
+  }
+
+  &__slot-day {
+    font-size: 16px;
+    font-weight: 700;
+  }
+
+  &__slot-date {
+    font-size: 32px;
+    font-weight: 800;
+    line-height: 1;
   }
 
   &__circle {
     display: grid;
     place-items: center;
-    width: 32px;
-    height: 32px;
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
     background: $forest;
     color: $cream;
-    font-size: 11px;
-    font-weight: 800;
+    font-size: 20px;
+  }
+
+  &__type {
+    font-weight: 600;
+    text-align: center;
+    // Keep the label on a single line even when it's longer than the slot
+    // (e.g. "Non-combustible") rather than wrapping to two lines — it just
+    // overflows the fixed-width column a little, centred either side.
+    white-space: nowrap;
   }
 
   // The next collection day gets the one accent colour
@@ -300,24 +434,6 @@ $dash-viewall: 120px;   // width reserved on the right for the "View all" button
   &--ready { background: $sun; }
 }
 
-.dashboard-pill {
-  color: $cream;
-}
-.dashboard-pill--pending {
-  background: $forest;
-  color: $cream;
-}
-.dashboard-pill--listed {
-  background-color: #EF8354;
-}
-.dashboard-pill--booked {
-  background-color: #4ab0b9;
-}
-.dashboard-pill--disposed {
-  background: #fff;
-  border: 1px solid $forest;
-  color: $forest;
-}
 // Empty state (fills the cards' space when there are no items)
 .dashboard-empty {
   flex: 1 1 auto;
@@ -360,6 +476,18 @@ $dash-viewall: 120px;   // width reserved on the right for the "View all" button
 }
 
 // ---------- Responsive ----------
+// The strip's own breakpoint is wider than the cards' (1100px, not 640px):
+// __what's min-width (260px) plus the four fixed-width upcoming-pickup
+// columns don't actually fit next to __date until well above 640px, so
+// below 640 they were already wrapping — just with desktop's full-size
+// text/circles, since nothing shrunk until 640. That's the "goes down but
+// doesn't get smaller" gap: content could wrap anywhere from ~1000px down
+// to 640px with no compact styling applied yet. Matching this breakpoint to
+// where wrapping actually starts closes that gap — one clean jump straight
+// into the compact/stacked version, instead of an unstyled halfway state.
+// __date/__week column gap below 1100px.
+$strip-col-gap: 24px;
+
 @media (max-width: 1100px) {
   .dashboard-grid { flex-wrap: wrap; }
 
@@ -369,25 +497,155 @@ $dash-viewall: 120px;   // width reserved on the right for the "View all" button
   }
 
   // Button keeps margin-left: auto, so it stays right-aligned on its own line
-}
 
-@media (max-width: 640px) {
+  .dashboard-strip {
+    gap: 16px;
+    padding: 16px 18px 16px 18px;
+  }
+
+  // Row 1 keeps __date and __week paired (via `order`, DOM stays untouched)
+  // — __what (the scheduled-items list) is the one that drops to its own
+  // full-width row below, instead of the upcoming-pickups row.
+  .dashboard-strip__date { order: 1; }
+
+  .dashboard-strip__week {
+    order: 3;
+    // margin-left: 0;   // sits right after __date instead of pushed to the far edge
+    // padding-left: 20px;
+    // grid-auto-columns: 76px;
+  }
+
+  // Left/middle text shrinks along with the layout instead of staying at
+  // desktop size.
+  .dashboard-strip__eyebrow { font-size: 11px; }
+
+  .dashboard-strip__weekday,
+  .dashboard-strip__month {
+    font-size: 14px;
+  }
+
+  .dashboard-strip__day { font-size: 36px; }
+
+  .dashboard-strip__slot-day { font-size: 13px; }
+  .dashboard-strip__slot-date { font-size: 22px; }
+
+  .dashboard-strip__circle {
+    width: 40px;
+    height: 40px;
+    font-size: 15px;
+  }
+
+  .dashboard-strip__type {
+    font-size: 11px;
+    text-align: center;
+  }
+
+  // The scheduled-items list: drops below and loses its badge/label row's
+  // usual spacing partner (there's nothing left of it to sit beside), so a
+  // top border keeps a clean seam where __week's divider used to be.
+  .dashboard-strip__what {
+    order: 2;
+    // width: 100%;
+    width: fit-content;
+    // margin-top: 4px;
+    // padding-top: 16px;
+    // border-top: 1px solid rgba($forest, 0.15);
+  }
+
+  .dashboard-strip__badge {
+    width: 26px;
+    height: 26px;
+    font-size: 12px;
+  }
+
+  .dashboard-strip__label { font-size: 12px; }
+
+  .dashboard-strip__schedule {
+    padding: 4px 0;
+    font-size: 14px;
+  }
+
+  .dashboard-strip__schedule-date { font-size: 12px; }
+}
+@media (max-width: 930px) {
+
+
+  // __date keeps the same (unchanged) width it has above this breakpoint.
+  .dashboard-strip__date {
+    order: 1;
+  }
+
+  // __what drops to its own row below instead of sharing this one, so
+  // __week is free to grow into the space that leaves — still pinned to
+  // the right edge (margin-left: auto would eat that free space itself
+  // instead of letting the item grow, so it's turned off here).
+  .dashboard-strip__week {
+    order: 2;
+    flex: 1 1 auto;
+    margin: 0;
+    grid-auto-columns: minmax(76px, 1fr);
+  }
+
+  // TODO: match __date's column width instead — 100% for now.
+  .dashboard-strip__what {
+    order: 3;
+    // flex: 0 0 100%;
+    // width: 100%;
+  }
+}
+@media (max-width: 635px) {
   .dashboard { padding: 20px 16px 40px; }
 
   .dashboard-heading { font-size: 28px; }
 
-  .dashboard-strip {
-    gap: 14px 20px;
-    padding: 16px 36px 16px 18px;
-  }
-
+  // Row 1: __date + __week side by side (__week's columns shrink to share
+  // the row instead of going full-width). Row 2: __what, on its own row
+  // below, full width.
   .dashboard-strip__week {
-    width: 100%;
-    margin-left: 0;
+    order: 2;
+    flex: 1 1 auto;
+    width: auto;
+    margin: 0;
+    padding: 0 0 0 16px;
+    border-left: 1px solid rgba($forest, 0.15);
+    border-top: none;
+    display: grid;
+    grid-auto-flow: column;
     grid-auto-columns: minmax(0, 1fr);
+    column-gap: 8px;
   }
 
-  .dashboard-strip__type { text-align: center; }
+  .dashboard-strip__what {
+    order: 3;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid rgba($forest, 0.15);
+    width: 100%;
+    // The base rule's min-width: 260px doesn't shrink with the container on
+    // a narrow phone — it was pushing this past the strip's edge.
+    min-width: 0;
+  }
+
+  // The slot columns are tight now that they share row 1 with __date —
+  // shrink the circle/date a bit further and drop the category label.
+  .dashboard-strip__slot-day { font-size: 11px; }
+  .dashboard-strip__slot-date { font-size: 18px; }
+
+  .dashboard-strip__circle {
+    width: 36px;
+    height: 36px;
+    font-size: 14px;
+  }
+
+  .dashboard-strip__type {
+    display: none;
+  }
+
+  // Each slot lays its day/date, icon, and category name out horizontally
+  // instead of stacked.
+  // .dashboard-strip__slot {
+  //   flex-direction: row;
+  // }
 
   .dashboard-card,
   .dashboard-scan {
@@ -400,5 +658,19 @@ $dash-viewall: 120px;   // width reserved on the right for the "View all" button
   .dashboard-viewall {
     flex-basis: 100%;
     text-align: center;
+  }
+}
+@media (max-width: 479px) {
+  // Only truly narrow phones collapse the schedule list behind "See
+  // details" — from 480px up it stays open like every wider size.
+  .dashboard-strip__what-toggle {
+    display: inline-flex;
+  }
+
+  // !important + matching specificity to win over the base rule's own
+  // !important (needed there to beat Bootstrap's [hidden] reboot) — same
+  // specificity, so this later rule takes it back for this breakpoint only.
+  .dashboard-strip__what-panel[hidden] {
+    display: none !important;
   }
 }

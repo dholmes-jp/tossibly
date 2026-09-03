@@ -1,17 +1,34 @@
 <%# app/views/users/dashboard.html.erb %>
 <%# Styles: app/assets/stylesheets/pages/_dashboard.scss %>
-<%# Expects @recent_items from UsersController#dashboard (max 3, most recently touched first). %>
+<%# Expects @recent_items (max 3, most recently touched first) and @weekly_schedules
+    (this calendar week's Schedule records, soonest first) from UsersController#dashboard. %>
 <%
-  # Placeholder weekly collection pattern (Meguro-ku, Area B) until a schedule
-  # model exists. Keys are wday numbers: 0 = Sun ... 6 = Sat.
-  weekly = { 2 => "Recyclables", 3 => "Used paper", 4 => "Combustible", 6 => "Non-combustible" }
+  # Real Meguro fixed collection days, from Schedule::FIXED_COLLECTION_DOT_CLASSES /
+  # Schedule.collected_on? (the same rules the schedules calendar draws its dots
+  # from) — not every waste category has a fixed day (used paper, batteries, etc.
+  # don't), so this only ever lists the ones that do.
+  category_label = {
+    "combustible" => "Combustible",
+    "recyclable" => "Recyclables",
+    "non_combustible" => "Non-combustible"
+  }
+  category_icon = {
+    "combustible" => "fa-fire",
+    "recyclable" => "fa-recycle",
+    "non_combustible" => "fa-trash-can"
+  }
   today = Time.current.in_time_zone("Tokyo").to_date
-  next_day = (0..7).map { |n| today + n }.find { |d| weekly.key?(d.wday) }
-  when_label =
-    if next_day == today then "Today"
-    elsif next_day == today + 1 then "Tomorrow"
-    else "Next"
+
+  upcoming = []
+  offset = 0
+  while upcoming.size < 4 && offset <= 60
+    date = today + offset
+    Schedule::FIXED_COLLECTION_DOT_CLASSES.each_key do |key|
+      upcoming << [date, key] if Schedule.collected_on?(date, key)
     end
+    offset += 1
+  end
+  next_day = upcoming.first&.first
 %>
 <main class="dashboard">
   <p class="dashboard-kicker"><%= time_of_day_greeting %>, <%= current_user.name.presence || "there" %></p>
@@ -19,24 +36,53 @@
   <%# ---------- NEXT COLLECTION STRIP ---------- %>
   <div class="dashboard-strip">
     <div class="dashboard-strip__date">
-      <span class="dashboard-strip__eyebrow"><%= when_label %></span>
-      <span class="dashboard-strip__day"><%= next_day.day %></span>
-      <span class="dashboard-strip__weekday"><%= next_day.strftime("%A") %></span>
+      <span class="dashboard-strip__eyebrow">Today</span>
+      <div class="dashboard-strip__wrap">
+        <span class="dashboard-strip__weekday"><%= today.strftime("%a") %></span>,
+        <span class="dashboard-strip__month"><%= today.strftime("%b") %></span>
+        <span class="dashboard-strip__day"><%= today.day %></span>
+      </div>
     </div>
-    <div class="dashboard-strip__what">
-      <span class="dashboard-strip__title"><%= weekly[next_day.wday] %> collection</span>
-      <span class="dashboard-strip__sub">Put out by 8:00</span>
+    <div class="dashboard-strip__what" data-controller="disclosure">
+      <div class="dashboard-strip__what-head">
+        <span class="dashboard-strip__badge"><i class="fa-solid fa-calendar-days" aria-hidden="true"></i></span>
+        <span class="dashboard-strip__label">My scheduled items</span>
+      </div>
+      <%# Mobile only (see _dashboard.scss) — reveals the panel below, which
+          stays open regardless of `hidden` at every other size. %>
+      <button type="button" class="dashboard-strip__what-toggle" data-action="disclosure#toggle">
+        See details <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+      </button>
+      <div class="dashboard-strip__what-panel" data-disclosure-target="panel" hidden>
+        <% if @weekly_schedules.any? %>
+          <ul class="dashboard-strip__schedules">
+            <% @weekly_schedules.each do |schedule| %>
+              <li class="dashboard-strip__schedule">
+                <span class="dashboard-strip__schedule-name"><%= schedule.title.presence || schedule.item&.title %></span>
+                <span class="dashboard-strip__schedule-date"><%= schedule.scheduled_date.strftime("%a, %b %-d") %></span>
+              </li>
+            <% end %>
+          </ul>
+        <% else %>
+          <span class="dashboard-strip__sub">Nothing scheduled this week</span>
+        <% end %>
+        <%= link_to schedules_path, class: "dashboard-strip__viewall" do %>
+          View full calendar <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+        <% end %>
+      </div>
     </div>
     <ul class="dashboard-strip__week">
-      <% weekly.each do |wday, type| %>
-        <li class="dashboard-strip__slot <%= 'dashboard-strip__slot--active' if wday == next_day.wday %>">
-          <span class="dashboard-strip__circle"><%= Date::ABBR_DAYNAMES[wday] %></span>
-          <span class="dashboard-strip__type"><%= type %></span>
+      <% upcoming.each do |date, key| %>
+        <li class="dashboard-strip__slot <%= 'dashboard-strip__slot--active' if date == next_day %>">
+          <span class="dashboard-strip__slot-day"><%= date.strftime("%a") %></span>
+          <span class="dashboard-strip__slot-date"><%= date.strftime("%-d") %></span>
+          <span class="dashboard-strip__circle"><i class="fa-solid <%= category_icon[key] %>" aria-hidden="true"></i></span>
+          <span class="dashboard-strip__type"><%= category_label[key] %></span>
         </li>
       <% end %>
     </ul>
-    <%# Folded paper corner = link to the full schedule (no schedule page yet, so "#") %>
-    <%= link_to "", "#", class: "dashboard-strip__corner", "aria-label": "Full schedule" %>
+    <%# Folded paper corner = link to the full schedule %>
+    <%= link_to "", schedules_path, class: "dashboard-strip__corner", "aria-label": "Full schedule" %>
   </div>
   <%# ---------- RECENT ITEMS + SCAN TILE + VIEW ALL ---------- %>
   <section class="dashboard-section">
@@ -47,19 +93,11 @@
       <% @recent_items.each do |item| %>
         <% status = item.respond_to?(:status) ? item.status.to_s : "" %>
         <% status_label, pill_mod =
-            case status
-            when "pending"
-              ["Pending", "dashboard-pill--pending"]
-            when "listed"
-              ["Listed", "dashboard-pill--listed"]
-            when "disposal_booked"
-              ["Booked", "dashboard-pill--booked"]
-            when "disposed"
-              ["Disposed", "dashboard-pill--disposed"]
-            else
-              ["Pending", "dashboard-pill--pending"]
-            end
-          %>
+             case status
+             when /listed/ then ["Listed on #{item.platform.to_s.capitalize}", ""]
+             when /ready/  then ["Ready to post", "dashboard-pill--ready"]
+             else               ["In progress", ""]
+             end %>
         <%= link_to item_path(item), class: "dashboard-card" do %>
           <div class="dashboard-card__photo">
             <% if item.photos.attached? %>
