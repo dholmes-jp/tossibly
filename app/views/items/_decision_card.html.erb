@@ -16,10 +16,27 @@
   <% else %>
     <%
       waste_category = item.waste_category
+      fee            = DisposalFeeEstimator.call(item)
       single_path    = !item.listable
 
-      # Same hash the scan page's _disposal_card builds — see DisposalPanelPresenter.
-      dispose = DisposalPanelPresenter.call(item)
+      dispose = if waste_category
+        {
+          chip: waste_category.chip_label,
+          blurb: waste_category.blurb,
+          cost: fee.label,
+          stat: waste_category.collection_frequency.present? ? { k: "Collected", v: waste_category.collection_frequency } : nil,
+          facts: [["Category", waste_category.name], ["Cost", fee.label],
+                  ["Application", waste_category.application_required? ? "Required" : "Not required"]],
+          steps: waste_category.steps,
+          notes: fee.notes,
+          apply_url: fee.application_url,
+          apply_label: fee.application_label
+        }
+      else
+        { chip: nil, blurb: "Disposal category not yet determined for this item.",
+          cost: nil, stat: nil, facts: [], steps: [], notes: [],
+          apply_url: nil, apply_label: nil }
+      end
 
       # Which path gets the "Tossibly suggests" tag. Working + listable → List, otherwise Toss.
       suggested    = (item.functional && !single_path) ? :list : :toss
@@ -133,32 +150,7 @@
           </div>
 
           <div class="decide-details" hidden data-decision-card-target="panel" data-panel="list">
-            <%# 1) Tossibly's recommendation from the nearby-listing analysis, as bullets %>
-            <div class="decide-block">
-              <p class="decide-details__title">Tossibly's take</p>
-              <ul class="decide-bullets">
-              <% if item.typical_price.present? %>
-                <li><strong>Tossibly suggests starting at <%= yen(item.typical_price) %></strong> &mdash; expect buyers to negotiate down.</li>
-              <% elsif item.nearby_listings_found? %>
-                <li><strong>Tossibly suggests listing it free</strong> &mdash; every similar item nearby is being given away.</li>
-              <% else %>
-                <li><strong>No price suggestion yet</strong> &mdash; no comparable listings are live nearby right now.</li>
-              <% end %>
-              <% if item.nearby_listings_found? %>
-                <li>Based on <strong><%= item.nearby_count %> similar items</strong> listed
-                  <%= item.search_scope == "tokyo" ? "across Tokyo" : "near you" %> right now,
-                  <%= item.free_count %> of them free.</li>
-                <% if item.search_scope == "tokyo" %>
-                  <li>Nothing comparable was live in Meguro-ku, so the search widened to all of Tokyo.</li>
-                <% end %>
-                <li>These are asking prices, not what items actually sold for.</li>
-              <% else %>
-                <li>Demand changes week to week &mdash; a listing can still work, and it's free to post.</li>
-              <% end %>
-              </ul>
-            </div>
-
-            <%# 2) The AI-written listing draft %>
+            <%# The AI-written listing draft %>
             <div class="decide-block">
               <p class="decide-details__title">Your listing draft</p>
               <div class="decide-draft">
@@ -183,7 +175,7 @@
               </div>
             </div>
 
-            <%# 3) How to post it %>
+            <%# How to post it %>
             <div class="decide-inline">
               <div><strong>Ready to post?</strong><span>Opens Jimoty in a new tab &mdash; paste the Japanese draft there</span></div>
               <%= link_to "https://jmty.jp/articles/new?prefecture_id=0/", class: "decide-mini decide-mini--primary", target: "_blank", rel: "noopener" do %>
