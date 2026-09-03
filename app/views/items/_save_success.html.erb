@@ -17,10 +17,10 @@
   </div>
 
   <div class="end-actions">
-    <%= link_to new_item_path, class: "scan-btn scan-btn--sun" do %>
+    <%= link_to "View Item →", item_path(item), class: "scan-btn scan-btn--sun" %>
+    <%= link_to new_item_path, class: "scan-btn scan-btn--outline" do %>
       <%= render "shared/scan_camera" %> Scan Another Item
     <% end %>
-    <%= link_to "Go to My Items →", items_path, class: "scan-btn scan-btn--outline" %>
     <p class="end-caption">No rush — this item is saved as Pending in My Items.</p>
   </div>
 </div>
