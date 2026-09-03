@@ -1,4 +1,16 @@
 class ItemDescriber
+  PLANT_GUIDANCE = <<~TEXT
+    This item is a potted plant. For this listing's `description` only:
+    - Open by saying the plant is looking for a new home / being passed on to someone local, then describe it.
+    - Describe the plant and its pot only — never the surface it stands on, the room, the background, or how it is photographed.
+    - Do not start sentences with "This is a". Name the plant directly.
+    - Cover briefly: what it is and rough size; how healthy it looks (leaf colour, fullness, bare stems or damage visible in the photos); the pot and any marks on it; anything the seller noted; that the pot is included and pickup timing is flexible.
+    - Keep it to 3–5 short sentences.
+
+    Example of the tone and shape (do not copy the details):
+    "Rubber plant looking for a new home. About knee height, healthy, with full glossy dark-green leaves and no bare stems. Comes in a plain white pot with a few small surface marks. Repotted last year. Pot included, happy to arrange a local pickup."
+  TEXT
+
   def initialize(identification, answers, photo_paths)
     @identification = identification
     @answers = answers
@@ -44,12 +56,25 @@ class ItemDescriber
       color — not a pitch headline.
     PROMPT
 
+    prompt += "\n#{PLANT_GUIDANCE}" if plant?
+
     chat = RubyLLM.chat(model: "gpt-4o").with_schema(ItemListingSchema)
     response = chat.ask(prompt, with: @photo_paths)
 
-    response.content.symbolize_keys
+    result = response.content.symbolize_keys
+    if plant? && !result[:description].to_s.match?(/new home|passing|re-?home/i)
+      result[:description] = "Looking for a new home. #{result[:description]}"
+    end
+    result
   rescue StandardError => e
     Rails.logger.error("ItemDescriber failed: #{e.message}")
     nil
+  end
+
+  private
+
+  def plant?
+    @identification[:waste_category_key].to_s == "potted_plant" ||
+      %i[category name].any? { |k| @identification[k].to_s.downcase.include?("plant") }
   end
 end
