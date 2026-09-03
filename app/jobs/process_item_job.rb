@@ -62,6 +62,7 @@ class ProcessItemJob < ApplicationJob
       file.flush
       file
     end
+    identification = identification.merge(waste_category_key: item.waste_category_key)
     ItemDescriber.new(identification, answers, tempfiles.map(&:path)).call || {}
   ensure
     tempfiles&.each { |file| file.close! }
