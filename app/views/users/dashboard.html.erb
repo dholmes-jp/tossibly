@@ -1,12 +1,4 @@
-<%# app/views/users/dashboard.html.erb %>
-<%# Styles: app/assets/stylesheets/pages/_dashboard.scss %>
-<%# Expects @recent_items (max 3, most recently touched first) and @weekly_schedules
-    (this calendar week's Schedule records, soonest first) from UsersController#dashboard. %>
 <%
-  # Real Meguro fixed collection days, from Schedule::FIXED_COLLECTION_DOT_CLASSES /
-  # Schedule.collected_on? (the same rules the schedules calendar draws its dots
-  # from) — not every waste category has a fixed day (used paper, batteries, etc.
-  # don't), so this only ever lists the ones that do.
   category_label = {
     "combustible" => "Combustible",
     "recyclable" => "Recyclables",
@@ -48,8 +40,6 @@
         <span class="dashboard-strip__badge"><i class="fa-solid fa-calendar-days" aria-hidden="true"></i></span>
         <span class="dashboard-strip__label">My scheduled items</span>
       </div>
-      <%# Mobile only (see _dashboard.scss) — reveals the panel below, which
-          stays open regardless of `hidden` at every other size. %>
       <button type="button" class="dashboard-strip__what-toggle" data-action="disclosure#toggle">
         See details <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
       </button>
@@ -81,7 +71,6 @@
         </li>
       <% end %>
     </ul>
-    <%# Folded paper corner = link to the full schedule %>
     <%= link_to "", schedules_path, class: "dashboard-strip__corner", "aria-label": "Full schedule" %>
   </div>
   <%# ---------- RECENT ITEMS + SCAN TILE + VIEW ALL ---------- %>
