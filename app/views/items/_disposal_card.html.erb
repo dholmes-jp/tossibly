@@ -1,0 +1,40 @@
+<%# app/views/items/_disposal_card.html.erb
+    The scan page's own presentation of the DisposalPanelPresenter hash, styled to
+    match .toss-card in pages/_scan.scss. Also renders fee[:notes] and an apply
+    link when present — fee-tiered categories carry both. %>
+<% if dispose[:chip] || dispose[:blurb] %>
+  <div class="toss-card">
+    <div class="toss-card__head">
+      <span class="toss-card__name">Toss It</span>
+      <span class="toss-chip"><%= dispose[:chip] %></span>
+    </div>
+    <p class="toss-card__blurb"><%= dispose[:blurb] %></p>
+    <div class="toss-stats">
+      <% if dispose[:category_name].present? %>
+        <div class="toss-stat"><span class="k">Category</span><span class="v"><%= dispose[:category_name] %></span></div>
+      <% end %>
+      <div class="toss-stat"><span class="k">Cost</span><span class="v"><%= dispose[:cost] %></span></div>
+      <% if dispose[:stat] %>
+        <div class="toss-stat"><span class="k"><%= dispose[:stat][:k] %></span><span class="v"><%= dispose[:stat][:v] %></span></div>
+      <% end %>
+    </div>
+    <ol class="toss-steps">
+      <% dispose[:steps].each do |step| %>
+        <li><%= step %></li>
+      <% end %>
+    </ol>
+    <% if dispose[:notes].present? %>
+      <div class="dispose-notes">
+        <% dispose[:notes].each do |note| %>
+          <p class="dispose-note"><%= note %></p>
+        <% end %>
+      </div>
+    <% end %>
+    <% if dispose[:apply_url].present? %>
+      <%= link_to dispose[:apply_label], dispose[:apply_url],
+            target: "_blank", rel: "noopener", class: "dispose-apply" %>
+    <% end %>
+  </div>
+<% else %>
+  <p class="text-muted">Disposal category not yet determined for this item.</p>
+<% end %>

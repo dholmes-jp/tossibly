@@ -56,8 +56,8 @@
     <%# Result state — revealed by the controller once identify returns.
         Both #identification and #follow_up_questions are filled in by the
         identify turbo-stream response. #follow_up_questions receives either
-        _follow_up_questions (ask case: condition pills + note + dynamic
-        questions) or _single_path_result (skip case: disposal info card). %>
+        _follow_up_questions (listable: condition pills + note + dynamic
+        questions) or _single_path_result (non-listable: disposal info card). %>
     <div class="scan-details d-none" data-photo-analyzer-target="details">
       <div id="identification"></div>
       <div id="follow_up_questions"></div>

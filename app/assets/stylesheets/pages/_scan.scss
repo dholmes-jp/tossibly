@@ -268,10 +268,16 @@
     color: rgba($ink, 0.6);
   }
 
-  &__confidence {
+  // Quiet "start over" aside, not a call to action — reuses &__sub's size/color
+  // as a muted text link with underline-on-hover.
+  &__correction {
+    display: inline-block;
     margin: 10px 0 0;
-    font-size: 15px;
-    color: rgba($ink, 0.75);
+    font-size: 14px;
+    color: rgba($ink, 0.6);
+    text-decoration: none;
+
+    &:hover { text-decoration: underline; }
   }
 }
 
@@ -291,14 +297,53 @@
   gap: 20px;
 }
 
-// ---------- Skip-case: "Nothing to decide here" + Toss It card ----------
-// Mirrors the .path-card--dispose language from _items.scss (chip, blurb, stat
-// pairs, numbered steps) so this reads as the same product.
+// ---------- Single-path result: "This one has a clear path." + Toss It card ----------
+// Shown immediately for every non-listable item (free or fee-tiered). Mirrors the
+// .path-card--dispose language from _items.scss (chip, blurb, stat pairs, numbered
+// steps) so this reads as the same product.
 .scan-single-path {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
+
+// ---------- Reuse-prompt result: disposal card + "worth passing on" pitch ----------
+// Listable items only. Same disposal card as the single-path result, then a short
+// pitch whose button reveals the (hidden) follow-up form client-side.
+.scan-reuse-result {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+// Plain block, not a card — keeps the same spacing rhythm as .single-path-intro.
+.reuse-prompt {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 4px;
+
+  h4 {
+    margin: 0;
+    font-family: $headers-font;
+    font-size: 18px;
+    font-weight: 800;
+    color: $forest;
+  }
+
+  p {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.5;
+    color: rgba($ink, 0.75);
+  }
+
+  .scan-btn { align-self: flex-start; margin-top: 6px; }
+}
+
+// Wrapper the reveal controller toggles .d-none on — no styling of its own beyond
+// what .scan-followups inside it already provides.
+.reuse-followups { display: block; }
 
 .single-path-intro {
   h3 {
@@ -395,6 +440,41 @@
   font-size: 14px;
   line-height: 1.5;
   color: rgba($ink, 0.8);
+}
+
+// Fee-tiered categories carry caveat notes + a ward application link. The shared
+// .dispose-* base rules (pages/_items.scss) are navy-accented for the show page;
+// re-tint them to this page's forest palette against the .toss-card cream.
+.toss-card {
+  .dispose-notes {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin: 0;
+  }
+
+  .dispose-note {
+    margin: 0;
+    padding-left: 10px;
+    border-left: 2px solid rgba($forest, 0.3);
+    font-size: 12px;
+    line-height: 1.5;
+    color: rgba($ink, 0.6);
+  }
+
+  .dispose-apply {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 700;
+    color: $forest;
+    text-decoration: none;
+
+    &:hover { text-decoration: underline; }
+    &::after { content: "↗"; font-size: 0.9em; }
+  }
 }
 
 // Shared by the skip-case card and the save-success panel.
