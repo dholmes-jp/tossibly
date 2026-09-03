@@ -2,6 +2,14 @@ class Schedule < ApplicationRecord
   belongs_to :user
   belongs_to :item, optional: true
 
+  # Only enforced for the manual "Add Schedule" form on the calendar page
+  # (SchedulesController#create calls save(context: :manual_create)) — the
+  # "Set reminder" flow from the item page (ItemsController#create) always
+  # sets both anyway, and shouldn't be blocked by a validation meant for a
+  # different form.
+  validates :item_id, presence: true
+  validates :scheduled_date, presence: true # , on: :manual_create
+
   # Waste categories with a real, fixed recurring collection day on Meguro's
   # regular ward calendar, and the CSS dot class the calendar view draws for
   # each (was hardcoded separately as SchedulesController#index's

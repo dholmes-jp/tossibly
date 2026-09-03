@@ -1,3 +1,87 @@
+// ---------- Calendar heading (month title + prev/today/next nav) ----------
+// .calendar-heading/.calendar-title are rendered by the simple_calendar gem
+// itself (see the month_calendar call in schedules/index.html.erb) as plain
+// text links, with no room to add icon markup — so the chevron/calendar
+// glyphs below are injected via ::before/::after using Font Awesome's icon
+// font directly (font-awesome-sass is already loaded app-wide), rather than
+// overriding the gem's view templates.
+.calendar-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+
+  nav {
+    display: flex;
+    gap: 10px;
+  }
+
+  nav a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: 999px;
+    border: 1.5px solid rgba($forest, 0.25);
+    background: $tossibly-white;
+    color: $forest;
+    font-family: $body-font;
+    font-size: 15px;
+    font-weight: 700;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+
+    &::before,
+    &::after {
+      font-family: "Font Awesome 6 Free";
+      font-weight: 900;
+      font-size: 13px;
+    }
+
+    // 1st link: "‹ Previous"   2nd: "📅 Today"   3rd: "Next ›"
+    &:nth-child(1)::before { content: "\f053"; } // chevron-left
+    &:nth-child(2)::before { content: "\f073"; } // calendar-days
+    &:nth-child(3)::after  { content: "\f054"; } // chevron-right
+
+    &:hover { border-color: $forest; }
+
+    // "Today" — the middle link — reads as the one primary/filled action
+    &:nth-child(2) {
+      border-color: $forest;
+      background: $forest;
+      color: $cream;
+
+      &:hover { background: $leaf; border-color: $leaf; }
+    }
+  }
+}
+
+.calendar-title {
+  display: block;
+  font-family: $headers-font;
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: $forest;
+}
+
+// ---------- Weekday header row ----------
+.simple-calendar thead th {
+  padding: 12px 8px;
+  font-family: $headers-font;
+  font-size: 16px;
+  font-weight: 800;
+  color: $forest;
+  border-bottom: 2px solid rgba($forest, 0.15);
+}
+
+@media (max-width: 640px) {
+  .calendar-heading { gap: 12px; }
+  .calendar-title { font-size: 24px; }
+  .calendar-heading nav a { padding: 8px 14px; font-size: 13px; }
+}
+
 .simple-calendar table,
 .simple-calendar thead,
 .simple-calendar tbody,
@@ -15,6 +99,9 @@
   background-color: transparent;
 }
 
+.date-number {
+  display: block;
+}
 .dot {
   display: block;
   width: 10px;
@@ -47,31 +134,43 @@
   margin-bottom: 0.3rem;
 }
 
-.simple-calendar thead th{
-  color: $forest;
-}
-
 .simple-calendar thead td {
   color: $ink;
 }
-.schedule-item {
-  display: flex;
-  justify-content: space-between;
-  cursor: pointer;
-}
+// .schedule-item {
+//   display: flex;
+//   justify-content: space-between;
+//   cursor: pointer;
+// }
 
+// Lives inside .schedule-popup, pinned over the top-right corner of its
+// photo (1rem card padding + 0.15rem inset), so it only shows up (with
+// the rest of the popup) on hover.
 .schedule-delete {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
   border: none;
-  background-color: transparent;
-  opacity: 0;
+  border-radius: 50%;
+  background-color: rgba($mint, 0);
+  color: $mint;
   pointer-events: none;
-  transition: opacity 0.2s ease;
+  transition: opacity 0.2s ease, background-color 0.15s ease;
+
+  &:hover { background-color: $mint; }
 }
 .schedule-item:hover {
-  background-color: $mint;
+  // background-color: $mint;
     .schedule-delete {
       opacity: 1;
       pointer-events: auto;
+      background-color: rgba($mint, 1);
+      color: $forest;
     }
   }
 
@@ -86,4 +185,239 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+// Positioned so .schedule-popup sits relative to this item's own day cell
+// (.schedule-item fills the <td>'s width, so 100% below matches the td).
+.schedule-item {
+  position: relative;
+  display: inline-block;
+  width: fit-content;
+
+  // Invisible bridge over the gap between the item and .schedule-popup's
+  // margin-top below it (same 14px). Without this, moving the mouse from
+  // the item down to the popup crosses empty space that isn't part of
+  // .schedule-item, so :hover drops and the popup closes before the
+  // cursor ever reaches it — making the delete button unclickable.
+  &::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 240px;
+    height: 14px;
+  }
+}
+
+// A day cell is too narrow for an image beside text, so the card stacks
+// image-on-top-of-title instead of the row layout used at row-width.
+// Speech-bubble style: centred under the day cell, with a small triangle
+// (::before) pointing back up at it.
+.schedule-popup {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 240px;
+  margin-top: 14px;
+  z-index: 20;
+  // gap: 0.6rem;
+  padding: 1rem 0.9rem 1rem;
+  background-color: $tossibly-white;
+  border-radius: 24px;
+  box-shadow: 0 12px 28px rgba($ink, 0.18);
+  // Hidden until the parent .schedule-item is hovered — opacity (not
+  // display) so it can transition, and pointer-events keeps it
+  // unclickable/unhoverable while invisible.
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 8px solid $tossibly-white;
+  }
+}
+
+.schedule-item:hover .schedule-popup {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.schedule-popup-img {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 16px;
+  overflow: hidden;
+  background: $mint;
+}
+
+.schedule-popup-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.schedule-popup-title {
+  width: 100%;
+  margin: 0;
+  font-family: $headers-font;
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1.2;
+  color: $forest;
+  // Clamp long titles to 2 lines instead of forcing them onto one.
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  margin-top: 10px;
+}
+
+// Same category colours as the calendar's .dot--* legend, just as a
+// filled pill instead of a bare dot.
+.schedule-popup-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-family: $body-font;
+  font-size: 0.7rem;
+  font-weight: 700;
+  white-space: nowrap;
+  margin-top: 10px;
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    margin-top: 0;
+  }
+
+  &--combustibles {
+    background: rgba(#f28b82, 0.18);
+    color: #a5372b;
+  }
+
+  &--recyclables {
+    background: rgba(#81c995, 0.2);
+    color: #2f6b3f;
+  }
+
+  &--non-combustibles {
+    background: rgba(#8ab4f8, 0.2);
+    color: #2c5aa8;
+  }
+}
+
+// ---------- "+ Add schedule" toggle ----------
+// Wraps the trigger button + the form itself (see disclosure_controller.js);
+// the form is `hidden` by default and only revealed on click, unless the
+// server re-rendered it already open because it has errors to show.
+.schedule-toggle__trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 24px;
+  // padding: 10px 18px 10px 14px;
+  // border: 1.5px solid $forest;
+  // border-radius: 999px;
+  background: transparent;
+  color: $forest;
+  font-family: $body-font;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+  border: none;
+  font-family: $headers-font;
+
+  i {
+    display: grid;
+    place-items: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: $forest;
+    color: $cream;
+    font-size: 11px;
+  }
+
+  // &:hover { background: rgba($forest, 0.08); }
+}
+
+// ---------- "Add Schedule" form ----------
+// simple_form / Bootstrap pieces, restyled the same way as .auth's
+// .form-control (14px radius, forest border, no default focus glow).
+.schedule-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  margin-top: 24px;
+  // padding-top: 24px;
+  // border-top: 1px solid rgba($forest, 0.15);
+
+  .form-label,
+  label:not(.form-check-label) {
+    margin-bottom: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    color: $forest;
+  }
+
+  .form-control,
+  .form-select {
+    padding: 10px 14px;
+    border: 1.5px solid rgba($forest, 0.25);
+    border-radius: 999px;
+    background-color: #fff;
+    font-family: $body-font;
+    font-size: 15px;
+    color: $ink;
+
+    &:focus {
+      border-color: $forest;
+      box-shadow: none;
+    }
+  }
+
+  // Tints the native calendar-icon button toward the app's palette
+  // (Chromium only — Firefox/Safari just keep their own default icon).
+  .form-control[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(21%) sepia(24%) saturate(1329%) hue-rotate(93deg) brightness(94%) contrast(93%);
+  }
+}
+
+.schedule-form__field { display: flex; flex-direction: column; }
+
+.schedule-form__submit .btn {
+  padding: 10px 22px;
+  border: none;
+  border-radius: 999px;
+  background: $forest;
+  color: $cream;
+  font-size: 14px;
+  font-weight: 800;
+
+  &:hover { background: $leaf; }
+}
+.schedule-form__field .schedule_item,
+.schedule-form__field .schedule_scheduled_date {
+  margin-bottom: 0 !important;
+}
+.schedule-form__submit {
+  align-self: flex-end;
 }
