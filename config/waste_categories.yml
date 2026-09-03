@@ -113,10 +113,9 @@ non_combustible:
       name: "Spray cans, lighters, gas cartridges"
       keywords: ["spray can", "aerosol can", "aerosol", "spray", "gas cartridge", "gas canister", "lighter", "butane"]
       steps:
-        - "Use up the contents completely first."
+        - "Spray out all remaining contents first."
         - "Bag separately from other non-combustible waste."
-        - "Mark the bag 危険 (dangerous)."
-        - "You do not need to puncture the can."
+        - "Mark the bag as hazardous (\"KIKEN\" / \"キケン\")."
     - key: small_appliance_non_designated
       name: "Small appliance, not one of the 9 designated types"
       description: "Under 30cm on its longest side."
