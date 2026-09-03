@@ -4,7 +4,10 @@ class ItemIdentifier
   end
 
   def call
-    categories_description = WasteCategoryLookup.all.map { |c| "- #{c.key}: #{c.name}" }.join("\n        ")
+    categories_description = WasteCategoryLookup.all.map do |c|
+      examples = Array(c.subitems).map { |s| s[:name] }.first(4).join(", ")
+      examples.present? ? "- #{c.key}: #{c.name} (examples: #{examples})" : "- #{c.key}: #{c.name}"
+    end.join("\n        ")
 
     prompt = <<-PROMPT
       Identify this secondhand item. Look closely for a visible brand/manufacturer name or

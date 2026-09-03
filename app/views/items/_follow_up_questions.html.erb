@@ -1,10 +1,11 @@
-<div id="follow_up_questions" class="scan-followups">
+<div class="scan-followups">
   <%= hidden_field_tag "item[brand]", identification[:brand] %>
   <%= hidden_field_tag "item[category]", identification[:category] %>
   <%= hidden_field_tag "item[model_number]", identification[:model_number] %>
   <%= hidden_field_tag "item[condition_guess]", identification[:condition_guess] %>
   <%= hidden_field_tag "item[waste_category_key]", identification[:waste_category_key] %>
-  <%= hidden_field_tag "item[listable]", identification[:listable] %>
+  <%= hidden_field_tag "item[listable]", identification[:listable],
+        data: { "reuse-reveal-target": "listableField" } %>
   <%= hidden_field_tag "item[jimoty_search_keyword]", identification[:jimoty_search_keyword] %>
 
   <div class="scan-field">
@@ -38,6 +39,6 @@
     </div>
   <% end %>
 
-  <%= submit_tag "Save to Items →", class: "scan-btn scan-btn--sun",
+  <%= submit_tag "Save and compare my options →", class: "scan-btn scan-btn--sun",
         data: { turbo_submits_with: "Saving…" } %>
 </div>

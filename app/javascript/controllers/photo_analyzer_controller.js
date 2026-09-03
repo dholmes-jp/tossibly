@@ -94,9 +94,11 @@ export default class extends Controller {
 
     Turbo.renderStreamMessage(await response.text())
 
-    // The condition pills / functionalInput target only exist in the ask-case
-    // (_follow_up_questions). The skip-case (_single_path_result) renders neither,
-    // so guard before touching them or applyCondition() throws on a missing target.
+    // The condition pills / functionalInput target only exist for listable items
+    // (_follow_up_questions, now nested — hidden — inside _reuse_prompt_result).
+    // Non-listable items (_single_path_result) render neither, so guard before
+    // touching them or applyCondition() throws on a missing target. The lookup
+    // ignores the .d-none wrapper, so the auto-select still primes the hidden form.
     if (this.hasFunctionalInputTarget) {
       const conditionGuess = document.querySelector('input[name="item[condition_guess]"]')?.value
       this.selectConditionFromGuess(conditionGuess)

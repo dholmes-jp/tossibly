@@ -7,6 +7,6 @@
         <%= [identification[:brand], identification[:model_number]].compact_blank.join(" · ") %>
       </p>
     <% end %>
-    <p class="scan-result__confidence">Did we get it right? Adjust anything below before we work out the best way to let it go.</p>
+    <%= link_to "Not what you photographed?", new_item_path, class: "scan-result__correction" %>
   <% end %>
 </div>
