@@ -121,6 +121,11 @@
 .simple-calendar th,
 .simple-calendar td {
   min-width: 0;
+}
+
+// Header tiles clip their own rounded corners; day cells must NOT, or the
+// .schedule-popup (absolutely positioned below its cell) gets cut off.
+.simple-calendar th {
   overflow: hidden;
 }
 
