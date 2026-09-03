@@ -92,9 +92,50 @@
     color: $cream;
   }
 
-  // Mobile hamburger border
+  // Mobile hamburger: bare Font Awesome bars in mint, no Bootstrap box
   .navbar-toggler {
-    border-color: rgba($cream, .5);
+    padding: 6px 8px;
+    border: 0;
+    background: transparent;
+    color: $mint;
+    font-size: 26px;
+    line-height: 1;
+
+    &:hover,
+    &:focus { color: $sun; }
+    &:focus { box-shadow: none; outline: 2px solid rgba($mint, .6); outline-offset: 2px; }
+  }
+
+  // Collapsed (phone) menu: links stack full-width under the logo,
+  // avatar row sits at the bottom
+  @media (max-width: 575.98px) {
+    .navbar-collapse {
+      flex-grow: 1;
+      padding: 12px 0 4px;
+    }
+
+    .navbar-nav {
+      align-items: stretch;
+      gap: 4px;
+
+      li { width: 100%; }
+    }
+
+    a.nav-item {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 14px;
+    }
+
+    li.nav-item.dropdown {
+      display: flex;
+      justify-content: flex-start;
+      margin-top: 8px;
+      padding: 8px 14px 0;
+      border-top: 1px solid rgba($cream, .2);
+    }
+
+    a.avatar { margin-left: 0; }
   }
 }
 // Landing page: navbar floats over the hero and slides in on scroll
@@ -103,7 +144,7 @@
   top: 0; left: 0; right: 0;
   z-index: 1030;
   transition: transform .35s ease, opacity .35s ease;
-  display: none;
+  display: block;
 }
 
 .navbar--hidden {

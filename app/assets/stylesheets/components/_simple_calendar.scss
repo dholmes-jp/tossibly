@@ -1,17 +1,34 @@
-// ---------- Calendar heading (month title + prev/today/next nav) ----------
-// .calendar-heading/.calendar-title are rendered by the simple_calendar gem
-// itself (see the month_calendar call in schedules/index.html.erb) as plain
-// text links, with no room to add icon markup — so the chevron/calendar
-// glyphs below are injected via ::before/::after using Font Awesome's icon
-// font directly (font-awesome-sass is already loaded app-wide), rather than
-// overriding the gem's view templates.
+// app/assets/stylesheets/components/_simple_calendar.scss
+// Schedule page (schedules#index): month calendar from the simple_calendar gem,
+// restyled to the design system. Tokens from config/_colors.scss.
+//
+// Page frame comes from .items-page (1180px, 24px 30px 64px). Heading follows
+// the shared spec: eyebrow 14/700 forest, 6px below · h1 32/800 · 24px before
+// the grid. Waste streams use the same icons as the scan page: flame =
+// combustible, flame + slash = non-combustible, recycle = recyclables.
+
+// Whole month on one screen at 100%: tighter frame and rows than the
+// other pages (the grid needs the height more than the margins do).
+.schedules-page { padding-bottom: 32px; }
+
+// ---------- Heading ----------
+.calendar-eyebrow {
+  margin: 0 0 6px;
+  font-size: 14px;
+  font-weight: 700;
+  color: $forest;
+}
+
+// .calendar-heading / .calendar-title are rendered by the gem as plain text
+// links, so the chevron / calendar glyphs are injected with Font Awesome's
+// icon font via ::before/::after rather than overriding the gem's templates.
 .calendar-heading {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  margin-bottom: 24px;
+  margin-bottom: 16px;
 
   nav {
     display: flex;
@@ -24,12 +41,13 @@
     gap: 8px;
     padding: 10px 20px;
     border-radius: 999px;
-    border: 1.5px solid rgba($forest, 0.25);
+    border: 1.5px solid $forest;
     background: $tossibly-white;
     color: $forest;
     font-family: $body-font;
     font-size: 15px;
     font-weight: 700;
+    text-decoration: none;
     transition: background 0.15s, border-color 0.15s, color 0.15s;
 
     &::before,
@@ -44,11 +62,10 @@
     &:nth-child(2)::before { content: "\f073"; } // calendar-days
     &:nth-child(3)::after  { content: "\f054"; } // chevron-right
 
-    &:hover { border-color: $forest; }
+    &:hover { background: rgba($forest, 0.06); }
 
-    // "Today" — the middle link — reads as the one primary/filled action
+    // "Today" — the one filled action
     &:nth-child(2) {
-      border-color: $forest;
       background: $forest;
       color: $cream;
 
@@ -59,27 +76,20 @@
 
 .calendar-title {
   display: block;
+  margin: 0;
   font-family: $headers-font;
   font-size: 32px;
   font-weight: 800;
+  line-height: 1.1;
   letter-spacing: -0.02em;
   color: $forest;
 }
 
-// ---------- Weekday header row ----------
-.simple-calendar thead th {
-  padding: 12px 8px;
-  font-family: $headers-font;
-  font-size: 16px;
-  font-weight: 800;
-  color: $forest;
-  border-bottom: 2px solid rgba($forest, 0.15);
-}
-
-@media (max-width: 640px) {
-  .calendar-heading { gap: 12px; }
-  .calendar-title { font-size: 24px; }
-  .calendar-heading nav a { padding: 8px 14px; font-size: 13px; }
+// ---------- The grid: a white card, day cells as rounded tiles ----------
+.calendar.month {
+  padding: 16px 16px 12px;
+  border-radius: 24px;
+  background: $tossibly-white;
 }
 
 .simple-calendar table,
@@ -92,113 +102,161 @@
   border: none;
 }
 
-.calendar.month table {
-  height: 70vh;
+// width + fixed layout together = seven equal columns that always fit the
+// card; without both, the table sizes to its content and overflows phones.
+.simple-calendar {
+  width: 100%;
+  min-width: 0;
 }
-.table-striped > tbody > tr:nth-of-type(odd) > * {
-  background-color: transparent;
+
+.simple-calendar table {
+  width: 100% !important;
+  min-width: 0;
+  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 6px;
+  margin: 0;
+}
+
+.simple-calendar th,
+.simple-calendar td {
+  min-width: 0;
+  overflow: hidden;
+}
+
+// Undo Bootstrap's table background, striping and cell padding. Striping is
+// an inset box-shadow driven by these variables, so zero them rather than
+// fighting the rule's specificity.
+.simple-calendar .table {
+  --bs-table-bg: transparent;
+  --bs-table-striped-bg: transparent;
+  --bs-table-accent-bg: transparent;
+}
+.simple-calendar .table > :not(caption) > * > * { padding: 0; box-shadow: none; }
+
+// Weekday header row: sun tiles with forest text
+.simple-calendar thead th {
+  height: 34px;
+  padding: 0 10px;
+  border-radius: 10px;
+  background: $sun;
+  font-family: $headers-font;
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 34px;
+  text-align: center;
+  vertical-align: middle;
+  color: $forest;
+}
+
+// Day cell
+.simple-calendar td.day {
+  vertical-align: top;
+  height: 68px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  background: $cream;
+
+  // Days outside the current month fade back
+  &.prev-month,
+  &.next-month {
+    background: rgba($cream, 0.45);
+    .date-number { color: rgba($ink, 0.35); }
+    .dot { opacity: 0.35; }
+  }
+
+  // Today: mint tile with a sun ring
+  &.today {
+    background: rgba($mint, 0.45);
+    box-shadow: inset 0 0 0 2px $sun;
+    .date-number { color: $forest; }
+  }
 }
 
 .date-number {
   display: block;
-}
-.dot {
-  display: block;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  margin-top: .3rem;
-}
-
-.dot--combustibles {
-  background-color: #f28b82;
-}
-
-.dot--recyclables {
-  background-color: #81c995;
-}
-
-.dot--non-combustibles {
-  background-color: #8ab4f8;
-}
-.categories {
-  display: flex;
-  align-items: center;
-  gap: 2rem;
-}
-
-.categories p{
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
-  margin-bottom: 0.3rem;
-}
-
-.simple-calendar thead td {
+  margin-bottom: 4px;
+  font-family: $body-font;
+  font-size: 13px;
+  font-weight: 700;
   color: $ink;
 }
-// .schedule-item {
-//   display: flex;
-//   justify-content: space-between;
-//   cursor: pointer;
-// }
 
-// Lives inside .schedule-popup, pinned over the top-right corner of its
-// photo (1rem card padding + 0.15rem inset), so it only shows up (with
-// the rest of the popup) on hover.
-.schedule-delete {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  z-index: 100;
-  display: grid;
+// ---------- Waste-stream markers (calendar cells + legend) ----------
+// A small mint circle with the stream's glyph, drawn with Font Awesome's
+// font so no markup is needed. Non-combustible = flame with a slash.
+.dot {
+  position: relative;
+  display: inline-grid;
   place-items: center;
-  width: 30px;
-  height: 30px;
-  border: none;
+  width: 20px;
+  height: 20px;
+  margin: 0 4px 2px 0;
   border-radius: 50%;
-  background-color: rgba($mint, 0);
-  color: $mint;
-  pointer-events: none;
-  transition: opacity 0.2s ease, background-color 0.15s ease;
+  background: $mint;
+  color: $forest;
+  vertical-align: middle;
 
-  &:hover { background-color: $mint; }
+  &::before {
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    font-size: 10px;
+    line-height: 1;
+  }
 }
-.schedule-item:hover {
-  // background-color: $mint;
-    .schedule-delete {
-      opacity: 1;
-      pointer-events: auto;
-      background-color: rgba($mint, 1);
-      color: $forest;
-    }
+
+.dot--combustibles::before { content: "\f06d"; }       // fire
+.dot--recyclables::before  { content: "\f1b8"; }       // recycle
+.dot--non-combustibles {
+  &::before { content: "\f06d"; }                      // fire…
+  &::after {                                           // …with a slash over it
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 2px;
+    height: 12px;
+    border-radius: 2px;
+    background: $forest;
+    box-shadow: 0 0 0 1.5px $mint;
+    transform: translate(-50%, -50%) rotate(45deg);
+  }
+}
+
+// Legend under the grid
+.calendar-info {
+  margin-top: 12px;
+}
+
+.categories {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 24px;
+
+  p {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: rgba($ink, 0.75);
   }
 
-.schedule-item-img {
-  width: 25px;
-  height: 25px;
-  border-radius: 5px;
-  overflow: hidden;
+  .dot { margin: 0; }
 }
 
-.schedule-item-img img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-// Positioned so .schedule-popup sits relative to this item's own day cell
-// (.schedule-item fills the <td>'s width, so 100% below matches the td).
+// ---------- Scheduled item in a day cell (thumbnail + hover popup) ----------
+// Positioned so .schedule-popup sits relative to this item's own day cell.
 .schedule-item {
   position: relative;
   display: inline-block;
   width: fit-content;
+  vertical-align: middle;
 
-  // Invisible bridge over the gap between the item and .schedule-popup's
-  // margin-top below it (same 14px). Without this, moving the mouse from
-  // the item down to the popup crosses empty space that isn't part of
-  // .schedule-item, so :hover drops and the popup closes before the
-  // cursor ever reaches it — making the delete button unclickable.
+  // Invisible bridge over the gap between the thumbnail and the popup below
+  // it, so :hover doesn't drop while the mouse travels down to the popup.
   &::after {
     content: "";
     position: absolute;
@@ -210,10 +268,33 @@
   }
 }
 
-// A day cell is too narrow for an image beside text, so the card stacks
-// image-on-top-of-title instead of the row layout used at row-width.
-// Speech-bubble style: centred under the day cell, with a small triangle
-// (::before) pointing back up at it.
+.schedule-item-img {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: $mint;
+  color: $forest;
+  box-shadow: 0 0 0 2px $tossibly-white;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  // Item without a photo: show a box glyph instead of an empty ring
+  &:empty::before {
+    content: "\f466";                    // box
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    font-size: 10px;
+  }
+}
+
+// Speech-bubble popup, centred under the day cell, triangle pointing up
 .schedule-popup {
   display: flex;
   flex-direction: column;
@@ -225,14 +306,10 @@
   width: 240px;
   margin-top: 14px;
   z-index: 20;
-  // gap: 0.6rem;
   padding: 1rem 0.9rem 1rem;
   background-color: $tossibly-white;
-  border-radius: 24px;
+  border-radius: 20px;
   box-shadow: 0 12px 28px rgba($ink, 0.18);
-  // Hidden until the parent .schedule-item is hovered — opacity (not
-  // display) so it can transition, and pointer-events keeps it
-  // unclickable/unhoverable while invisible.
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.15s ease;
@@ -254,121 +331,125 @@
   pointer-events: auto;
 }
 
+// Delete: pinned over the popup photo's top-right corner, visible on hover
+.schedule-delete {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 50%;
+  background-color: rgba($mint, 0);
+  color: $mint;
+  pointer-events: none;
+  transition: opacity 0.2s ease, background-color 0.15s ease;
+
+  &:hover { background-color: $mint; }
+}
+
+.schedule-item:hover .schedule-delete {
+  opacity: 1;
+  pointer-events: auto;
+  background-color: $mint;
+  color: $forest;
+}
+
 .schedule-popup-img {
   position: relative;
   width: 100%;
   aspect-ratio: 4 / 3;
-  border-radius: 16px;
+  border-radius: 14px;
   overflow: hidden;
   background: $mint;
-}
 
-.schedule-popup-img img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 }
 
 .schedule-popup-title {
   width: 100%;
-  margin: 0;
+  margin: 10px 0 0;
   font-family: $headers-font;
   font-size: 1rem;
   font-weight: 800;
   line-height: 1.2;
   color: $forest;
-  // Clamp long titles to 2 lines instead of forcing them onto one.
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
   line-clamp: 2;
   overflow: hidden;
-  margin-top: 10px;
 }
 
-// Same category colours as the calendar's .dot--* legend, just as a
-// filled pill instead of a bare dot.
+// Category pill in the popup: same marker, on a mint pill
 .schedule-popup-pill {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 2px 8px;
+  margin-top: 10px;
+  padding: 3px 10px 3px 4px;
   border-radius: 999px;
+  background: rgba($mint, 0.45);
+  color: $forest;
   font-family: $body-font;
-  font-size: 0.7rem;
+  font-size: 12px;
   font-weight: 700;
   white-space: nowrap;
-  margin-top: 10px;
 
   .dot {
-    width: 8px;
-    height: 8px;
-    margin-top: 0;
-  }
-
-  &--combustibles {
-    background: rgba(#f28b82, 0.18);
-    color: #a5372b;
-  }
-
-  &--recyclables {
-    background: rgba(#81c995, 0.2);
-    color: #2f6b3f;
-  }
-
-  &--non-combustibles {
-    background: rgba(#8ab4f8, 0.2);
-    color: #2c5aa8;
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    &::before { font-size: 9px; }
+    &::after { height: 11px; }
   }
 }
 
-// ---------- "+ Add schedule" toggle ----------
-// Wraps the trigger button + the form itself (see disclosure_controller.js);
-// the form is `hidden` by default and only revealed on click, unless the
-// server re-rendered it already open because it has errors to show.
+// ---------- "+ Add schedule" toggle + form ----------
 .schedule-toggle__trigger {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  margin-top: 24px;
-  // padding: 10px 18px 10px 14px;
-  // border: 1.5px solid $forest;
-  // border-radius: 999px;
+  margin-top: 12px;
+  padding: 0;
+  border: none;
   background: transparent;
   color: $forest;
-  font-family: $body-font;
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: background 0.15s;
-  border: none;
   font-family: $headers-font;
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
 
   i {
     display: grid;
     place-items: center;
-    width: 20px;
-    height: 20px;
+    width: 22px;
+    height: 22px;
     border-radius: 50%;
     background: $forest;
     color: $cream;
     font-size: 11px;
   }
 
-  // &:hover { background: rgba($forest, 0.08); }
+  &:hover { color: $leaf; i { background: $leaf; } }
 }
 
-// ---------- "Add Schedule" form ----------
-// simple_form / Bootstrap pieces, restyled the same way as .auth's
-// .form-control (14px radius, forest border, no default focus glow).
 .schedule-form {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: flex-end;
   gap: 16px;
-  margin-top: 24px;
-  // padding-top: 24px;
-  // border-top: 1px solid rgba($forest, 0.15);
+  margin-top: 16px;
+  padding: 20px;
+  border-radius: 20px;
+  background: $tossibly-white;
 
   .form-label,
   label:not(.form-check-label) {
@@ -383,7 +464,7 @@
     padding: 10px 14px;
     border: 1.5px solid rgba($forest, 0.25);
     border-radius: 999px;
-    background-color: #fff;
+    background-color: $tossibly-white;
     font-family: $body-font;
     font-size: 15px;
     color: $ink;
@@ -394,14 +475,19 @@
     }
   }
 
-  // Tints the native calendar-icon button toward the app's palette
-  // (Chromium only — Firefox/Safari just keep their own default icon).
+  // Tint the native date-picker icon toward forest (Chromium only)
   .form-control[type="date"]::-webkit-calendar-picker-indicator {
     filter: invert(21%) sepia(24%) saturate(1329%) hue-rotate(93deg) brightness(94%) contrast(93%);
   }
 }
 
-.schedule-form__field { display: flex; flex-direction: column; }
+.schedule-form__field {
+  display: flex;
+  flex-direction: column;
+
+  .schedule_item,
+  .schedule_scheduled_date { margin-bottom: 0 !important; }
+}
 
 .schedule-form__submit .btn {
   padding: 10px 22px;
@@ -414,10 +500,16 @@
 
   &:hover { background: $leaf; }
 }
-.schedule-form__field .schedule_item,
-.schedule-form__field .schedule_scheduled_date {
-  margin-bottom: 0 !important;
-}
-.schedule-form__submit {
-  align-self: flex-end;
+
+// ---------- Responsive ----------
+@media (max-width: 640px) {
+  .calendar-heading { gap: 12px; }
+  .calendar-heading nav a { padding: 8px 14px; font-size: 13px; }
+  .calendar.month { padding: 8px; }
+  .simple-calendar table { border-spacing: 3px; }
+  .simple-calendar thead th { height: 28px; padding: 0 2px; border-radius: 8px; font-size: 11px; line-height: 28px; white-space: nowrap; text-overflow: ellipsis; }
+  .simple-calendar td.day { height: 60px; padding: 5px 4px; border-radius: 10px; }
+  .date-number { margin-bottom: 4px; font-size: 12px; }
+  .dot { width: 16px; height: 16px; margin: 0 2px 2px 0; &::before { font-size: 8px; } &::after { height: 9px; } }
+  .schedule-item-img { width: 20px; height: 20px; }
 }
