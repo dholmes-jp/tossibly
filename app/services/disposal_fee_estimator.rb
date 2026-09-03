@@ -93,31 +93,6 @@ class DisposalFeeEstimator
   end
 
   def best_matching_subitem
-    matches = []
-
-    Array(category.subitems).each_with_index do |subitem, index|
-      Array(subitem[:keywords]).each do |keyword|
-        term = normalize(keyword)
-        next if term.blank?
-        next unless haystack.match?(/\b#{Regexp.escape(term)}\b/)
-
-        # Sort key: longest keyword first, earlier subitem breaks ties.
-        matches << [term.length, -index, subitem]
-      end
-    end
-
-    matches.max_by { |length, position, _subitem| [length, position] }&.last
-  end
-
-  # Title and category are the two English descriptive fields identification
-  # fills in. Description is deliberately excluded — too noisy for keyword hits.
-  def haystack
-    @haystack ||= normalize([item.title, item.category].compact.join(" "))
-  end
-
-  # Collapses punctuation to single spaces on both sides of the match, so
-  # "air-con" / "air con" and "e-bike" / "e bike" don't miss each other.
-  def normalize(text)
-    text.to_s.downcase.gsub(/[^a-z0-9]+/, " ").strip
+    WasteCategoryLookup.match_subitem(category, item)
   end
 end

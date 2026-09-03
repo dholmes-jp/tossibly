@@ -111,6 +111,7 @@ non_combustible:
         - "Wrap sharp or broken pieces with paper and mark 危険 (dangerous) before disposing."
     - key: spray_cans_lighters_gas_cartridges
       name: "Spray cans, lighters, gas cartridges"
+      keywords: ["spray can", "aerosol can", "aerosol", "spray", "gas cartridge", "gas canister", "lighter", "butane"]
       steps:
         - "Use up the contents completely first."
         - "Bag separately from other non-combustible waste."

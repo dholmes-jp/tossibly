@@ -12,6 +12,13 @@ class DisposalPanelPresenter
     waste_category = item.waste_category
     return empty_panel unless waste_category
 
+    # A matching subitem (e.g. "Spray cans, lighters, gas cartridges" under
+    # non_combustible) carries handling steps more specific than the parent
+    # category's generic ones — e.g. "bag it with non-combustible waste"
+    # alone would miss that an aerosol can has to be emptied and marked 危険
+    # first. Fall back to the category's own steps when nothing matches, or
+    # the matched subitem doesn't override steps.
+    subitem = WasteCategoryLookup.match_subitem(waste_category, item)
     fee = DisposalFeeEstimator.call(item)
     {
       chip: waste_category.chip_label,
@@ -21,7 +28,7 @@ class DisposalPanelPresenter
       stat: collected_stat(item, waste_category),
       facts: [["Category", waste_category.name], ["Cost", fee.label],
               ["Application", waste_category.application_required? ? "Required" : "Not required"]],
-      steps: waste_category.steps,
+      steps: Array(subitem&.dig(:steps)).presence || waste_category.steps,
       notes: fee.notes,
       apply_url: fee.application_url,
       apply_label: fee.application_label
