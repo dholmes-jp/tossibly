@@ -7,8 +7,14 @@ local:
   root: <%= Rails.root.join("storage") %>
 
 # Credentials are read from the CLOUDINARY_URL env var by the cloudinary gem.
+# `timeout` is forwarded straight through to Faraday on every upload call (see
+# Cloudinary::Uploader.call_api) — without it Cloudinary defaults to a 60s timeout, so a slow
+# connection hangs the whole request for a minute before the controller-level retry (see
+# ItemsController#save_item_with_retry) even gets a chance to try again. Kept short so a single
+# failed attempt fails fast instead of hanging.
 cloudinary:
   service: Cloudinary
+  timeout: 10
 
 # Use bin/rails credentials:edit to set the AWS secrets (as aws:access_key_id|secret_access_key)
 # amazon:
