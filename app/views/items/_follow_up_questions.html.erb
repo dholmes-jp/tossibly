@@ -8,27 +8,33 @@
         data: { "reuse-reveal-target": "listableField" } %>
   <%= hidden_field_tag "item[jimoty_search_keyword]", identification[:jimoty_search_keyword] %>
 
-  <div class="scan-field">
-    <span class="scan-field__label">Does it still work? What shape is it in?</span>
-    <div class="condition-pills" data-photo-analyzer-target="conditionPills">
-      <% ["New", "Like new", "Good", "Fair", "Not working"].each do |value| %>
-        <label class="condition-pill <%= "active" if value == "Good" %>">
-          <input type="radio" name="condition" value="<%= value %>" class="visually-hidden"
-                 data-photo-analyzer-target="conditionRadio"
-                 data-action="change->photo-analyzer#conditionChanged"
-                 <%= "checked" if value == "Good" %>>
-          <%= value %>
-        </label>
-      <% end %>
+  <% plant = identification[:waste_category_key].to_s == "potted_plant" ||
+             identification[:category].to_s.downcase.include?("plant") %>
+
+  <% unless plant %>
+    <div class="scan-field">
+      <span class="scan-field__label">Does it still work? What shape is it in?</span>
+      <div class="condition-pills" data-photo-analyzer-target="conditionPills">
+        <% ["New", "Like new", "Good", "Fair", "Not working"].each do |value| %>
+          <label class="condition-pill <%= "active" if value == "Good" %>">
+            <input type="radio" name="condition" value="<%= value %>" class="visually-hidden"
+                   data-photo-analyzer-target="conditionRadio"
+                   data-action="change->photo-analyzer#conditionChanged"
+                   <%= "checked" if value == "Good" %>>
+            <%= value %>
+          </label>
+        <% end %>
+      </div>
     </div>
-  </div>
+  <% end %>
 
   <%= hidden_field_tag "item[functional]", "true", data: { photo_analyzer_target: "functionalInput" } %>
 
   <div class="scan-field">
     <label class="scan-field__label" for="note">Anything else we should know? (optional)</label>
     <%= text_field_tag :note, nil, class: "form-control",
-          placeholder: "e.g. scratch on the back, comes with original box" %>
+          placeholder: plant ? "e.g. some leaf drop in winter, repotted last year" :
+                               "e.g. scratch on the back, comes with original box" %>
   </div>
 
   <% (identification[:follow_up_questions] || []).each do |question| %>

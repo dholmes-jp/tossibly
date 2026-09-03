@@ -48,7 +48,7 @@
       <% if single_path %>
         <strong>This one goes the disposal route.</strong> Here's exactly how to do it under Meguro rules.
       <% elsif suggested == :list %>
-        <strong>Both options are realistic.</strong> Listing it is free and someone nearby may take it; tossing it correctly is simpler but usually costs money.
+        <strong>Both options are realistic.</strong> Listing it is free and someone nearby may take it.
       <% else %>
         <strong>Tossing it is the cleaner option.</strong> It's marked not working, though some people take items for parts.
       <% end %>
@@ -250,7 +250,6 @@
       <dialog class="decide-dialog" data-decision-card-target="dialog" data-action="click->decision-card#backdrop">
         <div class="decide-dialog__inner">
           <h4>Review listing draft</h4>
-          <p>Changes are saved without leaving the comparison screen.</p>
           <%= render "items/jimoty_form", item: item %>
           <button type="button" class="decide-btn decide-btn--secondary decide-dialog__cancel"
                   data-action="decision-card#closeEditor">Cancel</button>
