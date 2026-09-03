@@ -1,7 +1,17 @@
+<%
+  # Short labels for the popup's category pill — same keys as
+  # Schedule::FIXED_COLLECTION_DOT_CLASSES, just friendlier text than the
+  # full waste_categories.yml names ("Combustible waste" -> "Combustible").
+  category_label = {
+    "combustible" => "Combustible",
+    "recyclable" => "Recyclables",
+    "non_combustible" => "Non-combustible"
+  }
+%>
 <main class="items-page">
   <div class="calendar month">
     <%= month_calendar do |date| %>
-      <%= date.day %>
+      <span class="date-number"><%= date.day %></span>
       <% Schedule::FIXED_COLLECTION_DOT_CLASSES.each do |waste_category_key, dot_class| %>
         <% if Schedule.collected_on?(date, waste_category_key) %>
           <span class="dot dot--<%= dot_class %>"></span>
@@ -14,12 +24,29 @@
               <%= cl_image_tag schedule.item&.photos.first.key %>
             <% end %>
           </div>
-          <%= button_to schedule_path(schedule),
-                  method: :delete,
-                  class: "schedule-delete",
-                  data: { turbo_confirm: "Delete this schedule?" } do %>
-            <i class="fa-solid fa-trash-can" aria-hidden="true"></i>
-          <% end %>
+          <div class="schedule-popup">
+            <%= button_to schedule_path(schedule),
+                    method: :delete,
+                    class: "schedule-delete",
+                    data: { turbo_confirm: "Delete this schedule?" } do %>
+              <i class="fa-solid fa-trash-can" aria-hidden="true"></i>
+            <% end %>
+            <% if schedule.item %>
+              <div class="schedule-popup-img">
+                <% if schedule.item.photos.attached? %>
+                  <%= cl_image_tag schedule.item.photos.first.key, width: 300, height: 300, crop: :fill %>
+                <% end %>
+              </div>
+              <p class="schedule-popup-title"><%= schedule.item.title %></p>
+              <% dot_class = Schedule::FIXED_COLLECTION_DOT_CLASSES[schedule.item.waste_category_key] %>
+              <% if dot_class %>
+                <span class="schedule-popup-pill schedule-popup-pill--<%= dot_class %>">
+                  <span class="dot dot--<%= dot_class %>"></span>
+                  <%= category_label[schedule.item.waste_category_key] %>
+                </span>
+              <% end %>
+            <% end %>
+          </div>
         </div>
       <% end %>
     <% end %>
@@ -31,18 +58,34 @@
       <p><span class="dot dot--non-combustibles"></span>non-combustibles</p>
     </div>
   </div>
-  <%= simple_form_for @schedule do |f| %>
-    <div class="title">
-      <%= f.association :item,
-      # collection: current_user.items.map { |item| [item.title, item.id] },
-      label: "Item",
-      prompt: "Select an item" %>
-    </div>
-    <div class="date">
-      <%= f.input :scheduled_date, as: :date, label: "date" %>
-    </div>
-    <div class="submit">
-      <%= f.button :submit, "Add Schedule" %>
-    </div>
-  <% end %>
+  <%# Hidden by default; the "+ Add schedule" trigger reveals it. Starts
+      open instead when @schedule already has errors on it (a failed
+      submission re-rendering this page), so the error text isn't hidden
+      away behind a closed toggle. %>
+  <div class="schedule-toggle" data-controller="disclosure">
+    <button type="button" class="schedule-toggle__trigger" data-action="disclosure#toggle">
+      <i class="fa-solid fa-plus" aria-hidden="true"></i>
+      Add schedule
+    </button>
+
+    <%= simple_form_for @schedule,
+          html: {
+            class: "schedule-form",
+            data: { disclosure_target: "panel" },
+            hidden: @schedule.errors.empty?
+          } do |f| %>
+      <div class="schedule-form__field">
+        <%= f.association :item,
+        # collection: current_user.items.map { |item| [item.title, item.id] },
+        label: "Item",
+        prompt: "Select an item" %>
+      </div>
+      <div class="schedule-form__field">
+        <%= f.input :scheduled_date, as: :string, input_html: { type: "date" }, label: "date" %>
+      </div>
+      <div class="schedule-form__submit">
+        <%= f.button :submit, "Add Schedule" %>
+      </div>
+    <% end %>
+  </div>
 </main>

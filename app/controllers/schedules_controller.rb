@@ -12,7 +12,10 @@ class SchedulesController < ApplicationController
     if @schedule.save
       redirect_to schedules_path
     else
-      render :new, status: :unprocessable_entity
+      # There's no separate :new template — the form lives inline on
+      # :index — so re-render that, with the same data it normally loads.
+      @schedules = current_user.schedules
+      render :index, status: :unprocessable_entity
     end
   end
 
