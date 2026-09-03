@@ -66,6 +66,38 @@ class WasteCategoryLookup
       "#{yen(low)}#{RANGE_SEPARATOR}#{yen(high)}"
     end
 
+    # Longest-keyword-wins match of an item's title/category text against one
+    # category's subitem `keywords:` lists (word-boundary, punctuation-insensitive).
+    # Shared so DisposalFeeEstimator (fee tiers) and DisposalPanelPresenter
+    # (category-specific disposal steps) always agree on which subitem an item
+    # is — only subitems that define `keywords:` participate, so categories
+    # that don't need this (most of them, today) are completely unaffected.
+    def match_subitem(category, item)
+      return nil unless category
+
+      haystack = normalize([item.title, item.category].compact.join(" "))
+      matches = []
+
+      Array(category.subitems).each_with_index do |subitem, index|
+        Array(subitem[:keywords]).each do |keyword|
+          term = normalize(keyword)
+          next if term.blank?
+          next unless haystack.match?(/\b#{Regexp.escape(term)}\b/)
+
+          # Sort key: longest keyword first, earlier subitem breaks ties.
+          matches << [term.length, -index, subitem]
+        end
+      end
+
+      matches.max_by { |length, position, _subitem| [length, position] }&.last
+    end
+
+    # Collapses punctuation to single spaces on both sides of the match, so
+    # "air-con" / "air con" and "e-bike" / "e bike" don't miss each other.
+    def normalize(text)
+      text.to_s.downcase.gsub(/[^a-z0-9]+/, " ").strip
+    end
+
     private
 
     def categories

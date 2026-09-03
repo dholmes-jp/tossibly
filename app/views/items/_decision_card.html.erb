@@ -16,27 +16,13 @@
   <% else %>
     <%
       waste_category = item.waste_category
-      fee            = DisposalFeeEstimator.call(item)
       single_path    = !item.listable
 
-      dispose = if waste_category
-        {
-          chip: waste_category.chip_label,
-          blurb: waste_category.blurb,
-          cost: fee.label,
-          stat: waste_category.collection_frequency.present? ? { k: "Collected", v: waste_category.collection_frequency } : nil,
-          facts: [["Category", waste_category.name], ["Cost", fee.label],
-                  ["Application", waste_category.application_required? ? "Required" : "Not required"]],
-          steps: waste_category.steps,
-          notes: fee.notes,
-          apply_url: fee.application_url,
-          apply_label: fee.application_label
-        }
-      else
-        { chip: nil, blurb: "Disposal category not yet determined for this item.",
-          cost: nil, stat: nil, facts: [], steps: [], notes: [],
-          apply_url: nil, apply_label: nil }
-      end
+      # Same hash the scan page's preview builds (DisposalPanelPresenter), so a
+      # category-specific subitem match (e.g. "Spray cans, lighters, gas
+      # cartridges" overriding non_combustible's generic steps) shows up here
+      # too, instead of this view keeping its own separate, drifted copy.
+      dispose = DisposalPanelPresenter.call(item)
 
       # Which path gets the "Tossibly suggests" tag. Working + listable → List, otherwise Toss.
       suggested    = (item.functional && !single_path) ? :list : :toss
