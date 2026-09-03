@@ -1,17 +1,5 @@
-// app/assets/stylesheets/pages/_dashboard.scss
-// Dashboard: collection strip + recent items row + scan tile + "View all".
-// Tokens from config/_colors.scss ($forest, $leaf, $mint, $cream, $sun, $ink,
-// $tossibly-white) and config/_fonts.scss ($headers-font, $body-font).
-//
-// Type scale used on this page (keep consistent):
-//   h1 32 · h2 22 · card/strip titles 18 · body 14 · labels/pills 12 · eyebrow 11
-
-$dash-gap: 20px;        // gap between cards
-$dash-viewall: 120px;   // width reserved on the right for the "View all" button
-
-// Page frame + heading follow the shared spec (same on every page):
-//   frame 1180 / 24px 30px 64px · eyebrow 14/700 forest, 6px below ·
-//   h1 32/800, lh 1.1, ls -0.02em · 24px between heading block and content
+$dash-gap: 20px;
+$dash-viewall: 120px;
 .dashboard {
   max-width: 1180px;
   margin: 0 auto;
@@ -46,16 +34,12 @@ $dash-viewall: 120px;   // width reserved on the right for the "View all" button
   flex-wrap: wrap;
   align-items: flex-start;
   gap: 10px 15px;
-  padding: 28px 52px 28px 32px;   // a little extra right padding keeps the corner clear of "Sat"
+  padding: 28px 52px 28px 32px;
   border-radius: 24px;
   background: $mint;
   color: $forest;
-  // Every text element in the strip inherits this rather than repeating it —
-  // the fa-solid icons keep their own icon font regardless, since Font
-  // Awesome sets font-family directly on those classes.
   font-family: $headers-font;
 
-  // Left: TODAY / Wed, Sep / 2
   &__date {
     display: flex;
     flex-direction: column;
@@ -73,8 +57,6 @@ $dash-viewall: 120px;   // width reserved on the right for the "View all" button
     text-transform: uppercase;
   }
 
-  // "Wed, Sep" + the day number, wrapped so __day (flex-basis: 100%) always
-  // falls onto its own line below regardless of container width.
   &__wrap {
     display: flex;
     flex-wrap: wrap;
@@ -96,7 +78,6 @@ $dash-viewall: 120px;   // width reserved on the right for the "View all" button
     line-height: 1;
   }
 
-  // Middle: badge + "My scheduled items" label, the list, then "View full calendar"
   &__what {
     display: flex;
     flex-direction: column;
@@ -175,10 +156,6 @@ $dash-viewall: 120px;   // width reserved on the right for the "View all" button
     &:hover { color: $leaf; }
   }
 
-  // "See details" — reveals __what-panel below. Only shown on very narrow
-  // phones (see the max-width: 479px rule); the panel stays forced open
-  // everywhere else regardless of the `hidden` attribute the disclosure
-  // controller toggles.
   &__what-toggle {
     display: none;
     align-items: center;
@@ -203,17 +180,9 @@ $dash-viewall: 120px;   // width reserved on the right for the "View all" button
     flex-direction: column;
     gap: 8px;
 
-    // Bootstrap's reboot sets `[hidden] { display: none !important; }`
-    // globally, which otherwise always wins over a plain `display` here —
-    // matching !important (with higher selector specificity than
-    // Bootstrap's bare [hidden]) is the only way to force this open while
-    // the server-rendered `hidden` attribute is still present.
     &[hidden] { display: flex !important; }
   }
 
-  // Right: the upcoming pickups, one circle per actual collection date (not
-  // a generic weekly pattern) — every slot is the same fixed width, so the
-  // circles sit at exactly equal intervals regardless of label length.
   &__week {
     display: grid;
     grid-auto-flow: column;
@@ -260,22 +229,14 @@ $dash-viewall: 120px;   // width reserved on the right for the "View all" button
   &__type {
     font-weight: 600;
     text-align: center;
-    // Keep the label on a single line even when it's longer than the slot
-    // (e.g. "Non-combustible") rather than wrapping to two lines — it just
-    // overflows the fixed-width column a little, centred either side.
     white-space: nowrap;
   }
 
-  // The next collection day gets the one accent colour
   &__slot--active .dashboard-strip__circle {
     background: $sun;
     color: $forest;
   }
 
-  // ---- Folded paper corner (top-right) — links to the full schedule ----
-  // ::before is the page showing through where the corner lifted (cream),
-  // ::after is the folded flap itself (forest). Peels open on load, lifts a
-  // little further on hover. No text; aria-label carries the meaning.
   &__corner {
     position: absolute;
     top: 0;
@@ -320,7 +281,6 @@ $dash-viewall: 120px;   // width reserved on the right for the "View all" button
   .dashboard-strip__corner { animation: none; }
 }
 
-// Underlined text link (kept for reuse)
 .dashboard-link {
   font-size: 14px;
   font-weight: 800;
@@ -332,7 +292,6 @@ $dash-viewall: 120px;   // width reserved on the right for the "View all" button
 }
 
 // ---------- Section ----------
-// Equal breathing room above and below the section title.
 .dashboard-section {
   margin-top: 28px;
 }
@@ -340,8 +299,6 @@ $dash-viewall: 120px;   // width reserved on the right for the "View all" button
 .dashboard-section__head {
   margin-bottom: 28px;
 
-  // "Continue where you left off" as a white label with a green border,
-  // regular weight (not bold), green text.
   h2 {
     display: inline-block;
     margin: 0;
@@ -358,16 +315,12 @@ $dash-viewall: 120px;   // width reserved on the right for the "View all" button
 }
 
 // ---------- Cards row ----------
-// Flex row: up to 3 item cards + scan tile at the same width, then the
-// "View all" button pushed to the right edge and centred vertically.
 .dashboard-grid {
   display: flex;
   align-items: stretch;
   gap: $dash-gap;
 }
 
-// Shared column width for cards and the scan tile: 4 columns fit beside the
-// reserved "View all" space, so the row never wraps at desktop width.
 .dashboard-card,
 .dashboard-scan {
   flex: 0 0 calc((100% - #{$dash-viewall} - #{4 * $dash-gap}) / 4);
@@ -424,8 +377,6 @@ $dash-viewall: 120px;   // width reserved on the right for the "View all" button
   }
 }
 
-// Status pill — same colour system as the My items page (components/_items.scss):
-// pending = forest, listed = sun, booked = teal, disposed = outlined.
 .dashboard-pill {
   align-self: flex-start;
   padding: 4px 12px;
@@ -474,10 +425,6 @@ $dash-viewall: 120px;   // width reserved on the right for the "View all" button
 }
 
 // ---------- Scan tile ----------
-// Visuals come from components/_scan_action.scss (scan-action--hero).
-// .dashboard-scan stays on the element purely for the grid sizing above and
-// the mobile ordering below.
-
 // ---------- "View all" button: right edge, vertically centred ----------
 .dashboard-viewall {
   flex: 0 0 auto;
@@ -499,16 +446,6 @@ $dash-viewall: 120px;   // width reserved on the right for the "View all" button
 }
 
 // ---------- Responsive ----------
-// The strip's own breakpoint is wider than the cards' (1100px, not 640px):
-// __what's min-width (260px) plus the four fixed-width upcoming-pickup
-// columns don't actually fit next to __date until well above 640px, so
-// below 640 they were already wrapping — just with desktop's full-size
-// text/circles, since nothing shrunk until 640. That's the "goes down but
-// doesn't get smaller" gap: content could wrap anywhere from ~1000px down
-// to 640px with no compact styling applied yet. Matching this breakpoint to
-// where wrapping actually starts closes that gap — one clean jump straight
-// into the compact/stacked version, instead of an unstyled halfway state.
-// __date/__week column gap below 1100px.
 $strip-col-gap: 24px;
 
 @media (max-width: 1100px) {
@@ -519,27 +456,17 @@ $strip-col-gap: 24px;
     flex: 0 0 calc((100% - #{$dash-gap}) / 2);
   }
 
-  // Button keeps margin-left: auto, so it stays right-aligned on its own line
-
   .dashboard-strip {
     gap: 16px;
     padding: 16px 18px 16px 18px;
   }
 
-  // Row 1 keeps __date and __week paired (via `order`, DOM stays untouched)
-  // — __what (the scheduled-items list) is the one that drops to its own
-  // full-width row below, instead of the upcoming-pickups row.
   .dashboard-strip__date { order: 1; }
 
   .dashboard-strip__week {
     order: 3;
-    // margin-left: 0;   // sits right after __date instead of pushed to the far edge
-    // padding-left: 20px;
-    // grid-auto-columns: 76px;
   }
 
-  // Left/middle text shrinks along with the layout instead of staying at
-  // desktop size.
   .dashboard-strip__eyebrow { font-size: 11px; }
 
   .dashboard-strip__weekday,
@@ -563,16 +490,9 @@ $strip-col-gap: 24px;
     text-align: center;
   }
 
-  // The scheduled-items list: drops below and loses its badge/label row's
-  // usual spacing partner (there's nothing left of it to sit beside), so a
-  // top border keeps a clean seam where __week's divider used to be.
   .dashboard-strip__what {
     order: 2;
-    // width: 100%;
     width: fit-content;
-    // margin-top: 4px;
-    // padding-top: 16px;
-    // border-top: 1px solid rgba($forest, 0.15);
   }
 
   .dashboard-strip__badge {
@@ -591,17 +511,10 @@ $strip-col-gap: 24px;
   .dashboard-strip__schedule-date { font-size: 12px; }
 }
 @media (max-width: 930px) {
-
-
-  // __date keeps the same (unchanged) width it has above this breakpoint.
   .dashboard-strip__date {
     order: 1;
   }
 
-  // __what drops to its own row below instead of sharing this one, so
-  // __week is free to grow into the space that leaves — still pinned to
-  // the right edge (margin-left: auto would eat that free space itself
-  // instead of letting the item grow, so it's turned off here).
   .dashboard-strip__week {
     order: 2;
     flex: 1 1 auto;
@@ -609,11 +522,8 @@ $strip-col-gap: 24px;
     grid-auto-columns: minmax(76px, 1fr);
   }
 
-  // TODO: match __date's column width instead — 100% for now.
   .dashboard-strip__what {
     order: 3;
-    // flex: 0 0 100%;
-    // width: 100%;
   }
 }
 @media (max-width: 635px) {
@@ -621,9 +531,6 @@ $strip-col-gap: 24px;
 
   .dashboard-heading { font-size: 28px; }
 
-  // Row 1: __date + __week side by side (__week's columns shrink to share
-  // the row instead of going full-width). Row 2: __what, on its own row
-  // below, full width.
   .dashboard-strip__week {
     order: 2;
     flex: 1 1 auto;
@@ -644,13 +551,9 @@ $strip-col-gap: 24px;
     padding-top: 16px;
     border-top: 1px solid rgba($forest, 0.15);
     width: 100%;
-    // The base rule's min-width: 260px doesn't shrink with the container on
-    // a narrow phone — it was pushing this past the strip's edge.
     min-width: 0;
   }
 
-  // The slot columns are tight now that they share row 1 with __date —
-  // shrink the circle/date a bit further and drop the category label.
   .dashboard-strip__slot-day { font-size: 11px; }
   .dashboard-strip__slot-date { font-size: 18px; }
 
@@ -664,18 +567,11 @@ $strip-col-gap: 24px;
     display: none;
   }
 
-  // Each slot lays its day/date, icon, and category name out horizontally
-  // instead of stacked.
-  // .dashboard-strip__slot {
-  //   flex-direction: row;
-  // }
-
   .dashboard-card,
   .dashboard-scan {
     flex: 0 0 100%;
   }
 
-  // Phones take the photos: camera tile first
   .dashboard-scan { order: -1; }
 
   .dashboard-viewall {
@@ -684,15 +580,10 @@ $strip-col-gap: 24px;
   }
 }
 @media (max-width: 479px) {
-  // Only truly narrow phones collapse the schedule list behind "See
-  // details" — from 480px up it stays open like every wider size.
   .dashboard-strip__what-toggle {
     display: inline-flex;
   }
 
-  // !important + matching specificity to win over the base rule's own
-  // !important (needed there to beat Bootstrap's [hidden] reboot) — same
-  // specificity, so this later rule takes it back for this breakpoint only.
   .dashboard-strip__what-panel[hidden] {
     display: none !important;
   }

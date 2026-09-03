@@ -1,7 +1,4 @@
 <%
-  # Short labels for the popup's category pill — same keys as
-  # Schedule::FIXED_COLLECTION_DOT_CLASSES, just friendlier text than the
-  # full waste_categories.yml names ("Combustible waste" -> "Combustible").
   category_label = {
     "combustible" => "Combustible",
     "recyclable" => "Recyclables",
@@ -58,16 +55,11 @@
       <p><span class="dot dot--non-combustibles"></span>non-combustibles</p>
     </div>
   </div>
-  <%# Hidden by default; the "+ Add schedule" trigger reveals it. Starts
-      open instead when @schedule already has errors on it (a failed
-      submission re-rendering this page), so the error text isn't hidden
-      away behind a closed toggle. %>
   <div class="schedule-toggle" data-controller="disclosure">
     <button type="button" class="schedule-toggle__trigger" data-action="disclosure#toggle">
       <i class="fa-solid fa-plus" aria-hidden="true"></i>
       Add schedule
     </button>
-
     <%= simple_form_for @schedule,
           html: {
             class: "schedule-form",
@@ -76,7 +68,6 @@
           } do |f| %>
       <div class="schedule-form__field">
         <%= f.association :item,
-        # collection: current_user.items.map { |item| [item.title, item.id] },
         label: "Item",
         prompt: "Select an item" %>
       </div>
