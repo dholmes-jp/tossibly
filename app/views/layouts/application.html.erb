@@ -6,6 +6,8 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="application-name" content="Tossibly">
     <meta name="mobile-web-app-capable" content="yes">
+    <%= tag.link rel: "manifest", href: pwa_manifest_path %>
+    <%= render 'shared/ios_pwa_links' %>
     <meta name="turbo-cache-control" content="no-preview">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
