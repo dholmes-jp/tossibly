@@ -309,7 +309,7 @@ large_sized_waste:
 
 potted_plant:
   name: "Potted plant"
-  blurb: "A potted plant is really three kinds of waste at once — this splits it into what actually needs to happen with each part."
+  blurb: "A potted plant has to be taken apart first — the leaves and roots, the soil, and the pot are each collected differently."
   steps:
     - "Leaves and roots: bag with your combustible waste."
     - "Soil: not collected as ordinary waste — take it to a garden center or gardening shop that accepts soil, or reuse it in another pot or your garden."
