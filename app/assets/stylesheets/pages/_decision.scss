@@ -445,38 +445,6 @@
   }
 }
 
-// Tossibly's take: the recommendation from the nearby-listing analysis,
-// as short bullets so it can be scanned in a second.
-.decide-bullets {
-  margin: 0 0 16px;
-  padding: 0;
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-
-  li {
-    position: relative;
-    padding-left: 18px;
-    font-size: 14px;
-    line-height: 1.5;
-    color: rgba($ink, 0.75);
-
-    &::before {
-      content: "";
-      position: absolute;
-      left: 2px;
-      top: 0.55em;
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: $sun;
-    }
-
-    strong { color: $forest; }
-  }
-}
-
 // White block wrapping each section of the details panel, matching the
 // edit / post rows below it.
 .decide-block {
@@ -489,7 +457,6 @@
   & + .decide-inline { margin-top: 8px; }
 
   .decide-details__title { margin-bottom: 10px; }
-  .decide-bullets { margin-bottom: 0; }
   .decide-draft { margin-bottom: 0; }
   .decide-draft__actions { margin-top: 14px; }
 }
